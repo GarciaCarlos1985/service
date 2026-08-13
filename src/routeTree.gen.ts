@@ -21,8 +21,11 @@ import { Route as PainelIndexRouteImport } from './routes/painel.index'
 import { Route as PainelAgendaRouteImport } from './routes/painel.agenda'
 import { Route as PainelCarteiraRouteImport } from './routes/painel.carteira'
 import { Route as PainelDisponibilidadeRouteImport } from './routes/painel.disponibilidade'
+import { Route as PainelNotificacoesRouteImport } from './routes/painel.notificacoes'
 import { Route as PainelPerfilRouteImport } from './routes/painel.perfil'
 import { Route as PainelServicosRouteImport } from './routes/painel.servicos'
+import { Route as PainelMensagensIndexRouteImport } from './routes/painel.mensagens.index'
+import { Route as PainelMensagensConversationIdRouteImport } from './routes/painel.mensagens.$conversationId'
 import { Route as ProfissionaisCitySlugProfileSlugRouteImport } from './routes/profissionais.$citySlug.$profileSlug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -85,6 +88,11 @@ const PainelDisponibilidadeRoute = PainelDisponibilidadeRouteImport.update({
   path: '/disponibilidade',
   getParentRoute: () => PainelRoute,
 } as any)
+const PainelNotificacoesRoute = PainelNotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => PainelRoute,
+} as any)
 const PainelPerfilRoute = PainelPerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -95,6 +103,17 @@ const PainelServicosRoute = PainelServicosRouteImport.update({
   path: '/servicos',
   getParentRoute: () => PainelRoute,
 } as any)
+const PainelMensagensIndexRoute = PainelMensagensIndexRouteImport.update({
+  id: '/mensagens/',
+  path: '/mensagens/',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelMensagensConversationIdRoute =
+  PainelMensagensConversationIdRouteImport.update({
+    id: '/mensagens/$conversationId',
+    path: '/mensagens/$conversationId',
+    getParentRoute: () => PainelRoute,
+  } as any)
 const ProfissionaisCitySlugProfileSlugRoute =
   ProfissionaisCitySlugProfileSlugRouteImport.update({
     id: '/profissionais/$citySlug/$profileSlug',
@@ -114,10 +133,13 @@ export interface FileRoutesByFullPath {
   '/painel/agenda': typeof PainelAgendaRoute
   '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
+  '/painel/notificacoes': typeof PainelNotificacoesRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
+  '/painel/mensagens/$conversationId': typeof PainelMensagensConversationIdRoute
   '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
+  '/painel/mensagens/': typeof PainelMensagensIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -130,10 +152,13 @@ export interface FileRoutesByTo {
   '/painel/agenda': typeof PainelAgendaRoute
   '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
+  '/painel/notificacoes': typeof PainelNotificacoesRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel': typeof PainelIndexRoute
+  '/painel/mensagens/$conversationId': typeof PainelMensagensConversationIdRoute
   '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
+  '/painel/mensagens': typeof PainelMensagensIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -148,10 +173,13 @@ export interface FileRoutesById {
   '/painel/agenda': typeof PainelAgendaRoute
   '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
+  '/painel/notificacoes': typeof PainelNotificacoesRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
+  '/painel/mensagens/$conversationId': typeof PainelMensagensConversationIdRoute
   '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
+  '/painel/mensagens/': typeof PainelMensagensIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -167,10 +195,13 @@ export interface FileRouteTypes {
     | '/painel/agenda'
     | '/painel/carteira'
     | '/painel/disponibilidade'
+    | '/painel/notificacoes'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
+    | '/painel/mensagens/$conversationId'
     | '/profissionais/$citySlug/$profileSlug'
+    | '/painel/mensagens/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -183,10 +214,13 @@ export interface FileRouteTypes {
     | '/painel/agenda'
     | '/painel/carteira'
     | '/painel/disponibilidade'
+    | '/painel/notificacoes'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel'
+    | '/painel/mensagens/$conversationId'
     | '/profissionais/$citySlug/$profileSlug'
+    | '/painel/mensagens'
   id:
     | '__root__'
     | '/'
@@ -200,10 +234,13 @@ export interface FileRouteTypes {
     | '/painel/agenda'
     | '/painel/carteira'
     | '/painel/disponibilidade'
+    | '/painel/notificacoes'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
+    | '/painel/mensagens/$conversationId'
     | '/profissionais/$citySlug/$profileSlug'
+    | '/painel/mensagens/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -304,6 +341,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PainelDisponibilidadeRouteImport
       parentRoute: typeof PainelRoute
     }
+    '/painel/notificacoes': {
+      id: '/painel/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/painel/notificacoes'
+      preLoaderRoute: typeof PainelNotificacoesRouteImport
+      parentRoute: typeof PainelRoute
+    }
     '/painel/perfil': {
       id: '/painel/perfil'
       path: '/perfil'
@@ -316,6 +360,20 @@ declare module '@tanstack/react-router' {
       path: '/servicos'
       fullPath: '/painel/servicos'
       preLoaderRoute: typeof PainelServicosRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/mensagens/': {
+      id: '/painel/mensagens/'
+      path: '/mensagens'
+      fullPath: '/painel/mensagens/'
+      preLoaderRoute: typeof PainelMensagensIndexRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/mensagens/$conversationId': {
+      id: '/painel/mensagens/$conversationId'
+      path: '/mensagens/$conversationId'
+      fullPath: '/painel/mensagens/$conversationId'
+      preLoaderRoute: typeof PainelMensagensConversationIdRouteImport
       parentRoute: typeof PainelRoute
     }
     '/profissionais/$citySlug/$profileSlug': {
@@ -332,18 +390,24 @@ interface PainelRouteChildren {
   PainelAgendaRoute: typeof PainelAgendaRoute
   PainelCarteiraRoute: typeof PainelCarteiraRoute
   PainelDisponibilidadeRoute: typeof PainelDisponibilidadeRoute
+  PainelNotificacoesRoute: typeof PainelNotificacoesRoute
   PainelPerfilRoute: typeof PainelPerfilRoute
   PainelServicosRoute: typeof PainelServicosRoute
   PainelIndexRoute: typeof PainelIndexRoute
+  PainelMensagensConversationIdRoute: typeof PainelMensagensConversationIdRoute
+  PainelMensagensIndexRoute: typeof PainelMensagensIndexRoute
 }
 
 const PainelRouteChildren: PainelRouteChildren = {
   PainelAgendaRoute: PainelAgendaRoute,
   PainelCarteiraRoute: PainelCarteiraRoute,
   PainelDisponibilidadeRoute: PainelDisponibilidadeRoute,
+  PainelNotificacoesRoute: PainelNotificacoesRoute,
   PainelPerfilRoute: PainelPerfilRoute,
   PainelServicosRoute: PainelServicosRoute,
   PainelIndexRoute: PainelIndexRoute,
+  PainelMensagensConversationIdRoute: PainelMensagensConversationIdRoute,
+  PainelMensagensIndexRoute: PainelMensagensIndexRoute,
 }
 
 const PainelRouteWithChildren =

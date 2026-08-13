@@ -37,14 +37,13 @@ Intermediador de serviços locais com segurança e integridade financeira como d
 Confirmado na spec (master build spec):
 
 - Autenticação (email/password, recuperação de senha, sessão segura), perfis, serviços, categorias, busca por categoria/cidade/bairro/preço/nota/disponibilidade/favoritos.
-- Agendamento com disponibilidade, exceções, folgas, bloqueios; double booking garantido no banco; máquina de estados de booking validada no backend (pending → confirmed → in_progress → completed; cancelamentos).
-- Fluxo financeiro: pagamento iniciado/confirmado → serviço concluído → avaliação → liberação conforme regra → comissão → repasse → cashback. Nenhuma etapa financeira depende de clique visual.
-- Ledger imutável (`wallet_transactions`): credit, debit, cashback, refund, adjustment, platform_fee, payout; saldo derivado ou projeção reconciliável; correções via transação compensatória.
-- Idempotency key obrigatória: pagamento, refund, cashback, indicação, payout, ajustes administrativos.
-- Webhooks autenticados, verificados, idempotentes, registrados, auditáveis (`webhook_events`).
-- Cashback e referral com regras configuráveis, tetos, estados (pending/approved/rejected/review), antifraude; recompensa nunca liberada só pelo cadastro.
-- Chat ligado a booking/cliente/profissional, com paginação, unread, rate limiting, denúncia, bloqueio (não é rede social). Supabase Realtime.
-- Notificações centralizadas (booking, payment, payout, cashback, review, referral, system, dispute, security) com arquitetura para in-app/email/push.
+- Agendamento com disponibilidade, exceções, folgas, bloqueios; double booking garantido no banco; máquina de estados de booking validada no backend (pending → confirmed → in_progress → completed; cancelamentos). **Implementado (M4) e testado no banco real.**
+- Fluxo financeiro: pagamento iniciado/confirmado → serviço concluído → avaliação → liberação conforme regra → comissão → repasse → cashback. Nenhuma etapa financeira depende de clique visual. **Core implementado (M6):** `complete_booking` dispara `process_booking_financials` (idempotente).
+- Ledger imutável (`wallet_transactions`): credit, debit, cashback, refund, adjustment, platform_fee, payout; saldo derivado ou projeção reconciliável; correções via transação compensatória. **Implementado (M6)** com trigger que bloqueia UPDATE/DELETE até para postgres.
+- Idempotency key obrigatória: pagamento, refund, cashback, indicação, payout, ajustes administrativos. **Implementado (M6)** via `idempotency_key` única.
+- Cashback e referral com regras configuráveis, tetos, estados (pending/approved/rejected/review), antifraude; recompensa nunca liberada só pelo cadastro. **Cashback implementado (M6)** — percentual configurável + teto mensal; referral fica para M9.
+- Chat ligado a booking/cliente/profissional, com paginação, unread, rate limiting, denúncia, bloqueio (não é rede social). Supabase Realtime. **Implementado (M7)** — conversa única por booking, RLS por participação, 10 msg/min, unread/read status, realtime.
+- Notificações centralizadas (booking, payment, payout, cashback, review, referral, system, dispute, security) com arquitetura para in-app/email/push. **In-app implementado (M7)**; email/push na arquitetura.
 - Reviews apenas de clientes reais do booking concluído; proteção contra duplicadas/falsas/autoavaliação; profissional pode responder.
 - Disputas (open/under_review/resolved/rejected), com evidências e decisão administrativa.
 - Admin: dashboard, usuários, profissionais, financeiro (sem edição direta de saldo), auditoria (`admin_audit_logs`), permissões por least privilege (super_admin, support, moderator, finance, operations, marketing, analyst), preview/dry run/confirmation/audit/rollback honesto, kill switches, feature flags com rollout gradual.
@@ -67,8 +66,10 @@ Decisões em aberto (não confirmadas, registrar conforme surgir): nome legal/ma
 ## Evidence on Hand
 
 - Master build spec: `documentos/SERVICE-PROMPT-INICIO.md` (fonte da verdade de produto; arquitetura, segurança, monetização, SEO, escalabilidade, milestones 0–12).
-- Projeto atualmente vazio (greenfield; apenas pastas de config de harnesses de IA).
-- Nenhum usuário real, dado, avaliação, testemunho ou asset. Seeds de desenvolvimento devem ser claramente identificados; nunca tratar dados fictícios como reais.
+- ADRs: `documentos/DECISIONS.md` (ADR-001 a ADR-039, adaptados/registrados até 2026-08-13).
+- Validação técnica real: **37 testes SQL aprovados no banco real** (`supabase/tests/`: rls 15, ledger 11, chat 11 — rodar via `node scripts/sql-tests.mjs <arquivo>`).
+- Site publicado em produção (Vercel) com fundação M0–M7.
+- Nenhum usuário real, dado, avaliação, testemunho ou asset além da logo. Seeds de desenvolvimento são claramente identificados; nunca tratar dados fictícios como reais.
 
 ## Product Principles
 

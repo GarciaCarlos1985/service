@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from '@tanstack/react-router'
+﻿import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import {
@@ -22,6 +22,7 @@ import {
   startBooking,
 } from '~/modules/booking/booking-api'
 import type { Booking } from '~/modules/booking/booking-api'
+import { openConversation } from '~/modules/chat/chat-api'
 
 export const Route = createFileRoute('/painel/agenda')({
   component: AgendaPage,
@@ -39,6 +40,7 @@ function AgendaPage() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const { toast } = useToast()
+  const router = useRouter()
   const [cancelTarget, setCancelTarget] = useState<Booking | null>(null)
   const [cancelReason, setCancelReason] = useState('')
 
@@ -71,9 +73,9 @@ function AgendaPage() {
         case 'complete':
           return completeBooking(booking.id)
         case 'cancel':
-          return cancelBooking(booking.id, cancelReason || 'SolicitaÃ§Ã£o do usuÃ¡rio')
+          return cancelBooking(booking.id, cancelReason || 'Solicitação do usuário')
         default:
-          throw new Error('AÃ§Ã£o desconhecida')
+          throw new Error('Ação desconhecida')
       }
     },
     onSuccess: () => {
@@ -83,7 +85,21 @@ function AgendaPage() {
       toast('Atualizado.', 'success')
     },
     onError: (err) => {
-      toast(err instanceof Error ? err.message : 'NÃ£o foi possÃ­vel atualizar.', 'error')
+      toast(err instanceof Error ? err.message : 'Não foi possível atualizar.', 'error')
+    },
+  })
+
+  const openChatMutation = useMutation({
+    mutationFn: (bookingId: string) => openConversation(bookingId),
+    onSuccess: (conversation) => {
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] })
+      void router.navigate({
+        to: '/painel/mensagens/$conversationId',
+        params: { conversationId: conversation.id },
+      })
+    },
+    onError: () => {
+      toast('Não foi possível abrir a conversa.', 'error')
     },
   })
 
@@ -101,11 +117,21 @@ function AgendaPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-bold text-slate-900">Agenda</h1>
-        <p className="text-sm text-slate-500">
-          {isProfessional ? 'Seus serviÃ§os agendados' : 'Seus agendamentos'}
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900">Agenda</h1>
+          <p className="text-sm text-slate-500">
+            {isProfessional ? 'Seus serviços agendados' : 'Seus agendamentos'}
+          </p>
+        </div>
+        {isProfessional ? (
+          <Link
+            to="/painel/disponibilidade"
+            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+          >
+            Gerenciar horários
+          </Link>
+        ) : null}
       </div>
 
       {bookings.length === 0 ? (
@@ -155,6 +181,18 @@ function AgendaPage() {
                     })}
                   </span>
                   <div className="flex flex-wrap gap-2">
+                    {booking.status !== 'cancelled' && booking.status !== 'completed' ? (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        loading={openChatMutation.isPending}
+                        onClick={() => {
+                          openChatMutation.mutate(booking.id)
+                        }}
+                      >
+                        💬 Conversar
+                      </Button>
+                    ) : null}
                     {isProfessional && booking.status === 'pending' ? (
                       <Button
                         size="sm"

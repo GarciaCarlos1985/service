@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 import { Avatar, LoadingState } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { getProfile } from '~/modules/profile/profile-api'
+import { getUnreadMessagesCount } from '~/modules/chat/chat-api'
+import { getUnreadNotificationsCount } from '~/modules/notifications/notifications-api'
 
 export const Route = createFileRoute('/painel')({
   component: PainelLayout,
@@ -12,7 +14,7 @@ export const Route = createFileRoute('/painel')({
 const navItems = [
   { to: '/painel', label: 'Início', icon: '🏠' },
   { to: '/painel/agenda', label: 'Agenda', icon: '📅' },
-  { to: '/painel/disponibilidade', label: 'Horários', icon: '🕐' },
+  { to: '/painel/mensagens', label: 'Mensagens', icon: '💬' },
   { to: '/painel/servicos', label: 'Serviços', icon: '🧰' },
   { to: '/painel/perfil', label: 'Perfil', icon: '👤' },
 ]
@@ -50,6 +52,20 @@ function PainelLayout() {
 
   const profile = profileQuery.data
 
+  const unreadNotificationsQuery = useQuery({
+    queryKey: ['unread-notifications', userId],
+    queryFn: getUnreadNotificationsCount,
+    enabled: userId !== undefined,
+    refetchInterval: 60_000,
+  })
+
+  const unreadMessagesQuery = useQuery({
+    queryKey: ['unread-messages', userId],
+    queryFn: getUnreadMessagesCount,
+    enabled: userId !== undefined,
+    refetchInterval: 60_000,
+  })
+
   return (
     <div className="min-h-dvh bg-slate-50">
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white">
@@ -57,12 +73,31 @@ function PainelLayout() {
           <Link to="/" className="text-sm font-bold text-brand-blue-600">
             SERVICE
           </Link>
-          <div className="flex items-center gap-2">
-            {profile ? (
-              <span className="text-sm font-medium text-slate-700">
-                {profile.full_name ?? user.email}
-              </span>
-            ) : null}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/painel/mensagens"
+              aria-label="Mensagens"
+              className="relative grid size-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"
+            >
+              💬
+              {(unreadMessagesQuery.data ?? 0) > 0 ? (
+                <span className="absolute -top-0.5 -right-0.5 grid size-4.5 min-h-4 min-w-4 place-items-center rounded-full bg-brand-blue-500 px-1 text-[10px] font-bold text-white">
+                  {unreadMessagesQuery.data}
+                </span>
+              ) : null}
+            </Link>
+            <Link
+              to="/painel/notificacoes"
+              aria-label="Notificações"
+              className="relative grid size-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"
+            >
+              🔔
+              {(unreadNotificationsQuery.data ?? 0) > 0 ? (
+                <span className="absolute -top-0.5 -right-0.5 grid size-4.5 min-h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                  {unreadNotificationsQuery.data}
+                </span>
+              ) : null}
+            </Link>
             <Avatar name={profile?.full_name ?? user.email ?? '?'} size="sm" />
           </div>
         </div>

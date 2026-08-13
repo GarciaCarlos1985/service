@@ -605,6 +605,54 @@
   Cloudflare segue como plano (ADR-034), o plano Netlify (ADR-036) fica
   registrado como alternativa.
 
+## ADR-038 — Chat preso ao booking e notificações in-app centralizadas (M7)
+**Status:** Aceita (2026-08-13) — implementada e testada no banco real; atende spec §27/§28
+
+- **Contexto:** o SERVICE precisa de comunicação entre cliente e profissional,
+  mas o chat não pode virar rede social (spec §27) e as notificações precisam
+  ser centralizadas com arquitetura para in-app/email/push (spec §28).
+- **Decisão:**
+  - **Uma conversa por booking** (`conversations` com `booking_id` único):
+    cliente e profissional do booking são os únicos participantes — verificado
+    por RPC `open_conversation`/`send_message` (SECURITY DEFINER) + RLS por
+    participação. Terceiros nunca acessam (spec §63, testado).
+  - **Escrita 100% via RPC** (ADR-002): nenhuma policy de insert/update/delete
+    em mensagens/conversas/notificações.
+  - **Rate limit no banco**: 10 mensagens/minuto por usuário (spec §27).
+  - **Unread/read status** via `conversation_participants.last_read_at`;
+    contadores agregados via RPC.
+  - **Realtime** via publicação `supabase_realtime` em `messages` e
+    `notifications` (RLS vale para o subscriber).
+  - **Notificações in-app agora** (tipos da spec §28); email/push ficam na
+    arquitetura. Eventos de negócio notificam via helper `_notify`: booking
+    criado → profissional; confirmado/cancelado → outra parte; cashback →
+    cliente (dentro do processamento financeiro idempotente).
+- **Motivo:** chat é contexto do marketplace, não rede social; e notificação
+  nasce junto do evento financeiro que a gera (spec §15: sem clique manual).
+- **Consequências:** 11 testes SQL de chat+notificação no banco real
+  (participantes, rate limit, unread, isolamento de terceiros); nenhuma
+  regressão nas suítes RLS (15) e ledger (11). Interface: lista de conversas,
+  thread com realtime, sino com contadores, página de notificações.
+
+## ADR-039 — Toda migration é validada contra o banco real (padrão de qualidade)
+**Status:** Aceita (2026-08-13) — implementada
+
+- **Contexto:** as migrations M1–M5 foram escritas "às cegas" e revelaram bugs
+  só na aplicação (make_interval não-imutável em índice; UNIQUE parcial). Com o
+  `DATABASE_URL` disponível localmente, o projeto ganhou a capacidade de
+  executar SQL arbitrário no banco real.
+- **Decisão:** a partir do M6, **toda migration nova nasce com uma suíte de
+  teste SQL** (`supabase/tests/<dominio>-tests.sql`) executada por
+  `node scripts/sql-tests.mjs <arquivo>` contra o banco real. A suíte cria
+  usuários reais em `auth.users`, simula papéis com `set local role` +
+  `set_config`, e valida as regras do ADR-002/003/009 (RLS, imutabilidade,
+  double booking) além das regras de negócio do milestone.
+- **Motivo:** o erro de SQL mais barato é o que nunca chega a produção; o
+  segundo mais barato é o que o teste pega no dia em que foi escrito.
+- **Consequências:** 37 testes SQL verdes (15 RLS + 11 ledger + 11 chat);
+  padrão documentado no AGENTS.md; `pg` (dev) e `DATABASE_URL` (gitignored)
+  como ferramentas de teste locais.
+
 ---
 
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue

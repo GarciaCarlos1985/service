@@ -14,7 +14,7 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
       DEPLOYMENT, SEO, ADMIN, DISASTER-RECOVERY)
 - [x] Hospedagem atual: Vercel free + Supabase (ADR-036/037); repo GitHub
       `GarciaCarlos1985/service`
-- [ ] Deploy validado na Vercel (aguarda redeploy com o build Nitro)
+- [x] Deploy validado na Vercel (site no ar com M0–M7)
 - [ ] Decisões de fundação: nome/domínio, regiões de lançamento
 
 ## M1 — Database + Auth + RLS
@@ -80,8 +80,13 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 
 ## M7 — Chat + notificações
 
-Chat por booking (RLS, paginação, unread, rate limit, denúncia, bloqueio) ·
-notificações centralizadas (in-app; email/push preparados)
+- [x] Conversa única por booking (spec §27: nunca rede social); só participantes (testado: terceiro bloqueado)
+- [x] Escrita 100% via RPC (ADR-002); rate limit 10 msg/min no banco; unread/read status
+- [x] Realtime em mensagens e notificações (publicação supabase_realtime)
+- [x] Notificações in-app centralizadas (spec §28) — eventos de negócio geram avisos (booking/cashback)
+- [x] UI: lista de conversas, thread com realtime, sino com contadores, página de notificações
+- [x] **Testes no banco real: 11/11** (participantes, rate limit, unread, isolamento)
+- [ ] Email/push (canais preparados na arquitetura — ativar quando fizer sentido)
 
 ## M8 — Reviews + confiança + disputas
 
