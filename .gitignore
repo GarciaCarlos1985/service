@@ -6,6 +6,9 @@ dist/
 .output/
 .netlify/
 
+# Vercel
+.vercel/
+
 # Ambiente
 .env
 .env.local

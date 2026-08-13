@@ -27,15 +27,16 @@ Tudo o que o projeto precisa de cada serviço e onde encontrar cada chave.
 Já preenchido em `.env.local`: `VITE_SUPABASE_URL=https://taabjnmsaaltsiehywbw.supabase.co`
 Falta preencher: `VITE_SUPABASE_ANON_KEY` (copiar do painel).
 
-## Onde configurar cada ambiente (deploy Netlify — ADR-036)
+## Onde configurar cada ambiente (deploy Vercel — ADR-036/037)
 
-| variável                 | dev local    | Netlify (produção)                    |
-| ------------------------ | ------------ | ------------------------------------- |
-| `VITE_SUPABASE_URL`      | `.env.local` | Site settings → Environment variables |
-| `VITE_SUPABASE_ANON_KEY` | `.env.local` | Site settings → Environment variables |
+| variável                 | dev local    | Vercel (produção)                          |
+| ------------------------ | ------------ | ------------------------------------------ |
+| `VITE_SUPABASE_URL`      | `.env.local` | Project → Settings → Environment Variables |
+| `VITE_SUPABASE_ANON_KEY` | `.env.local` | Project → Settings → Environment Variables |
 
 O `.env.local` serve só para desenvolvimento; produção configura as variáveis
-no painel do Netlify, nunca no repositório.
+no painel da Vercel, nunca no repositório. Depois de alterar env vars na
+Vercel, é necessário **redeploy**.
 
 ## Chaves futuras (quando o milestone chegar — NÃO usar agora)
 

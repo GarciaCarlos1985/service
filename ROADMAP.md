@@ -12,9 +12,9 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 - [x] CI: typecheck · lint · test · build
 - [x] Documentação base (ARCHITECTURE, SECURITY, DATABASE, PAYMENTS,
       DEPLOYMENT, SEO, ADMIN, DISASTER-RECOVERY)
-- [x] Hospedagem atual: Netlify free + Supabase (ADR-036); repo GitHub
+- [x] Hospedagem atual: Vercel free + Supabase (ADR-036/037); repo GitHub
       `GarciaCarlos1985/service`
-- [ ] Deploy de prova no Netlify (aguarda chave anônima + `netlify login`)
+- [ ] Deploy validado na Vercel (aguarda redeploy com o build Nitro)
 - [ ] Decisões de fundação: nome/domínio, regiões de lançamento
 
 ## M1 — Database + Auth + RLS
@@ -73,7 +73,7 @@ kill switches · feature flags com rollout
 
 ## M11 — Cloudflare + R2 + performance + PWA
 
-(Retorno ao Cloudflare conforme ADR-036 quando houver receita; R2 com
+(Retorno ao Cloudflare conforme ADR-036/037 quando houver receita; R2 com
 guardrails de custo — ADR-013.) R2 para mídia · otimização de imagens
 (WebP/AVIF) · PWA (instalação, ícones, offline sem operações financeiras) ·
 Core Web Vitals · logo: isolamento + variantes + otimização

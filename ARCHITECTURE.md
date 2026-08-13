@@ -52,11 +52,12 @@ supabase/
   migrations/      # SQL versionado (ADR-010)
 ```
 
-## Deploy (ADR-036 — Netlify free por enquanto; ADR-034 como plano de retorno)
+## Deploy (ADR-036/037 — Vercel free por enquanto; ADR-034 como plano de retorno)
 
-- **Atual:** app (SSR + assets) em **Netlify (plano grátis)** via
-  `@netlify/vite-plugin-tanstack-start` (suporte oficial TanStack Start);
-  banco em Supabase. Decisão econômica enquanto o site não vende (ADR-036).
+- **Atual:** app (SSR + assets) na **Vercel (plano grátis)** via Nitro
+  (`nitro/vite`, preset `vercel`) — caminho oficial do TanStack Start para
+  Vercel; banco em Supabase. Decisão econômica enquanto o site não vende
+  (ADR-036/037).
 - **Plano de retorno:** Cloudflare Workers (`@cloudflare/vite-plugin` +
   `wrangler deploy`, `nodejs_compat`) — validado no M0 (ADR-034), suporte
   oficial (Official Partner). Uma conta Cloudflare por projeto (ADR-013).

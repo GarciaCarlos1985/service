@@ -584,6 +584,27 @@
   `GarciaCarlos1985/service` é a origem do deploy contínuo. Retorno à
   Cloudflare registrado no ROADMAP (M11) e no ADR-034.
 
+## ADR-037 — Frontend na Vercel (free) em vez do Netlify; SSR via Nitro
+**Status:** Aceita (2026-08-12) — implementada; substitui a escolha de deploy do ADR-036
+
+- **Contexto:** o dono do produto fez o deploy na **Vercel** (URL
+  `service-kappa-rose.vercel.app`) e o site retornava **404 em todos os
+  recursos** — o build estava configurado com o plugin do Netlify
+  (ADR-036), cujo output não roda na Vercel. Medido: o 404 desaparece quando o
+  build gera o formato nativo da Vercel.
+- **Decisão:** trocar o deploy de Netlify para **Vercel (plano grátis)** pelo
+  caminho oficial do TanStack Start: **Nitro** (`nitro/vite`, preset
+  `vercel`) — Build Output API v3 (`__server.func` para SSR + CDN para
+  assets). Env vars `VITE_*` no painel da Vercel; redeploy obrigatório após
+  alterá-las.
+- **Motivo:** plataforma é camada, não arquitetura (ADR-036); o objetivo
+  continua custo zero. Nitro é o preset documentado pela TanStack para Vercel.
+- **Consequências:** `netlify.toml` e plugin Netlify removidos; `vercel` CLI
+  adicionada (`npm run deploy` = `vercel deploy --prod`); `.vercel/` no
+  gitignore. O 404 anterior era deploy errado, não bug do app. Retorno ao
+  Cloudflare segue como plano (ADR-034), o plano Netlify (ADR-036) fica
+  registrado como alternativa.
+
 ---
 
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue
