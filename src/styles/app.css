@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Paleta da logo SERVICE (medida em public/service.png) */
+  --color-brand-blue-50: #eef5ff;
+  --color-brand-blue-100: #d7e6fa;
+  --color-brand-blue-200: #a8c9f9;
+  --color-brand-blue-300: #6fa9f8;
+  --color-brand-blue-400: #5697fb;
+  --color-brand-blue-500: #3580fd;
+  --color-brand-blue-600: #1f66e8;
+  --color-brand-blue-700: #1a52c4;
+  --color-brand-blue-800: #1a459e;
+  --color-brand-blue-900: #1b3c7d;
+
+  --color-brand-green-50: #f2fbf5;
+  --color-brand-green-100: #e0f5e8;
+  --color-brand-green-200: #c0e9cf;
+  --color-brand-green-300: #9ad9b0;
+  --color-brand-green-400: #6fc18d;
+  --color-brand-green-500: #4da76e;
+  --color-brand-green-600: #3a8a58;
+  --color-brand-green-700: #2f6f47;
+  --color-brand-green-800: #285a3b;
+  --color-brand-green-900: #224a32;
+
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+}
+
+@layer utilities {
+  /* Identidade visual: verde → azul claro (spec §58, PRODUCT.md) */
+  .brand-gradient {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-brand-green-400) 0%,
+      var(--color-brand-blue-400) 55%,
+      var(--color-brand-blue-500) 100%
+    );
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-slate-900 antialiased;
+}

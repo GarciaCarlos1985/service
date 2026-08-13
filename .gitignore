@@ -1,0 +1,27 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+.output/
+.netlify/
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Editor / SO
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Testes
+coverage/

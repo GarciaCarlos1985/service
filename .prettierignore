@@ -1,0 +1,10 @@
+node_modules
+dist
+.output
+.wrangler
+coverage
+package-lock.json
+worker-configuration.d.ts
+src/routeTree.gen.ts
+public/service.png
+documentos
