@@ -49,6 +49,7 @@ create table public.bookings (
   professional_id uuid not null references public.profiles (id) on delete cascade,
   service_id uuid not null references public.services (id),
   scheduled_at timestamptz not null,
+  ends_at timestamptz not null,
   duration_minutes integer not null default 60
     check (duration_minutes between 15 and 480),
   price_cents integer not null check (price_cents >= 0),
@@ -59,18 +60,22 @@ create table public.bookings (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   check (client_id <> professional_id),
-  check (scheduled_at > now() - interval '1 hour')
+  check (scheduled_at > now() - interval '1 hour'),
+  check (ends_at > scheduled_at)
 );
 
 -- ***** DOUBLE BOOKING: garantia dura no banco (ADR-009) *****
 -- Dois bookings do mesmo profissional não podem ter janelas sobrepostas,
 -- exceto cancelados. Corrida de dois cliques simultâneos: um perde na
 -- constraint, não na boa vontade.
+-- NOTA: expressão de índice exige funções IMMUTABLE; por isso o fim da
+-- janela é uma COLUNA (ends_at, gravada pelo RPC create_booking — o único
+-- caminho de escrita) e o índice usa tstzrange(coluna, coluna).
 alter table public.bookings
   add constraint bookings_no_overlap
   exclude using gist (
     professional_id with =,
-    tstzrange(scheduled_at, scheduled_at + make_interval(mins => duration_minutes)) with &&
+    tstzrange(scheduled_at, ends_at) with &&
   )
   where (status <> 'cancelled');
 
@@ -252,7 +257,7 @@ begin
                 and b.status <> 'cancelled'
                 and tstzrange(
                       b.scheduled_at,
-                      b.scheduled_at + make_interval(mins => b.duration_minutes)
+                      b.ends_at
                     ) && tstzrange(
                       slot_date + slot_time,
                       slot_date + slot_time + make_interval(mins => p_slot_minutes)
@@ -337,10 +342,11 @@ begin
   -- escrita + garantia final do banco
   begin
     insert into public.bookings (
-      client_id, professional_id, service_id, scheduled_at,
+      client_id, professional_id, service_id, scheduled_at, ends_at,
       duration_minutes, price_cents, status
     ) values (
       auth.uid(), p_professional_id, p_service_id, p_scheduled_at,
+      p_scheduled_at + make_interval(mins => p_duration_minutes),
       p_duration_minutes, v_price, 'pending'
     )
     returning * into v_booking;

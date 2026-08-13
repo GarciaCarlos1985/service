@@ -23,9 +23,12 @@ create table public.payments (
     check (confidence in ('source', 'approximate')),
   payload jsonb,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  unique (provider, provider_payment_id) where (provider_payment_id is not null)
+  updated_at timestamptz not null default now()
 );
+
+create unique index payments_provider_payment_unique
+  on public.payments (provider, provider_payment_id)
+  where (provider_payment_id is not null);
 
 comment on table public.payments is
   'Pagamentos. Nunca dados sensíveis de cartão (spec §8). Identidade: chave do provider quando existir (ADR-005).';
@@ -39,9 +42,12 @@ create table public.payment_events (
   event_type text not null,
   provider_event_id text,
   payload jsonb,
-  created_at timestamptz not null default now(),
-  unique (provider_event_id) where (provider_event_id is not null)
+  created_at timestamptz not null default now()
 );
+
+create unique index payment_events_provider_event_unique
+  on public.payment_events (provider_event_id)
+  where (provider_event_id is not null);
 
 create index payment_events_payment_idx on public.payment_events (payment_id);
 
