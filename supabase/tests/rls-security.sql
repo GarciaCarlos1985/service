@@ -64,21 +64,44 @@ begin
      '{"full_name":"Profissional"}'::jsonb, now(), now())
   on conflict (id) do nothing;
 
-  -- O trigger cria o perfil como 'client'; ajusta o profissional
+  -- O trigger cria o perfil como 'client'; ajusta o perfil do profissional
   update public.profiles
   set user_type = 'professional', slug = 'profissional-teste'
   where id = user_pro;
   select id into cat_id from public.service_categories limit 1;
 
-  -- 1. anon não lê perfis
+  -- Setup: um serviço do Cliente B (inserido como postgres — fora do RLS)
+  -- para o teste "profissional não altera serviço de outro"
+  insert into public.services (professional_id, category_id, title)
+  values (user_b, cat_id, 'Serviço do Cliente B');
+
+  -- 1. anon não lê perfis de CLIENTES (perfis de profissionais são públicos
+  --    por contrato — ADR-016 — e anon pode lê-los)
   set local role anon;
   set local request.jwt.claims = '{"sub":"","role":"anon"}';
-  if exists (select 1 from public.profiles limit 1) then
-    perform public._test_fail('anon leu profiles');
+  if exists (select 1 from public.profiles where user_type = 'client') then
+    perform public._test_fail('anon leu perfis de clientes');
     failures := failures + 1;
   else
-    perform public._test_pass('anon NÃO lê profiles');
+    perform public._test_pass('anon NÃO lê perfis de clientes');
   end if;
+
+  -- anon lê perfil de profissional (contrato público reduzido, ADR-016)
+  if not exists (select 1 from public.profiles where user_type = 'professional') then
+    perform public._test_fail('anon não leu perfil público de profissional');
+    failures := failures + 1;
+  else
+    perform public._test_pass('anon lê perfil público de profissional');
+  end if;
+
+  -- anon NÃO acessa a coluna phone (grant por coluna, ADR-016)
+  begin
+    perform phone from public.profiles limit 1;
+    perform public._test_fail('anon acessou a coluna phone');
+    failures := failures + 1;
+  exception when others then
+    perform public._test_pass('anon NÃO acessa a coluna phone');
+  end;
 
   -- 2. anon não escreve
   begin
@@ -159,11 +182,19 @@ begin
     perform public._test_pass('profissional NÃO cria serviço para outro');
   end;
 
-  -- profissional não altera serviço de outro
+  -- profissional não altera serviço de outro (RLS filtra silenciosamente:
+  -- a linha alheia não é visível; o título não pode mudar)
   begin
     update public.services set title = 'Hack' where professional_id = user_b;
-    perform public._test_fail('profissional alterou serviço de outro');
-    failures := failures + 1;
+    if exists (
+      select 1 from public.services
+      where professional_id = user_b and title = 'Hack'
+    ) then
+      perform public._test_fail('profissional alterou serviço de outro');
+      failures := failures + 1;
+    else
+      perform public._test_pass('profissional NÃO altera serviço de outro');
+    end if;
   exception when others then
     perform public._test_pass('profissional NÃO altera serviço de outro');
   end;
