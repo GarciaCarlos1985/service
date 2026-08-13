@@ -1,14 +1,20 @@
 ﻿-- ============================================================
--- SERVICE â€” SuÃ­te de testes de RLS (spec Â§63/Â§64, prioridades 1-2)
--- Como rodar: Supabase Dashboard â†’ SQL Editor â†’ colar e executar.
--- Esperado ao final: "TODOS OS TESTES PASSARAM".
+-- SERVICE — Suíte de testes de RLS (spec §63/§64, prioridades 1-2)
+-- Como rodar: Supabase Dashboard → SQL Editor → colar e executar.
+-- Esperado ao final: "TODOS OS TESTES PASSARAM!".
 -- Regras verificadas:
---   1. anon NÃƒO lÃª perfis
---   2. anon NÃƒO escreve em nenhuma tabela
---   3. UsuÃ¡rio A NÃƒO lÃª o perfil do UsuÃ¡rio B (spec Â§63)
---   4. UsuÃ¡rio NÃƒO altera o prÃ³prio user_type (role)
---   5. Cliente NÃƒO cria serviÃ§o (sÃ³ professional)
---   6. Professional cria/altera/apaga apenas os prÃ³prios serviÃ§os
+--   1. anon NÃO lê perfis
+--   2. anon NÃO escreve em nenhuma tabela
+--   3. Usuário A NÃO lê o perfil do Usuário B (spec §63)
+--   4. Usuário NÃO altera o próprio user_type (role)
+--   5. Cliente NÃO cria serviço (só professional)
+--   6. Professional cria/altera/apaga apenas os próprios serviços
+-- ------------------------------------------------------------
+-- Notas:
+-- - Cria usuários reais no auth (o trigger on_auth_user_created cria os
+--   perfis automaticamente — spec §49). SQL Editor roda como postgres.
+-- - O cleanup é incondicional (banco fica limpo mesmo com falha) e o
+--   resultado é reportado por NOTICE (sem rollback, para diagnóstico).
 -- ============================================================
 
 drop function if exists public._test_fail(text);
@@ -39,9 +45,7 @@ declare
   svc_id uuid;
   failures integer := 0;
 begin
-  -- Setup: usuários reais no auth.users (o trigger on_auth_user_created
-  -- cria os perfis automaticamente — spec §49). O SQL Editor roda como
-  -- postgres, então pode inserir no schema auth.
+  -- Setup: usuários de teste no auth (perfis criados pelo trigger)
   insert into auth.users (
     id, instance_id, aud, role, email, encrypted_password, email_confirmed_at,
     raw_app_meta_data, raw_user_meta_data, created_at, updated_at
@@ -60,131 +64,130 @@ begin
      '{"full_name":"Profissional"}'::jsonb, now(), now())
   on conflict (id) do nothing;
 
-  -- O trigger cria o perfil como 'client'; ajusta o perfil do profissional
-  -- (postgres ignora RLS — é o admin)
+  -- O trigger cria o perfil como 'client'; ajusta o profissional
   update public.profiles
   set user_type = 'professional', slug = 'profissional-teste'
   where id = user_pro;
   select id into cat_id from public.service_categories limit 1;
 
-  -- 1. anon nÃ£o lÃª perfis
+  -- 1. anon não lê perfis
   set local role anon;
   set local request.jwt.claims = '{"sub":"","role":"anon"}';
   if exists (select 1 from public.profiles limit 1) then
     perform public._test_fail('anon leu profiles');
     failures := failures + 1;
   else
-    perform public._test_pass('anon NÃƒO lÃª profiles');
+    perform public._test_pass('anon NÃO lê profiles');
   end if;
 
-  -- 2. anon nÃ£o escreve
+  -- 2. anon não escreve
   begin
     insert into public.profiles (id, full_name) values (gen_random_uuid(), 'X');
     perform public._test_fail('anon inseriu em profiles');
     failures := failures + 1;
   exception when others then
-    perform public._test_pass('anon NÃƒO insere em profiles');
+    perform public._test_pass('anon NÃO insere em profiles');
   end;
 
-  -- 3. usuÃ¡rio A nÃ£o lÃª perfil de B
+  -- 3. usuário A não lê perfil de B
   set local role authenticated;
   perform set_config('request.jwt.claims', jsonb_build_object('sub', user_a::text, 'role', 'authenticated')::text, true);
   if exists (select 1 from public.profiles where id = user_b) then
     perform public._test_fail('A leu perfil de B');
     failures := failures + 1;
   else
-    perform public._test_pass('A NÃƒO lÃª perfil de B');
+    perform public._test_pass('A NÃO lê perfil de B');
   end if;
 
-  -- A lÃª o prÃ³prio perfil
+  -- A lê o próprio perfil
   if not exists (select 1 from public.profiles where id = user_a) then
-    perform public._test_fail('A nÃ£o leu o prÃ³prio perfil');
+    perform public._test_fail('A não leu o próprio perfil');
     failures := failures + 1;
   else
-    perform public._test_pass('A lÃª o prÃ³prio perfil');
+    perform public._test_pass('A lê o próprio perfil');
   end if;
 
-  -- 4. usuÃ¡rio nÃ£o altera o prÃ³prio user_type
+  -- 4. usuário não altera o próprio user_type
   begin
     update public.profiles set user_type = 'professional' where id = user_a;
-    perform public._test_fail('A alterou o prÃ³prio user_type');
+    perform public._test_fail('A alterou o próprio user_type');
     failures := failures + 1;
   exception when others then
-    perform public._test_pass('A NÃƒO altera o prÃ³prio user_type');
+    perform public._test_pass('A NÃO altera o próprio user_type');
   end;
 
-  -- A pode editar o prÃ³prio full_name
+  -- A pode editar o próprio full_name
   begin
     update public.profiles set full_name = 'Cliente A2' where id = user_a;
-    perform public._test_pass('A edita o prÃ³prio perfil (campos permitidos)');
+    perform public._test_pass('A edita o próprio perfil (campos permitidos)');
   exception when others then
-    perform public._test_fail('A nÃ£o conseguiu editar o prÃ³prio perfil');
+    perform public._test_fail('A não conseguiu editar o próprio perfil');
     failures := failures + 1;
   end;
 
-  -- 5. cliente nÃ£o cria serviÃ§o
+  -- 5. cliente não cria serviço
   set local role authenticated;
   perform set_config('request.jwt.claims', jsonb_build_object('sub', user_a::text, 'role', 'authenticated')::text, true);
   begin
     insert into public.services (professional_id, category_id, title)
-    values (user_a, cat_id, 'ServiÃ§o ilegal');
-    perform public._test_fail('cliente criou serviÃ§o');
+    values (user_a, cat_id, 'Serviço ilegal');
+    perform public._test_fail('cliente criou serviço');
     failures := failures + 1;
   exception when others then
-    perform public._test_pass('cliente NÃƒO cria serviÃ§o');
+    perform public._test_pass('cliente NÃO cria serviço');
   end;
 
-  -- 6. profissional cria serviÃ§o prÃ³prio
+  -- 6. profissional cria serviço próprio
   perform set_config('request.jwt.claims', jsonb_build_object('sub', user_pro::text, 'role', 'authenticated')::text, true);
   begin
     insert into public.services (professional_id, category_id, title)
     values (user_pro, cat_id, 'Limpeza residencial')
     returning id into svc_id;
-    perform public._test_pass('profissional cria serviÃ§o prÃ³prio');
+    perform public._test_pass('profissional cria serviço próprio');
   exception when others then
-    perform public._test_fail('profissional nÃ£o conseguiu criar serviÃ§o');
+    perform public._test_fail('profissional não conseguiu criar serviço');
     failures := failures + 1;
   end;
 
-  -- profissional nÃ£o cria serviÃ§o para outro
+  -- profissional não cria serviço para outro
   begin
     insert into public.services (professional_id, category_id, title)
-    values (user_b, cat_id, 'ServiÃ§o de outro');
-    perform public._test_fail('profissional criou serviÃ§o para outro');
+    values (user_b, cat_id, 'Serviço de outro');
+    perform public._test_fail('profissional criou serviço para outro');
     failures := failures + 1;
   exception when others then
-    perform public._test_pass('profissional NÃƒO cria serviÃ§o para outro');
+    perform public._test_pass('profissional NÃO cria serviço para outro');
   end;
 
-  -- profissional nÃ£o altera serviÃ§o de outro
+  -- profissional não altera serviço de outro
   begin
     update public.services set title = 'Hack' where professional_id = user_b;
-    perform public._test_fail('profissional alterou serviÃ§o de outro');
+    perform public._test_fail('profissional alterou serviço de outro');
     failures := failures + 1;
   exception when others then
-    perform public._test_pass('profissional NÃƒO altera serviÃ§o de outro');
+    perform public._test_pass('profissional NÃO altera serviço de outro');
   end;
 
-  -- anon pode ler catÃ¡logo e serviÃ§os pÃºblicos
+  -- anon pode ler catálogo e serviços públicos
   set local role anon;
   set local request.jwt.claims = '{"sub":"","role":"anon"}';
   if not exists (select 1 from public.cities limit 1) then
-    perform public._test_fail('anon nÃ£o leu cidades');
+    perform public._test_fail('anon não leu cidades');
     failures := failures + 1;
   else
-    perform public._test_pass('anon lÃª cidades (catÃ¡logo)');
+    perform public._test_pass('anon lê cidades (catálogo)');
   end if;
   if not exists (select 1 from public.service_categories limit 1) then
-    perform public._test_fail('anon nÃ£o leu categorias');
+    perform public._test_fail('anon não leu categorias');
     failures := failures + 1;
   else
-    perform public._test_pass('anon lÃª categorias (catÃ¡logo)');
+    perform public._test_pass('anon lê categorias (catálogo)');
   end if;
   if not exists (select 1 from public.services limit 1) then
-    perform public._test_fail('anon nÃ£o leu serviÃ§os');
+    perform public._test_fail('anon não leu serviços');
     failures := failures + 1;
   else
-    perform public._test_pass('anon lÃª serviÃ§os (oferta pÃºblica)');
+    perform public._test_pass('anon lê serviços (oferta pública)');
   end if;
 
   -- Cleanup: voltar ao papel original (postgres) antes de remover os
@@ -196,14 +199,13 @@ begin
   delete from auth.users where id in (user_a, user_b, user_pro);
   delete from public.profiles where id in (user_a, user_b, user_pro);
 
+  -- Resultado final (NOTICE — sem rollback, para diagnóstico)
   if failures > 0 then
-    raise exception '% teste(s) falharam', failures;
+    raise notice 'ATENÇÃO: % teste(s) falharam!', failures;
   else
-    raise notice 'TODOS OS TESTES PASSARAM';
+    raise notice 'TODOS OS TESTES PASSARAM!';
   end if;
 end $$;
 
 drop function if exists public._test_fail(text);
 drop function if exists public._test_pass(text);
-
-
