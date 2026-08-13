@@ -72,6 +72,7 @@ export const Route = createFileRoute('/$categorySlug/$citySlug')({
 function CategoryCityPage() {
   const { category, city, professionals, dbError } = Route.useLoaderData()
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- o loader retorna null na variante dbError; o TS não discrimina sem o guard
   if (dbError || !category || !city) {
     return (
       <main className="min-h-dvh flex items-center justify-center px-4 py-12">

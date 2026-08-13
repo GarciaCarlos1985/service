@@ -58,9 +58,12 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 
 ## M5 — Pagamentos + Stripe abstraction
 
-Contrato `PaymentProvider` + `MockProvider` (spec §73) · payments/payment_events
-· Bronze de webhooks · `StripeProvider` sandbox · testes: webhook/pagamento/
-refund duplicados
+- [x] Contrato `PaymentProvider` + Registry (ADR-001) + `MockProvider` claramente separado (spec §73)
+- [x] Migração: `payments`, `payment_events`, `webhook_events` (Bronze, ADR-008) com idempotency_key e `confianca_identidade` (ADR-005)
+- [x] Testes do registry/mock (19 testes no total)
+- [ ] `StripeProvider` (requer chaves Stripe Connect) — registro no registry quando existir
+- [ ] Ledger + comissão (M6) sobre o mesmo contrato
+- [ ] Fluxo booking → pagamento → confirmação (spec §15)
 
 ## M6 — Ledger + cashback + comissão
 
