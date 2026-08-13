@@ -28,3 +28,6 @@ Thumbs.db
 
 # Testes
 coverage/
+
+# Supabase CLI cache
+supabase/.temp/
