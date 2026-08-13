@@ -10,18 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as CategorySlugCitySlugRouteImport } from './routes/$categorySlug.$citySlug'
 import { Route as PainelIndexRouteImport } from './routes/painel.index'
 import { Route as PainelPerfilRouteImport } from './routes/painel.perfil'
 import { Route as PainelServicosRouteImport } from './routes/painel.servicos'
+import { Route as ProfissionaisCitySlugProfileSlugRouteImport } from './routes/profissionais.$citySlug.$profileSlug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuscarRoute = BuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -49,6 +57,11 @@ const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   path: '/recuperar-senha',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CategorySlugCitySlugRoute = CategorySlugCitySlugRouteImport.update({
+  id: '/$categorySlug/$citySlug',
+  path: '/$categorySlug/$citySlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PainelIndexRoute = PainelIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -64,82 +77,109 @@ const PainelServicosRoute = PainelServicosRouteImport.update({
   path: '/servicos',
   getParentRoute: () => PainelRoute,
 } as any)
+const ProfissionaisCitySlugProfileSlugRoute =
+  ProfissionaisCitySlugProfileSlugRouteImport.update({
+    id: '/profissionais/$citySlug/$profileSlug',
+    path: '/profissionais/$citySlug/$profileSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
   '/entrar': typeof EntrarRoute
   '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
+  '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
   '/entrar': typeof EntrarRoute
   '/onboarding': typeof OnboardingRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel': typeof PainelIndexRoute
+  '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
   '/entrar': typeof EntrarRoute
   '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
+  '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/buscar'
     | '/cadastro'
     | '/entrar'
     | '/onboarding'
     | '/painel'
     | '/recuperar-senha'
+    | '/$categorySlug/$citySlug'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
+    | '/profissionais/$citySlug/$profileSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/buscar'
     | '/cadastro'
     | '/entrar'
     | '/onboarding'
     | '/recuperar-senha'
+    | '/$categorySlug/$citySlug'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel'
+    | '/profissionais/$citySlug/$profileSlug'
   id:
     | '__root__'
     | '/'
+    | '/buscar'
     | '/cadastro'
     | '/entrar'
     | '/onboarding'
     | '/painel'
     | '/recuperar-senha'
+    | '/$categorySlug/$citySlug'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
+    | '/profissionais/$citySlug/$profileSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BuscarRoute: typeof BuscarRoute
   CadastroRoute: typeof CadastroRoute
   EntrarRoute: typeof EntrarRoute
   OnboardingRoute: typeof OnboardingRoute
   PainelRoute: typeof PainelRouteWithChildren
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
+  CategorySlugCitySlugRoute: typeof CategorySlugCitySlugRoute
+  ProfissionaisCitySlugProfileSlugRoute: typeof ProfissionaisCitySlugProfileSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -149,6 +189,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buscar': {
+      id: '/buscar'
+      path: '/buscar'
+      fullPath: '/buscar'
+      preLoaderRoute: typeof BuscarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -186,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecuperarSenhaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$categorySlug/$citySlug': {
+      id: '/$categorySlug/$citySlug'
+      path: '/$categorySlug/$citySlug'
+      fullPath: '/$categorySlug/$citySlug'
+      preLoaderRoute: typeof CategorySlugCitySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/painel/': {
       id: '/painel/'
       path: '/'
@@ -207,6 +261,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PainelServicosRouteImport
       parentRoute: typeof PainelRoute
     }
+    '/profissionais/$citySlug/$profileSlug': {
+      id: '/profissionais/$citySlug/$profileSlug'
+      path: '/profissionais/$citySlug/$profileSlug'
+      fullPath: '/profissionais/$citySlug/$profileSlug'
+      preLoaderRoute: typeof ProfissionaisCitySlugProfileSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -227,11 +288,14 @@ const PainelRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BuscarRoute: BuscarRoute,
   CadastroRoute: CadastroRoute,
   EntrarRoute: EntrarRoute,
   OnboardingRoute: OnboardingRoute,
   PainelRoute: PainelRouteWithChildren,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
+  CategorySlugCitySlugRoute: CategorySlugCitySlugRoute,
+  ProfissionaisCitySlugProfileSlugRoute: ProfissionaisCitySlugProfileSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

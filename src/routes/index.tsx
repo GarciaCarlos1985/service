@@ -1,10 +1,24 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { Card, CardBody } from '~/modules/ui'
+import { listCategories, listLaunchCities } from '~/modules/search/search-api'
 
 export const Route = createFileRoute('/')({
+  loader: async () => {
+    try {
+      const [categories, cities] = await Promise.all([listCategories(), listLaunchCities()])
+      return { categories, cities }
+    } catch {
+      // Banco ainda não migrado ou indisponível — landing continua de pé
+      // com seções vazias (estado honesto, ADR-018).
+      return { categories: [], cities: [] }
+    }
+  },
   component: Home,
 })
 
 function Home() {
+  const { categories, cities } = Route.useLoaderData()
+
   return (
     <main className="min-h-dvh">
       <nav className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-4 text-white">
@@ -39,19 +53,73 @@ function Home() {
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <a
-              href="#profissionais"
+              href="#categorias"
               className="rounded-xl bg-white px-6 py-3 text-sm font-semibold text-brand-blue-600 shadow hover:bg-blue-50"
             >
               Encontrar um profissional
             </a>
-            <a
-              href="#profissional"
+            <Link
+              to="/cadastro"
               className="rounded-xl border border-white/60 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
             >
               Quero oferecer meus serviços
-            </a>
+            </Link>
           </div>
         </div>
+      </section>
+
+      <section id="categorias" className="mx-auto w-full max-w-3xl px-4 py-12">
+        <h2 className="text-xl font-bold text-slate-900">Categorias populares</h2>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {categories.map((category) => (
+            <Link
+              key={category.id}
+              to="/buscar"
+              search={{ categorySlug: category.slug }}
+              className="rounded-2xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-700 transition hover:border-brand-blue-400 hover:text-brand-blue-600"
+            >
+              {category.name}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section id="cidades" className="mx-auto w-full max-w-3xl px-4 pb-12">
+        <h2 className="text-xl font-bold text-slate-900">Cidades atendidas</h2>
+        <div className="mt-4 flex flex-wrap gap-3">
+          {cities.map((city) => (
+            <Link
+              key={city.id}
+              to="/buscar"
+              search={{ citySlug: city.slug }}
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-blue-400 hover:text-brand-blue-600"
+            >
+              {city.name} — {city.state}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-3xl px-4 pb-16">
+        <Card>
+          <CardBody className="space-y-3 text-center">
+            <h2 className="text-lg font-bold text-slate-900">Como funciona</h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div>
+                <p className="text-2xl">1️⃣</p>
+                <p className="mt-1 text-sm font-medium text-slate-700">Escolha o profissional</p>
+              </div>
+              <div>
+                <p className="text-2xl">2️⃣</p>
+                <p className="mt-1 text-sm font-medium text-slate-700">Agende e pague</p>
+              </div>
+              <div>
+                <p className="text-2xl">3️⃣</p>
+                <p className="mt-1 text-sm font-medium text-slate-700">Avalie com segurança</p>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
       </section>
     </main>
   )

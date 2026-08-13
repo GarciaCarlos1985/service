@@ -38,8 +38,13 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 
 ## M3 — Busca + SEO + Perfil público
 
-Busca PostgreSQL indexada + filtros (spec §30) · páginas públicas SSR
-(categoria × cidade, profissional) · meta/OG/structured data · favoritos
+- [x] Perfil público do profissional `/profissionais/<cidade>/<nome>` com SEO (title/meta/canonical/OG/JSON-LD LocalBusiness) — spec §20/§22/§23
+- [x] Páginas categoria × cidade `/<categoria>/<cidade>` indexáveis (spec §21), só com conteúdo real (ADR-014)
+- [x] Busca com filtros categoria + cidade (PostgreSQL, spec §30) + landing com categorias e cidades
+- [x] Favoritos (spec §29) com RLS por dono
+- [x] Contrato público reduzido (ADR-016): anon lê só colunas públicas de profissionais
+- [x] Loaders resilientes (estado de erro honesto sem banco — ADR-018)
+- [ ] Ranking (proximidade/avaliação/patrocinado) — fases 2/3 (spec §66)
 
 ## M4 — Agendamento + disponibilidade + double booking
 
