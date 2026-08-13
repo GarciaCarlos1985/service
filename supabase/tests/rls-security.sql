@@ -39,12 +39,32 @@ declare
   svc_id uuid;
   failures integer := 0;
 begin
-  -- Setup: usuÃ¡rios de teste + perfil profissional
-  insert into public.profiles (id, full_name, user_type) values
-    (user_a,   'Cliente A',    'client'),
-    (user_b,   'Cliente B',    'client'),
-    (user_pro, 'Profissional', 'professional');
+  -- Setup: usuários reais no auth.users (o trigger on_auth_user_created
+  -- cria os perfis automaticamente — spec §49). O SQL Editor roda como
+  -- postgres, então pode inserir no schema auth.
+  insert into auth.users (
+    id, instance_id, aud, role, email, encrypted_password, email_confirmed_at,
+    raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+  ) values
+    (user_a, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+     'cliente.a@teste.service', crypt('senha-teste', gen_salt('bf')), now(),
+     '{"provider":"email","providers":["email"]}'::jsonb,
+     '{"full_name":"Cliente A"}'::jsonb, now(), now()),
+    (user_b, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+     'cliente.b@teste.service', crypt('senha-teste', gen_salt('bf')), now(),
+     '{"provider":"email","providers":["email"]}'::jsonb,
+     '{"full_name":"Cliente B"}'::jsonb, now(), now()),
+    (user_pro, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+     'profissional@teste.service', crypt('senha-teste', gen_salt('bf')), now(),
+     '{"provider":"email","providers":["email"]}'::jsonb,
+     '{"full_name":"Profissional"}'::jsonb, now(), now())
+  on conflict (id) do nothing;
 
+  -- O trigger cria o perfil como 'client'; ajusta o perfil do profissional
+  -- (postgres ignora RLS — é o admin)
+  update public.profiles
+  set user_type = 'professional', slug = 'profissional-teste'
+  where id = user_pro;
   select id into cat_id from public.service_categories limit 1;
 
   -- 1. anon nÃ£o lÃª perfis
@@ -167,9 +187,11 @@ begin
     perform public._test_pass('anon lÃª serviÃ§os (oferta pÃºblica)');
   end if;
 
-  -- Cleanup
+  -- Cleanup: remover usuários de teste (cascata apaga perfis/favoritos;
+  -- se algum teste falhar, o raise exception desfaz tudo por rollback)
   delete from public.services;
-  delete from public.profiles;
+  delete from auth.users where id in (user_a, user_b, user_pro);
+  delete from public.profiles where id in (user_a, user_b, user_pro);
 
   if failures > 0 then
     raise exception '% teste(s) falharam', failures;
@@ -180,4 +202,5 @@ end $$;
 
 drop function if exists public._test_fail(text);
 drop function if exists public._test_pass(text);
+
 
