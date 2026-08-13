@@ -105,6 +105,7 @@ interface DialogProps {
   cancelLabel?: string
   variant?: 'default' | 'destructive'
   loading?: boolean
+  children?: ReactNode
 }
 
 export function Dialog({
@@ -117,6 +118,7 @@ export function Dialog({
   cancelLabel = 'Cancelar',
   variant = 'default',
   loading = false,
+  children,
 }: DialogProps) {
   return (
     <Modal
@@ -138,6 +140,8 @@ export function Dialog({
           </Button>
         </>
       }
-    />
+    >
+      {children}
+    </Modal>
   )
 }

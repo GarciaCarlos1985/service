@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions --
+   O `loaderData` do `head()` é tipado como any pelo framework; os dados reais
+   vêm do loader tipado (categoria/cidade/profissionais). */
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { Avatar, Badge, Card, CardBody, EmptyState, ErrorState } from '~/modules/ui'
 import { listCategories, searchProfessionals } from '~/modules/search/search-api'
@@ -34,8 +37,9 @@ export const Route = createFileRoute('/$categorySlug/$citySlug')({
     return { dbError: false, category, city, professionals }
   },
   head: ({ loaderData }) => {
-    if (!loaderData?.category || !loaderData.city) return {}
-    const { category, city } = loaderData
+    const category = loaderData?.category
+    const city = loaderData?.city
+    if (!category || !city) return {}
     const title = `${category.name} em ${city.name} — ${city.state} | SERVICE`
     const description = `Encontre ${category.name.toLowerCase()} de confiança em ${city.name}. Compare preços, avalie e agende pela plataforma.`
     const url = `https://service-kappa-rose.vercel.app/${category.slug}/${city.slug}`
@@ -66,9 +70,9 @@ export const Route = createFileRoute('/$categorySlug/$citySlug')({
 })
 
 function CategoryCityPage() {
-  const { category, city, professionals } = Route.useLoaderData()
+  const { category, city, professionals, dbError } = Route.useLoaderData()
 
-  if (!category || !city) {
+  if (dbError || !category || !city) {
     return (
       <main className="min-h-dvh flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">

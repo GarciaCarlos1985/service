@@ -18,6 +18,8 @@ import { Route as PainelRouteImport } from './routes/painel'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as CategorySlugCitySlugRouteImport } from './routes/$categorySlug.$citySlug'
 import { Route as PainelIndexRouteImport } from './routes/painel.index'
+import { Route as PainelAgendaRouteImport } from './routes/painel.agenda'
+import { Route as PainelDisponibilidadeRouteImport } from './routes/painel.disponibilidade'
 import { Route as PainelPerfilRouteImport } from './routes/painel.perfil'
 import { Route as PainelServicosRouteImport } from './routes/painel.servicos'
 import { Route as ProfissionaisCitySlugProfileSlugRouteImport } from './routes/profissionais.$citySlug.$profileSlug'
@@ -67,6 +69,16 @@ const PainelIndexRoute = PainelIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PainelRoute,
 } as any)
+const PainelAgendaRoute = PainelAgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelDisponibilidadeRoute = PainelDisponibilidadeRouteImport.update({
+  id: '/disponibilidade',
+  path: '/disponibilidade',
+  getParentRoute: () => PainelRoute,
+} as any)
 const PainelPerfilRoute = PainelPerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -93,6 +105,8 @@ export interface FileRoutesByFullPath {
   '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
+  '/painel/agenda': typeof PainelAgendaRoute
+  '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
@@ -106,6 +120,8 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
+  '/painel/agenda': typeof PainelAgendaRoute
+  '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel': typeof PainelIndexRoute
@@ -121,6 +137,8 @@ export interface FileRoutesById {
   '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
+  '/painel/agenda': typeof PainelAgendaRoute
+  '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
@@ -137,6 +155,8 @@ export interface FileRouteTypes {
     | '/painel'
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
+    | '/painel/agenda'
+    | '/painel/disponibilidade'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
@@ -150,6 +170,8 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
+    | '/painel/agenda'
+    | '/painel/disponibilidade'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel'
@@ -164,6 +186,8 @@ export interface FileRouteTypes {
     | '/painel'
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
+    | '/painel/agenda'
+    | '/painel/disponibilidade'
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
@@ -247,6 +271,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PainelIndexRouteImport
       parentRoute: typeof PainelRoute
     }
+    '/painel/agenda': {
+      id: '/painel/agenda'
+      path: '/agenda'
+      fullPath: '/painel/agenda'
+      preLoaderRoute: typeof PainelAgendaRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/disponibilidade': {
+      id: '/painel/disponibilidade'
+      path: '/disponibilidade'
+      fullPath: '/painel/disponibilidade'
+      preLoaderRoute: typeof PainelDisponibilidadeRouteImport
+      parentRoute: typeof PainelRoute
+    }
     '/painel/perfil': {
       id: '/painel/perfil'
       path: '/perfil'
@@ -272,12 +310,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface PainelRouteChildren {
+  PainelAgendaRoute: typeof PainelAgendaRoute
+  PainelDisponibilidadeRoute: typeof PainelDisponibilidadeRoute
   PainelPerfilRoute: typeof PainelPerfilRoute
   PainelServicosRoute: typeof PainelServicosRoute
   PainelIndexRoute: typeof PainelIndexRoute
 }
 
 const PainelRouteChildren: PainelRouteChildren = {
+  PainelAgendaRoute: PainelAgendaRoute,
+  PainelDisponibilidadeRoute: PainelDisponibilidadeRoute,
   PainelPerfilRoute: PainelPerfilRoute,
   PainelServicosRoute: PainelServicosRoute,
   PainelIndexRoute: PainelIndexRoute,

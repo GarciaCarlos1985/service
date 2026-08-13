@@ -11,6 +11,8 @@ export const Route = createFileRoute('/painel')({
 
 const navItems = [
   { to: '/painel', label: 'Início', icon: '🏠' },
+  { to: '/painel/agenda', label: 'Agenda', icon: '📅' },
+  { to: '/painel/disponibilidade', label: 'Horários', icon: '🕐' },
   { to: '/painel/servicos', label: 'Serviços', icon: '🧰' },
   { to: '/painel/perfil', label: 'Perfil', icon: '👤' },
 ]
@@ -71,16 +73,16 @@ function PainelLayout() {
       </main>
 
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white">
-        <div className="mx-auto grid w-full max-w-3xl grid-cols-3">
+        <div className="mx-auto grid w-full max-w-3xl grid-cols-5">
           {navItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
               activeOptions={{ exact: item.to === '/painel' }}
               activeProps={{ className: 'text-brand-blue-600' }}
-              className="flex flex-col items-center gap-0.5 py-2.5 text-xs font-medium text-slate-500"
+              className="flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium text-slate-500"
             >
-              <span className="text-xl">{item.icon}</span>
+              <span className="text-lg">{item.icon}</span>
               {item.label}
             </Link>
           ))}

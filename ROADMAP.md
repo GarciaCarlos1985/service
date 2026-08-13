@@ -48,9 +48,13 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 
 ## M4 — Agendamento + disponibilidade + double booking
 
-`professional_availability` + exceções/folgas/feriados · máquina de estados de
-booking (spec §14) · constraint de exclusividade no banco (ADR-009) · teste de
-concorrência
+- [x] Disponibilidade semanal + folgas/bloqueios por data (`professional_availability`, `availability_exceptions`)
+- [x] Máquina de estados dos bookings (spec §14) com eventos auditados (`booking_events`) e guarda de transições no banco
+- [x] **Double booking bloqueado pelo banco** (EXCLUDE USING gist — ADR-009) + RPC `create_booking` com validação completa
+- [x] RPCs seguros de transição (confirmar/iniciar/concluir/cancelar — quem pode cada uma, spec §63)
+- [x] RPC `available_slots` (horários livres sem expor dados de terceiros)
+- [x] UI: seletor de dia/horário no perfil, agenda no painel (cliente e profissional), editor de disponibilidade
+- [ ] Testes SQL de double booking (adição à suíte `supabase/tests/` junto com a aplicação das migrations)
 
 ## M5 — Pagamentos + Stripe abstraction
 
