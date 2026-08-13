@@ -19,6 +19,7 @@ import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as CategorySlugCitySlugRouteImport } from './routes/$categorySlug.$citySlug'
 import { Route as PainelIndexRouteImport } from './routes/painel.index'
 import { Route as PainelAgendaRouteImport } from './routes/painel.agenda'
+import { Route as PainelCarteiraRouteImport } from './routes/painel.carteira'
 import { Route as PainelDisponibilidadeRouteImport } from './routes/painel.disponibilidade'
 import { Route as PainelPerfilRouteImport } from './routes/painel.perfil'
 import { Route as PainelServicosRouteImport } from './routes/painel.servicos'
@@ -74,6 +75,11 @@ const PainelAgendaRoute = PainelAgendaRouteImport.update({
   path: '/agenda',
   getParentRoute: () => PainelRoute,
 } as any)
+const PainelCarteiraRoute = PainelCarteiraRouteImport.update({
+  id: '/carteira',
+  path: '/carteira',
+  getParentRoute: () => PainelRoute,
+} as any)
 const PainelDisponibilidadeRoute = PainelDisponibilidadeRouteImport.update({
   id: '/disponibilidade',
   path: '/disponibilidade',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
   '/painel/agenda': typeof PainelAgendaRoute
+  '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
   '/painel/agenda': typeof PainelAgendaRoute
+  '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
   '/painel/agenda': typeof PainelAgendaRoute
+  '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
     | '/painel/agenda'
+    | '/painel/carteira'
     | '/painel/disponibilidade'
     | '/painel/perfil'
     | '/painel/servicos'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
     | '/painel/agenda'
+    | '/painel/carteira'
     | '/painel/disponibilidade'
     | '/painel/perfil'
     | '/painel/servicos'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
     | '/painel/agenda'
+    | '/painel/carteira'
     | '/painel/disponibilidade'
     | '/painel/perfil'
     | '/painel/servicos'
@@ -278,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PainelAgendaRouteImport
       parentRoute: typeof PainelRoute
     }
+    '/painel/carteira': {
+      id: '/painel/carteira'
+      path: '/carteira'
+      fullPath: '/painel/carteira'
+      preLoaderRoute: typeof PainelCarteiraRouteImport
+      parentRoute: typeof PainelRoute
+    }
     '/painel/disponibilidade': {
       id: '/painel/disponibilidade'
       path: '/disponibilidade'
@@ -311,6 +330,7 @@ declare module '@tanstack/react-router' {
 
 interface PainelRouteChildren {
   PainelAgendaRoute: typeof PainelAgendaRoute
+  PainelCarteiraRoute: typeof PainelCarteiraRoute
   PainelDisponibilidadeRoute: typeof PainelDisponibilidadeRoute
   PainelPerfilRoute: typeof PainelPerfilRoute
   PainelServicosRoute: typeof PainelServicosRoute
@@ -319,6 +339,7 @@ interface PainelRouteChildren {
 
 const PainelRouteChildren: PainelRouteChildren = {
   PainelAgendaRoute: PainelAgendaRoute,
+  PainelCarteiraRoute: PainelCarteiraRoute,
   PainelDisponibilidadeRoute: PainelDisponibilidadeRoute,
   PainelPerfilRoute: PainelPerfilRoute,
   PainelServicosRoute: PainelServicosRoute,

@@ -4,6 +4,7 @@ import { Badge, Card, CardBody, EmptyState, Skeleton } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { getProfile } from '~/modules/profile/profile-api'
 import { listMyServices } from '~/modules/services/services-api'
+import { formatBRL, getWalletBalance } from '~/modules/wallet/wallet-api'
 
 export const Route = createFileRoute('/painel/')({
   component: PainelHome,
@@ -28,6 +29,12 @@ function PainelHome() {
       if (!userId) return Promise.resolve([])
       return listMyServices(userId)
     },
+    enabled: userId !== undefined,
+  })
+
+  const balanceQuery = useQuery({
+    queryKey: ['wallet-balance', userId],
+    queryFn: getWalletBalance,
     enabled: userId !== undefined,
   })
 
@@ -87,6 +94,20 @@ function PainelHome() {
           </Card>
         </div>
 
+        <Link to="/painel/carteira" className="block">
+          <Card className="brand-gradient border-0 text-white transition hover:opacity-95">
+            <CardBody className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-white/80">Saldo na carteira</p>
+                <p className="text-2xl font-bold">
+                  {formatBRL(balanceQuery.data?.balance_cents ?? 0)}
+                </p>
+              </div>
+              <span className="text-sm font-semibold text-white/90">Ver →</span>
+            </CardBody>
+          </Card>
+        </Link>
+
         <Card>
           <CardBody>
             <EmptyState
@@ -141,6 +162,20 @@ function PainelHome() {
           />
         </CardBody>
       </Card>
+
+      <Link to="/painel/carteira" className="block">
+        <Card className="brand-gradient border-0 text-white transition hover:opacity-95">
+          <CardBody className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-white/80">Cashback na carteira</p>
+              <p className="text-2xl font-bold">
+                {formatBRL(balanceQuery.data?.balance_cents ?? 0)}
+              </p>
+            </div>
+            <span className="text-sm font-semibold text-white/90">Ver →</span>
+          </CardBody>
+        </Card>
+      </Link>
 
       <Card>
         <CardBody>

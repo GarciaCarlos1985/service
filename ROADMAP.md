@@ -67,8 +67,16 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 
 ## M6 — Ledger + cashback + comissão
 
-`wallet_transactions` append-only (ADR-003) · saldo derivado + reconciliação ·
-idempotência financeira · cashback pós-conclusão · comissão configurável
+- [x] Ledger append-only (ADR-003): wallets + wallet_transactions **imutáveis por trigger** (vale até para postgres)
+- [x] Saldo derivado do ledger (spec §11) via `get_wallet_balance`; nenhum saldo vem do frontend
+- [x] Idempotência financeira (spec §12): `idempotency_key` única; booking processado 1x só
+- [x] Comissão configurável (spec §6): `commission_rules` (categoria/prioridade/período, bps) — default 10%, admin na M10
+- [x] Cashback pós-conclusão (spec §16): `cashback_rules` com teto mensal (5%, teto R$200/mês)
+- [x] `process_booking_financials` idempotente disparado pelo `complete_booking` (spec §15 — nada de clique manual)
+- [x] UI: `/painel/carteira` (saldo + histórico) e cartão de saldo no painel (ambos os papéis)
+- [x] **Testes no banco real: 11/11** (valores, idempotência, imutabilidade, teto mensal) + RLS 15/15 sem regressão
+- [ ] Saque/payout (profissional) e ajuste admin — M10
+- [ ] Reconciliação periódica automatizada — Fase 2 (spec §66)
 
 ## M7 — Chat + notificações
 
