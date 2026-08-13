@@ -187,8 +187,11 @@ begin
     perform public._test_pass('anon lÃª serviÃ§os (oferta pÃºblica)');
   end if;
 
-  -- Cleanup: remover usuários de teste (cascata apaga perfis/favoritos;
-  -- se algum teste falhar, o raise exception desfaz tudo por rollback)
+  -- Cleanup: voltar ao papel original (postgres) antes de remover os
+  -- usuários de TESTE (o último teste deixou o papel em anon)
+  set local role postgres;
+  perform set_config('request.jwt.claims', '{}', true);
+
   delete from public.services;
   delete from auth.users where id in (user_a, user_b, user_pro);
   delete from public.profiles where id in (user_a, user_b, user_pro);
