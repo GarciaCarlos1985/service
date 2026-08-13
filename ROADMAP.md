@@ -29,8 +29,12 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 
 ## M2 — Cliente + Profissional + Serviços
 
-Dashboards client/professional · cadastro de serviços · estados de UX
-obrigatórios (spec §62)
+- [x] Onboarding com escolha de tipo de conta (RPC `choose_user_type`, RLS mantém bloqueio direto — spec §63)
+- [x] Painel com navegação mobile-first (spec §25): Início, Serviços, Perfil
+- [x] CRUD de serviços (criar, editar, pausar/ativar, excluir com confirmação)
+- [x] Perfil editável (nome, telefone, cidade) com merge por completude (ADR-007)
+- [x] Estados de UX obrigatórios (spec §62): loading/empty/error em todas as telas
+- [ ] Dashboards completos (ganhos, avaliações, analytics) — M6/M8/M10
 
 ## M3 — Busca + SEO + Perfil público
 

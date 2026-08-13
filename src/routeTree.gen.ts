@@ -13,7 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PainelRouteImport } from './routes/painel'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as PainelIndexRouteImport } from './routes/painel.index'
+import { Route as PainelPerfilRouteImport } from './routes/painel.perfil'
+import { Route as PainelServicosRouteImport } from './routes/painel.servicos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,10 +39,30 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PainelIndexRoute = PainelIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelPerfilRoute = PainelPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelServicosRoute = PainelServicosRouteImport.update({
+  id: '/servicos',
+  path: '/servicos',
+  getParentRoute: () => PainelRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -46,7 +70,11 @@ export interface FileRoutesByFullPath {
   '/cadastro': typeof CadastroRoute
   '/entrar': typeof EntrarRoute
   '/onboarding': typeof OnboardingRoute
+  '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/servicos': typeof PainelServicosRoute
+  '/painel/': typeof PainelIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +82,9 @@ export interface FileRoutesByTo {
   '/entrar': typeof EntrarRoute
   '/onboarding': typeof OnboardingRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/servicos': typeof PainelServicosRoute
+  '/painel': typeof PainelIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,20 +92,45 @@ export interface FileRoutesById {
   '/cadastro': typeof CadastroRoute
   '/entrar': typeof EntrarRoute
   '/onboarding': typeof OnboardingRoute
+  '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/servicos': typeof PainelServicosRoute
+  '/painel/': typeof PainelIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cadastro' | '/entrar' | '/onboarding' | '/recuperar-senha'
+  fullPaths:
+    | '/'
+    | '/cadastro'
+    | '/entrar'
+    | '/onboarding'
+    | '/painel'
+    | '/recuperar-senha'
+    | '/painel/perfil'
+    | '/painel/servicos'
+    | '/painel/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cadastro' | '/entrar' | '/onboarding' | '/recuperar-senha'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/entrar'
+    | '/onboarding'
+    | '/recuperar-senha'
+    | '/painel/perfil'
+    | '/painel/servicos'
+    | '/painel'
   id:
     | '__root__'
     | '/'
     | '/cadastro'
     | '/entrar'
     | '/onboarding'
+    | '/painel'
     | '/recuperar-senha'
+    | '/painel/perfil'
+    | '/painel/servicos'
+    | '/painel/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -82,6 +138,7 @@ export interface RootRouteChildren {
   CadastroRoute: typeof CadastroRoute
   EntrarRoute: typeof EntrarRoute
   OnboardingRoute: typeof OnboardingRoute
+  PainelRoute: typeof PainelRouteWithChildren
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
 }
 
@@ -115,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recuperar-senha': {
       id: '/recuperar-senha'
       path: '/recuperar-senha'
@@ -122,14 +186,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecuperarSenhaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/painel/': {
+      id: '/painel/'
+      path: '/'
+      fullPath: '/painel/'
+      preLoaderRoute: typeof PainelIndexRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/perfil': {
+      id: '/painel/perfil'
+      path: '/perfil'
+      fullPath: '/painel/perfil'
+      preLoaderRoute: typeof PainelPerfilRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/servicos': {
+      id: '/painel/servicos'
+      path: '/servicos'
+      fullPath: '/painel/servicos'
+      preLoaderRoute: typeof PainelServicosRouteImport
+      parentRoute: typeof PainelRoute
+    }
   }
 }
+
+interface PainelRouteChildren {
+  PainelPerfilRoute: typeof PainelPerfilRoute
+  PainelServicosRoute: typeof PainelServicosRoute
+  PainelIndexRoute: typeof PainelIndexRoute
+}
+
+const PainelRouteChildren: PainelRouteChildren = {
+  PainelPerfilRoute: PainelPerfilRoute,
+  PainelServicosRoute: PainelServicosRoute,
+  PainelIndexRoute: PainelIndexRoute,
+}
+
+const PainelRouteWithChildren =
+  PainelRoute._addFileChildren(PainelRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
   EntrarRoute: EntrarRoute,
   OnboardingRoute: OnboardingRoute,
+  PainelRoute: PainelRouteWithChildren,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
 }
 export const routeTree = rootRouteImport
