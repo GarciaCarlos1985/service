@@ -4,6 +4,8 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import type * as React from 'react'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
+import { AuthProvider } from '~/modules/auth/auth-context'
+import { ToastProvider } from '~/modules/ui'
 import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
 
@@ -40,7 +42,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <ToastProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ToastProvider>
         <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>

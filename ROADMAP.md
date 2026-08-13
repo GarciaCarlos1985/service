@@ -19,9 +19,13 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 
 ## M1 — Database + Auth + RLS
 
-Auth (email/password, sessão) · profiles · services · service_categories ·
-baseline de RLS (ADR-002) · testes de auth e RLS (spec §64) · catálogo
-canônico de cidade IBGE (ADR-014)
+- [x] Migration init: profiles, cities, service_categories, services + RLS baseline (ADR-002)
+- [x] Seed catálogo canônico: 11 cidades (IBGE) + 12 categorias (ADR-014)
+- [x] Auth: entrar, cadastro, recuperar senha, onboarding (spec §49)
+- [x] Suíte SQL de testes de RLS (spec §63/§64 itens 1-2)
+- [x] Fix SSR dos portais (Toast/Modal)
+- [ ] **Aplicar migrations no Supabase** (aguarda `supabase login`/`link` — instruções em `documentos/APLICANDO_MIGRATIONS.md`)
+- [ ] Rodar `supabase/tests/rls-security.sql` no SQL Editor e confirmar "TODOS OS TESTES PASSARAM"
 
 ## M2 — Cliente + Profissional + Serviços
 

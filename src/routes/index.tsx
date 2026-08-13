@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -7,6 +7,20 @@ export const Route = createFileRoute('/')({
 function Home() {
   return (
     <main className="min-h-dvh">
+      <nav className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-4 text-white">
+        <span className="text-sm font-semibold">SERVICE</span>
+        <div className="flex items-center gap-4 text-sm font-medium">
+          <Link to="/entrar" className="hover:underline">
+            Entrar
+          </Link>
+          <Link
+            to="/cadastro"
+            className="rounded-xl bg-white px-4 py-2 font-semibold text-brand-blue-600 shadow hover:bg-blue-50"
+          >
+            Criar conta
+          </Link>
+        </div>
+      </nav>
       <section className="brand-gradient text-white">
         <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center gap-6 px-6 py-16 text-center">
           <img

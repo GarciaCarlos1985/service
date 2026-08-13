@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { useIsClient } from '~/utils/use-is-client'
 import { cn } from '~/utils/cn'
 import { Button } from './Button'
 
@@ -24,6 +25,7 @@ export function Modal({
   className,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const isClient = useIsClient()
   const titleId = useId()
   const descriptionId = useId()
 
@@ -52,6 +54,8 @@ export function Modal({
       dialog.removeEventListener('cancel', onCancel)
     }
   }, [onClose])
+
+  if (!isClient) return null
 
   return createPortal(
     <dialog
