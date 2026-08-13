@@ -1,48 +1,45 @@
 # APLICANDO MIGRATIONS NO SUPABASE
 
-As migrations do Milestone 1 estão prontas em `supabase/migrations/` mas **ainda
-não foram aplicadas** no seu projeto (`taabjnmsaaltsiehywbw`) — aplicação exige
-suas credenciais (não automatizável por mim).
+> **Status: MIGRATIONS APLICADAS (2026-08-13).** Este documento virou o
+> registro de como aplicar as próximas migrations — o procedimento não muda.
 
-## Opção A — CLI (recomendada, versionada)
-
-No terminal do projeto:
+## Comandos (CLI logado — token em `~/.supabase/`)
 
 ```bash
-npx supabase login          # abre o navegador para autorizar (1x)
-npx supabase link --project-ref taabjnmsaaltsiehywbw   # pede a senha do banco
-npx supabase db push        # aplica as migrations pendentes
+npx supabase link --project-ref taabjnmsaaltsiehywbw   # pede a senha do banco (1x)
+npx supabase db push                                    # aplica migrations pendentes
 ```
 
-Depois, teste a segurança:
+## Teste obrigatório de toda migration nova (ADR-039)
+
+Depois de aplicar, rode as suítes contra o banco real (usam `DATABASE_URL` do
+`.env.local` — conexão direta, nunca imprime a senha):
 
 ```bash
-# 1. Abrir Supabase Dashboard → SQL Editor
-# 2. Colar o conteúdo de supabase/tests/rls-security.sql
-# 3. Executar — esperado ao final: "TODOS OS TESTES PASSARAM"
+node scripts/sql-tests.mjs supabase/tests/rls-security.sql   # RLS — 15 testes
+node scripts/sql-tests.mjs supabase/tests/ledger-tests.sql   # ledger — 11 testes
+node scripts/sql-tests.mjs supabase/tests/chat-tests.sql     # chat+notif — 11 testes
 ```
 
-## Opção B — SQL Editor (sem CLI)
+Esperado em todas: `TODOS OS TESTES PASSARAM!` e o banco limpo ao final.
 
-1. Supabase Dashboard → **SQL Editor** → New query
-2. Colar o conteúdo de `supabase/migrations/20260812120000_init.sql` → Run
-3. Colar `supabase/migrations/20260812120010_seed_catalog.sql` → Run
-4. Colar `supabase/tests/rls-security.sql` → Run (esperado: TODOS OS TESTES PASSARAM)
+## O que está no banco (aplicado em 2026-08-13)
 
-## O que a migration cria
-
-- `profiles` (1:1 com auth.users, trigger automático no cadastro, `user_type`
-  client|professional — **não alterável pelo próprio usuário**)
+- `profiles` (1:1 auth.users, trigger automático, `user_type` client|professional —
+  **não alterável pelo próprio usuário**; RPC `choose_user_type` para o onboarding)
 - `cities` (catálogo canônico IBGE, ADR-014) + seed de 11 cidades
-  (SP capital, RJ, BH, Curitiba, Florianópolis, Porto Alegre, Brasília,
-  Goiânia, Campinas, Guarulhos, Santos)
-- `service_categories` + seed das 12 categorias (diaristas, faxina, ...)
-- `services` (oferta do profissional)
-- RLS baseline (ADR-002): default deny, anon só lê catálogo/serviços,
-  escrita anônima proibida, perfil só do dono
+- `service_categories` + seed de 12 categorias
+- `services` (oferta do profissional, escrita só do dono)
+- `professional_availability` + `availability_exceptions` (disponibilidade)
+- `bookings` + `booking_events` — máquina de estados (spec §14) e
+  **double booking garantido por EXCLUDE USING gist** (ADR-009); transições só
+  por RPC (confirmar/iniciar/concluir/cancelar)
+- `payments`, `payment_events`, `webhook_events` (Bronze, ADR-008)
+- `wallets`, `wallet_transactions` (**append-only**, trigger bloqueia
+  UPDATE/DELETE até para postgres), `commission_rules`, `cashback_rules`
+- `conversations`, `messages`, `conversation_participants` (chat por booking)
+- `notifications` (in-app centralizada)
 
-## Observação sobre dev local
-
-O cadastro/login **funcionam antes** da migration (o Supabase Auth é próprio),
-mas o perfil só é criado depois que o trigger existir. Aplique as migrations
-antes de testar o fluxo completo de cadastro → onboarding → painel.
+Regras: RLS `default deny` em tudo (ADR-002); escrita de cliente **sempre via
+RPC SECURITY DEFINER**; catálogos públicos só para leitura; coluna `phone` com
+grant por coluna (anon não acessa — ADR-016).

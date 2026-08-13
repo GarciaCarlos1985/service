@@ -25,7 +25,7 @@ Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
 - [x] Suíte SQL de testes de RLS (spec §63/§64 itens 1-2)
 - [x] Fix SSR dos portais (Toast/Modal)
 - [x] **Aplicar migrations no Supabase** — ✅ aplicadas em 2026-08-13 (5 correções: `make_interval`→`ends_at` em índice; `unique` parcial→índice)
-- [ ] Rodar `supabase/tests/rls-security.sql` no SQL Editor e confirmar "TODOS OS TESTES PASSARAM" (passo seu, 1 min)
+- [x] Rodar `supabase/tests/rls-security.sql` — ✅ automatizado: `node scripts/sql-tests.mjs` (15/15 verdes)
 
 ## M2 — Cliente + Profissional + Serviços
 

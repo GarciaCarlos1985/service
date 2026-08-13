@@ -17,6 +17,15 @@ Tudo o que o projeto precisa de cada serviço e onde encontrar cada chave.
   banco (documentos/DECISIONS.md — ADR-002). Sem RLS correto, chave anônima =
   dado exposto.
 
+## Chaves de teste local (nunca para o bundle)
+
+| chave | o que é | onde obter | nível |
+|---|---|---|---|
+| `DATABASE_URL` | conexão direta (porta 5432) do Postgres — usada apenas pelo runner de testes SQL (`node scripts/sql-tests.mjs`) | Supabase Dashboard → Project Settings → Database → Connection string | **secreto** |
+
+`DATABASE_URL` contém a senha do banco: vive só no `.env.local` (gitignored),
+nunca é impressa pelo runner e nunca vai para a Vercel ou o repositório.
+
 ## Chaves ativas
 
 | chave                    | o que é                     | onde obter                                                      | nível                       |

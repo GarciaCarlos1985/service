@@ -13,15 +13,20 @@ Toda tabela crítica:
 - **RLS ligada** com políticas mínimas (ADR-002)
 - Índices apenas para consultas reais (spec §51) — nunca indiscriminados
 
-## Entidades principais (spec §50)
+## Entidades principais (spec §50) — status de implementação (2026-08-13)
 
-profiles · services · service_categories · professional_availability ·
-availability_exceptions · bookings · booking_events · payments ·
-payment_events · wallets · wallet_transactions · reviews · review_responses ·
-favorites · messages · message_reads · notifications · subscriptions ·
-referrals · referral_events · professional_gallery · disputes ·
-dispute_messages · admin_audit_logs · feature_flags · platform_settings ·
-webhook_events · risk_events
+**Implementadas e testadas no banco real:** profiles · cities · service_categories ·
+services · professional_availability · availability_exceptions · bookings ·
+booking_events · payments · payment_events · webhook_events · wallets ·
+wallet_transactions · commission_rules · cashback_rules · conversations ·
+messages · conversation_participants · notifications · favorites
+
+**Planejadas (próximos milestones):** reviews · review_responses ·
+subscriptions · referrals · referral_events · professional_gallery ·
+disputes · dispute_messages · admin_audit_logs · feature_flags ·
+platform_settings · risk_events
+
+Validação: `node scripts/sql-tests.mjs supabase/tests/*.sql` (37 testes verdes).
 
 ## Padrão Medallion (ADR-008)
 
