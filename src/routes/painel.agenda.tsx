@@ -9,7 +9,9 @@ import {
   Dialog,
   EmptyState,
   Input,
+  Modal,
   Skeleton,
+  StarRating,
   useToast,
 } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
@@ -23,6 +25,12 @@ import {
 } from '~/modules/booking/booking-api'
 import type { Booking } from '~/modules/booking/booking-api'
 import { openConversation } from '~/modules/chat/chat-api'
+import { createReview, listMyReviews } from '~/modules/reviews/reviews-api'
+import {
+  disputeStatusLabel,
+  listMyDisputes,
+  openDispute,
+} from '~/modules/disputes/disputes-api'
 
 export const Route = createFileRoute('/painel/agenda')({
   component: AgendaPage,
@@ -36,6 +44,13 @@ const statusVariant: Record<string, 'default' | 'success' | 'warning' | 'danger'
   cancelled: 'danger',
 }
 
+const disputeStatusVariant: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
+  open: 'warning',
+  under_review: 'info',
+  resolved: 'success',
+  rejected: 'danger',
+}
+
 function AgendaPage() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
@@ -43,6 +58,8 @@ function AgendaPage() {
   const router = useRouter()
   const [cancelTarget, setCancelTarget] = useState<Booking | null>(null)
   const [cancelReason, setCancelReason] = useState('')
+  const [reviewTarget, setReviewTarget] = useState<Booking | null>(null)
+  const [disputeTarget, setDisputeTarget] = useState<Booking | null>(null)
 
   const bookingsQuery = useQuery({
     queryKey: ['my-bookings'],
@@ -56,6 +73,20 @@ function AgendaPage() {
       if (!user?.id) return Promise.resolve(null)
       return import('~/modules/profile/profile-api').then((m) => m.getProfile(user.id))
     },
+    enabled: user !== null,
+  })
+
+  const isProfessional = profileQuery.data?.user_type === 'professional'
+
+  const reviewsQuery = useQuery({
+    queryKey: ['my-reviews'],
+    queryFn: listMyReviews,
+    enabled: user !== null && !isProfessional,
+  })
+
+  const disputesQuery = useQuery({
+    queryKey: ['my-disputes'],
+    queryFn: listMyDisputes,
     enabled: user !== null,
   })
 
@@ -113,7 +144,13 @@ function AgendaPage() {
   }
 
   const bookings = bookingsQuery.data ?? []
-  const isProfessional = profileQuery.data?.user_type === 'professional'
+
+  const reviewsByBooking = new Map(
+    (reviewsQuery.data ?? []).map((review) => [review.booking_id, review]),
+  )
+  const disputesByBooking = new Map(
+    (disputesQuery.data ?? []).map((dispute) => [dispute.booking_id, dispute]),
+  )
 
   return (
     <div className="space-y-5">
@@ -242,6 +279,54 @@ function AgendaPage() {
                   </div>
                 </div>
 
+                <div className="flex flex-wrap items-center gap-2">
+                  {!isProfessional && booking.status === 'completed' ? (
+                    reviewsByBooking.has(booking.id) ? (
+                      <Badge variant="success" className="gap-1">
+                        ★ {reviewsByBooking.get(booking.id)?.rating} Avaliado
+                      </Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setReviewTarget(booking)
+                        }}
+                      >
+                        Avaliar
+                      </Button>
+                    )
+                  ) : null}
+
+                  {booking.status !== 'pending' ? (
+                    (() => {
+                      const dispute = disputesByBooking.get(booking.id)
+                      return dispute ? (
+                        <Link
+                          to="/painel/disputas/$disputeId"
+                          params={{ disputeId: dispute.id }}
+                          className="inline-flex items-center"
+                        >
+                          <Badge variant={disputeStatusVariant[dispute.status]}>
+                            Disputa: {disputeStatusLabel[dispute.status]}
+                          </Badge>
+                        </Link>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-slate-500"
+                          onClick={() => {
+                            setDisputeTarget(booking)
+                          }}
+                        >
+                          Abrir disputa
+                        </Button>
+                      )
+                    })()
+                  ) : null}
+                </div>
+
                 {booking.status === 'cancelled' && booking.cancellation_reason ? (
                   <p className="text-xs text-slate-400">Motivo: {booking.cancellation_reason}</p>
                 ) : null}
@@ -275,6 +360,153 @@ function AgendaPage() {
           }}
         />
       </Dialog>
+
+      {reviewTarget ? (
+        <ReviewModal
+          booking={reviewTarget}
+          onClose={() => {
+            setReviewTarget(null)
+          }}
+        />
+      ) : null}
+
+      {disputeTarget ? (
+        <DisputeModal
+          booking={disputeTarget}
+          onClose={() => {
+            setDisputeTarget(null)
+          }}
+        />
+      ) : null}
     </div>
+  )
+}
+
+function ReviewModal({ booking, onClose }: { booking: Booking; onClose: () => void }) {
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState('')
+
+  const mutation = useMutation({
+    mutationFn: () => createReview(booking.id, rating, comment.trim() === '' ? null : comment),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['my-reviews'] })
+      toast('Avaliação enviada. Obrigado!', 'success')
+      onClose()
+    },
+    onError: (err) => {
+      toast(err instanceof Error ? err.message : 'Não foi possível enviar a avaliação.', 'error')
+    },
+  })
+
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title="Avaliar serviço"
+      description={`Como foi "${booking.service?.title ?? 'o serviço'}"?`}
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={mutation.isPending}>
+            Cancelar
+          </Button>
+          <Button
+            loading={mutation.isPending}
+            disabled={rating < 1}
+            onClick={() => {
+              mutation.mutate()
+            }}
+          >
+            Enviar avaliação
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <div className="text-center">
+          <StarRating size="md" value={rating} onChange={setRating} />
+        </div>
+        <textarea
+          value={comment}
+          onChange={(event) => {
+            setComment(event.target.value)
+          }}
+          rows={3}
+          placeholder="Conte como foi a experiência (opcional)"
+          className="w-full rounded-xl border border-slate-200 p-3 text-sm text-slate-700 outline-none focus:border-brand-blue-400"
+        />
+      </div>
+    </Modal>
+  )
+}
+
+function DisputeModal({ booking, onClose }: { booking: Booking; onClose: () => void }) {
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+  const router = useRouter()
+  const [reason, setReason] = useState('')
+  const [description, setDescription] = useState('')
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      openDispute(booking.id, reason, description.trim() === '' ? null : description),
+    onSuccess: (dispute) => {
+      void queryClient.invalidateQueries({ queryKey: ['my-disputes'] })
+      toast('Disputa aberta. A outra parte foi notificada.', 'success')
+      onClose()
+      void router.navigate({
+        to: '/painel/disputas/$disputeId',
+        params: { disputeId: dispute.id },
+      })
+    },
+    onError: (err) => {
+      toast(err instanceof Error ? err.message : 'Não foi possível abrir a disputa.', 'error')
+    },
+  })
+
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title="Abrir disputa"
+      description="Descreva o problema para que ele seja analisado."
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={mutation.isPending}>
+            Cancelar
+          </Button>
+          <Button
+            loading={mutation.isPending}
+            disabled={reason.trim().length < 3}
+            onClick={() => {
+              mutation.mutate()
+            }}
+          >
+            Abrir disputa
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <Input
+          label="Motivo"
+          placeholder="Ex.: serviço diferente do combinado"
+          value={reason}
+          onChange={(event) => {
+            setReason(event.target.value)
+          }}
+        />
+        <textarea
+          value={description}
+          onChange={(event) => {
+            setDescription(event.target.value)
+          }}
+          rows={4}
+          placeholder="Descreva o que aconteceu (opcional, mínimo 10 caracteres)"
+          className="w-full rounded-xl border border-slate-200 p-3 text-sm text-slate-700 outline-none focus:border-brand-blue-400"
+        />
+      </div>
+    </Modal>
   )
 }

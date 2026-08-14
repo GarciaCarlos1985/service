@@ -40,18 +40,6 @@ function PainelLayout() {
     enabled: userId !== undefined,
   })
 
-  if (isLoading || !user) {
-    return (
-      <main className="min-h-dvh flex items-center justify-center px-4">
-        <div className="w-full max-w-md">
-          <LoadingState rows={2} />
-        </div>
-      </main>
-    )
-  }
-
-  const profile = profileQuery.data
-
   const unreadNotificationsQuery = useQuery({
     queryKey: ['unread-notifications', userId],
     queryFn: getUnreadNotificationsCount,
@@ -65,6 +53,18 @@ function PainelLayout() {
     enabled: userId !== undefined,
     refetchInterval: 60_000,
   })
+
+  if (isLoading || !user) {
+    return (
+      <main className="min-h-dvh flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <LoadingState rows={2} />
+        </div>
+      </main>
+    )
+  }
+
+  const profile = profileQuery.data
 
   return (
     <div className="min-h-dvh bg-slate-50">

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { getSupabase } from '~/lib/supabase'
@@ -9,7 +9,7 @@ import {
   markConversationRead,
   sendMessage,
 } from '~/modules/chat/chat-api'
-import { Avatar, Button, Card, CardBody, Input, Skeleton } from '~/modules/ui'
+import { Button, Card, CardBody, Input, Skeleton } from '~/modules/ui'
 
 export const Route = createFileRoute('/painel/mensagens/$conversationId')({
   component: ConversationPage,
@@ -19,7 +19,6 @@ function ConversationPage() {
   const { conversationId } = Route.useParams()
   const { user } = useAuth()
   const { toast } = useToast()
-  const router = useRouter()
   const queryClient = useQueryClient()
   const [draft, setDraft] = useState('')
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -27,7 +26,6 @@ function ConversationPage() {
   const messagesQuery = useQuery({
     queryKey: ['messages', conversationId],
     queryFn: () => listConversationMessages(conversationId, 100),
-    enabled: conversationId !== undefined,
   })
 
   useEffect(() => {

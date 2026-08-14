@@ -19,14 +19,14 @@ Toda tabela crítica:
 services · professional_availability · availability_exceptions · bookings ·
 booking_events · payments · payment_events · webhook_events · wallets ·
 wallet_transactions · commission_rules · cashback_rules · conversations ·
-messages · conversation_participants · notifications · favorites
+messages · conversation_participants · notifications · favorites · reviews ·
+review_responses · disputes · dispute_messages · dispute_evidence
 
-**Planejadas (próximos milestones):** reviews · review_responses ·
-subscriptions · referrals · referral_events · professional_gallery ·
-disputes · dispute_messages · admin_audit_logs · feature_flags ·
+**Planejadas (próximos milestones):** subscriptions · referrals ·
+referral_events · professional_gallery · admin_audit_logs · feature_flags ·
 platform_settings · risk_events
 
-Validação: `node scripts/sql-tests.mjs supabase/tests/*.sql` (37 testes verdes).
+Validação: `node scripts/sql-tests.mjs supabase/tests/*.sql` (73 testes verdes).
 
 ## Padrão Medallion (ADR-008)
 

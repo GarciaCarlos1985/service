@@ -3,11 +3,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Button, Card, CardBody, Input, Select, Skeleton, useToast } from '~/modules/ui'
+import { Badge, Button, Card, CardBody, Input, Select, Skeleton, useToast } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { profileFormSchema, parseCityId } from '~/modules/profile/schemas'
 import type { ProfileFormInput } from '~/modules/profile/schemas'
-import { getProfile, listCities, updateProfile } from '~/modules/profile/profile-api'
+import {
+  getProfile,
+  listCities,
+  requestVerification,
+  updateProfile,
+} from '~/modules/profile/profile-api'
+import { verificationStatusLabel } from '~/modules/profile/types'
 
 export const Route = createFileRoute('/painel/perfil')({
   component: ProfilePage,
@@ -146,6 +152,79 @@ function ProfilePage() {
           </form>
         </CardBody>
       </Card>
+
+      {profileQuery.data?.user_type === 'professional' ? (
+        <VerificationCard
+          status={profileQuery.data.verification_status}
+          onChanged={() => {
+            void queryClient.invalidateQueries({ queryKey: ['profile'] })
+          }}
+        />
+      ) : null}
     </div>
+  )
+}
+
+const verificationVariant: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
+  unverified: 'default',
+  pending: 'warning',
+  verified: 'success',
+  rejected: 'danger',
+  suspended: 'danger',
+}
+
+function VerificationCard({
+  status,
+  onChanged,
+}: {
+  status: string
+  onChanged: () => void
+}) {
+  const { toast } = useToast()
+
+  const mutation = useMutation({
+    mutationFn: requestVerification,
+    onSuccess: () => {
+      onChanged()
+      toast('Solicitação enviada! A equipe vai analisar seu perfil.', 'success')
+    },
+    onError: (err) => {
+      toast(err instanceof Error ? err.message : 'Não foi possível solicitar.', 'error')
+    },
+  })
+
+  const canRequest = status === 'unverified' || status === 'rejected'
+
+  return (
+    <Card>
+      <CardBody className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900">Verificação</h2>
+            <p className="mt-1 text-xs text-slate-500">
+              Profissionais verificados ganham um selo de confiança no perfil público.
+            </p>
+          </div>
+          <Badge variant={verificationVariant[status]}>
+            {(verificationStatusLabel as Record<string, string | undefined>)[status] ?? status}
+          </Badge>
+        </div>
+        {canRequest ? (
+          <Button
+            size="sm"
+            loading={mutation.isPending}
+            onClick={() => {
+              mutation.mutate()
+            }}
+          >
+            Solicitar verificação
+          </Button>
+        ) : status === 'pending' ? (
+          <p className="rounded-xl bg-amber-50 px-4 py-3 text-xs text-amber-800">
+            Sua solicitação está em análise. Você será notificado sobre o resultado.
+          </p>
+        ) : null}
+      </CardBody>
+    </Card>
   )
 }

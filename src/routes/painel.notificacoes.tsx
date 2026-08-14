@@ -68,7 +68,7 @@ function NotificationsPage() {
             <ul className="divide-y divide-slate-100">
               {notifications.map((notification) => (
                 <li key={notification.id} className="flex gap-3 px-5 py-4">
-                  <span className="text-2xl">{notificationIcon[notification.type] ?? '🔔'}</span>
+                  <span className="text-2xl">{notificationIcon[notification.type]}</span>
                   <div className="min-w-0">
                     <p
                       className={`text-sm font-semibold text-slate-900 ${

@@ -68,5 +68,5 @@ export async function getUnreadMessagesCount(): Promise<number> {
   const supabase = getSupabase()
   const result = await supabase.rpc('get_unread_messages_count')
   if (result.error) throw result.error
-  return (result.data as number) ?? 0
+  return result.data as number
 }

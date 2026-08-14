@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/no-unnecessary-condition --
-   O supabase-js retorna `any` em select('*') sem Database genérica. Tipamos a
-   borda explicitamente; substituir por `supabase gen types` quando o banco
-   estiver linkado (documentos/APLICANDO_MIGRATIONS.md). */
 import { getSupabase } from '~/lib/supabase'
 import type { Profile, UpdateProfileInput, UserType } from './types'
 
@@ -43,6 +39,16 @@ export async function chooseUserType(userType: UserType): Promise<void> {
   const { error } = await supabase.rpc('choose_user_type', {
     p_user_type: userType,
   })
+  if (error) throw error
+}
+
+/**
+ * Profissional solicita verificação (spec §32). Só admin aprova/recusa
+ * (set_verification_status — M10 consome).
+ */
+export async function requestVerification(): Promise<void> {
+  const supabase = getSupabase()
+  const { error } = await supabase.rpc('request_verification')
   if (error) throw error
 }
 

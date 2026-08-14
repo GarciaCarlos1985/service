@@ -39,7 +39,7 @@ export async function getUnreadNotificationsCount(): Promise<number> {
   const supabase = getSupabase()
   const result = await supabase.rpc('get_unread_notifications_count')
   if (result.error) throw result.error
-  return (result.data as number) ?? 0
+  return result.data as number
 }
 
 export const notificationIcon: Record<NotificationType, string> = {

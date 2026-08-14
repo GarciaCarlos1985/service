@@ -653,6 +653,52 @@
   padrão documentado no AGENTS.md; `pg` (dev) e `DATABASE_URL` (gitignored)
   como ferramentas de teste locais.
 
+## ADR-040 — Reviews presas ao booking, confiança objetiva e disputas com decisão só de admin (M8)
+**Status:** Aceita (2026-08-13) — implementada e testada no banco real; atende spec §32/§33/§34
+
+- **Contexto:** o SERVICE precisava de reputação (avaliações), confiança
+  (verificação + badges) e resolução de conflitos (disputas), sem abrir espaço
+  para avaliações falsas, autoavaliação ou manipulação (spec §33/§47).
+- **Decisão:**
+  - **Reviews só de booking concluído e só pelo cliente do booking**
+    (`reviews.booking_id` UNIQUE — 1 avaliação por booking no banco);
+    validação no RPC `create_review` (SECURITY DEFINER). Sem edição/exclusão:
+    manipulação bloqueada por construção. Profissional responde 1x
+    (`review_responses.review_id` UNIQUE) via `respond_review`.
+  - **Contrato público controlado**: anon lê avaliações/nota/badges via RPCs
+    (`list_professional_reviews`, `professional_rating_summary`,
+    `professional_badges`), nunca a tabela crua (RLS default deny nas tabelas
+    novas); nome do avaliador exibido reduzido (primeiro nome + inicial) —
+    perfil de cliente nunca é exposto (ADR-016).
+  - **Verificação**: `profiles.verification_status`
+    (unverified/pending/verified/rejected/suspended) + `profiles.is_admin`.
+    Profissional solicita via `request_verification`; só admin altera via
+    `set_verification_status` (M10 consome). Colunas blindadas em dobro:
+    política de update com with-check (mesmo padrão do user_type) + revoke
+    colunar de UPDATE para authenticated.
+  - **Badges com regra objetiva** (função única `professional_badges`, defaults
+    ajustáveis na M10 via `platform_settings`):
+    `verificado` = status verified · `alta_avaliacao` = média ≥ 4,5 com ≥ 5
+    avaliações · `top` = ≥ 10 bookings concluídos nos últimos 90 dias
+    (updated_at) com média ≥ 4,5 · `pro` reservado para M9 (assinatura) e não
+    emitido até lá. O selo "Verificado" fixo que existia no perfil público era
+    dado inventado (ADR-004) — removido.
+  - **Disputas**: 1 por booking (`disputes.booking_id` UNIQUE), estados
+    open/under_review/resolved/rejected com guarda de transição no banco;
+    aberta só por participante e nunca em booking `pending`; mensagens e
+    evidências (URL — upload real chega com R2 na M11, ADR-017) só de
+    participantes/admin; decisão (`resolve_dispute`) exige admin e nota de
+    resolução.
+  - **Notificações**: avaliação → profissional; resposta → cliente; disputa
+    aberta → outra parte; decisão → ambos; e lembrete de avaliação disparado
+    por trigger na conclusão do booking (spec §53).
+- **Motivo:** reputação só vale com compra real por trás; confiança só com
+  regra objetiva auditável; disputa é decisão operacional, nunca do usuário.
+- **Consequências:** 36 testes SQL novos no banco real (total 73: 15 RLS + 11
+  ledger + 11 chat + 36 reviews/confiança/disputas), sem regressão. Sem
+  realtime em disputas (fluxo lento, decisão admin — não justifica publicação
+  agora; pode ser adicionado quando houver demanda).
+
 ---
 
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue

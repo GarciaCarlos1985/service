@@ -6,6 +6,7 @@ export interface PublicProfessionalProfile {
   city_id: number | null
   avatar_url: string | null
   slug: string | null
+  verification_status: string | null
   city: { id: number; name: string; state: string; slug: string } | null
   services: Array<{
     id: string
@@ -47,7 +48,7 @@ export async function getProfessionalBySlugs(
   const result = await supabase
     .from('profiles')
     .select(
-      'id, full_name, city_id, avatar_url, slug, user_type, city:cities!profiles_city_id_fkey(id, name, state, slug), services(id, title, description, price_from_cents, category_id, category:service_categories(slug, name))',
+      'id, full_name, city_id, avatar_url, slug, user_type, verification_status, city:cities!profiles_city_id_fkey(id, name, state, slug), services(id, title, description, price_from_cents, category_id, category:service_categories(slug, name))',
     )
     .eq('user_type', 'professional')
     .eq('slug', profileSlug)
