@@ -2,7 +2,17 @@ import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { ErrorState } from '~/modules/ui'
-import { Avatar, Badge, Button, Card, CardBody, Modal, Skeleton, StarRating, useToast } from '~/modules/ui'
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  Modal,
+  Skeleton,
+  StarRating,
+  useToast,
+} from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { getProfessionalBySlugs, type PublicProfessionalProfile } from '~/modules/search/search-api'
 import { addFavorite, isFavorite, removeFavorite } from '~/modules/favorites/favorites-api'
@@ -107,8 +117,12 @@ export const Route = createFileRoute('/profissionais/$citySlug/$profileSlug')({
 })
 
 function ProfessionalProfilePage() {
-  const { professional, dbError, summary: loaderSummary, reviews: loaderReviews } =
-    Route.useLoaderData()
+  const {
+    professional,
+    dbError,
+    summary: loaderSummary,
+    reviews: loaderReviews,
+  } = Route.useLoaderData()
   const { user } = useAuth()
   const { toast } = useToast()
   const [bookingService, setBookingService] = useState<
@@ -296,8 +310,7 @@ function ProfileHeader({
             <StarRating value={summary.avg_rating} />
             <span className="font-semibold">{summary.avg_rating.toFixed(1)}</span>
             <span className="text-slate-400">
-              · {summary.review_count}{' '}
-              {summary.review_count === 1 ? 'avaliação' : 'avaliações'}
+              · {summary.review_count} {summary.review_count === 1 ? 'avaliação' : 'avaliações'}
             </span>
           </p>
         ) : (
@@ -305,10 +318,7 @@ function ProfileHeader({
         )}
         <div className="mt-2 flex flex-wrap gap-2">
           {(badgesQuery.data ?? []).map((badge) => (
-            <Badge
-              key={badge.badge}
-              variant={badge.badge === 'verificado' ? 'success' : 'info'}
-            >
+            <Badge key={badge.badge} variant={badge.badge === 'verificado' ? 'success' : 'info'}>
               {badge.badge === 'verificado' ? '✓ ' : ''}
               {badge.label}
             </Badge>
@@ -402,14 +412,10 @@ function ReviewsSection({
                     })}
                   </span>
                 </div>
-                {review.comment ? (
-                  <p className="text-sm text-slate-600">{review.comment}</p>
-                ) : null}
+                {review.comment ? <p className="text-sm text-slate-600">{review.comment}</p> : null}
                 {review.response_body ? (
                   <div className="rounded-xl border border-slate-200 bg-white p-3">
-                    <p className="text-xs font-semibold text-slate-900">
-                      Resposta do profissional
-                    </p>
+                    <p className="text-xs font-semibold text-slate-900">Resposta do profissional</p>
                     <p className="mt-1 text-sm text-slate-600">{review.response_body}</p>
                   </div>
                 ) : isProfessionalUser ? (

@@ -8,76 +8,75 @@ web
 
 ## Stack
 
-TanStack Start (React + Vite + Tailwind CSS) + TypeScript strict + TanStack Query + Zod + React Hook Form. Supabase (PostgreSQL, Auth, RLS, Realtime, Storage) como fonte de verdade. Cloudflare Pages/Workers/DNS/CDN/R2 como infraestrutura-alvo. Camada de abstração de pagamentos `PaymentProvider` (Stripe Connect como provider principal; Appmax futuro). Stack confirmada pelo usuário na entrevista (React + Vite), detalhada na spec.
+TanStack Start (React + Vite + Tailwind CSS) + TypeScript strict + TanStack Query + Zod + React Hook Form. Supabase (PostgreSQL, Auth, RLS, Realtime, Storage) como fonte de verdade. Deploy atual Vercel free (ADR-036/037); Cloudflare/R2 como infraestrutura-alvo futura. Busca em PostgreSQL (`tsvector` + `pg_trgm`) na Fase 1, preparada para evoluir. Sem integração de pagamento no MVP.
 
 ## Users
 
-- **Clientes**: consumidores brasileiros, majoritariamente no celular, buscando profissionais locais de confiança (diarista, faxina, limpeza pós-obra, pintura, reparos, eletricista, encanador, chaveiro, montagem, manutenção, jardinagem) para agendar, pagar e avaliar o serviço.
-- **Profissionais**: prestadores de serviço locais que criam perfil público, definem disponibilidade, recebem clientes, constroem reputação e recebem pagamentos pela plataforma.
-- **Admin/Operação**: central operacional com painel poderoso, permissões por least privilege e auditoria.
+- **Consumidores**: pessoas de Cacoal – RO (mercado inicial) e região, majoritariamente no celular, que buscam **o que precisam** — um produto ou serviço — em comércios locais. Navegam grátis, favoritam, entram em contato (WhatsApp/orçamento), avaliam e comentam. CPF só é exigido em ação de contratação, nunca para navegar (LGPD).
+- **Empresas**: comércios e prestadores locais cadastrados pela administração. São entidades próprias do sistema (não usuários). Planos FREE (presença básica) e PRO (assinatura: destaque rotulado, contato exposto, selo, mais mídia, analytics).
+- **Admin/Operação**: o Helon. Cadastra e mantém empresas, categorias, produtos, serviços, mídia, avaliações, plano das empresas e métricas. Permissões por least privilege e auditoria.
 
 ## Product Purpose
 
-Marketplace brasileiro de serviços locais que conecta clientes a profissionais confiáveis, intermediando agendamento, pagamento e reputação. Objetivo: fundação de produto real, segura, econômica e escalável para milhares de usuários — não uma demonstração visual.
+Plataforma de **descoberta comercial local**: permite ao consumidor pensar "preciso de alguma coisa, vou procurar aqui para descobrir onde encontro em Cacoal" e encontrar empresas, produtos e serviços — inclusive por produto ("tinta emborrachada"), não só por nome de empresa. O valor entregue às empresas é descoberta, contato (lead) e visibilidade mensurável. Objetivo: fundação de produto real, segura, econômica e escalável — não uma demonstração visual.
 
 ## Positioning
 
-Intermediador de serviços locais com segurança e integridade financeira como diferencial: pagamento processado pela plataforma (cliente paga → SERVICE retém comissão configurável → repasse ao profissional), ledger imutável, idempotência financeira, proteção contra double booking no banco, verificação de profissionais e avaliações apenas de compras reais concluídas.
+Guia comercial local com **curadoria manual** (empresa inserida pelo admin, sem lixo) e **busca por produto**, diferente de diretórios nacionais e do Google Maps. Monetização por **assinatura de destaque (FREE/PRO)**, sem comissão e sem intermediação financeira no MVP. Destaques/patrocinados sempre identificados; reputação (avaliações) nunca manipulada para vender posição.
 
 ## Operating Context
 
-- Público brasileiro; moeda BRL; LGPD aplicável (consentimento, privacidade, exportação/exclusão de dados).
-- Mobile-first: touch friendly, bottom navigation, dados reduzidos, skeletons.
-- **Mercado-alvo (confirmado 2026-08-12):** São Paulo, região Sul e as grandes metrópoles/capitais do Brasil com economias mais fortes. Fundador/operação baseada em Rondônia. Geografia por cidade/bairro/CEP; geolocalização apenas na precisão necessária. Cidades e bairros devem usar catálogo canônico (código IBGE) — nunca strings livres.
-- Desenvolvimento: auth sem confirmação de email no início; arquitetura preparada para ativá-la em produção.
-- Pagamento mock durante desenvolvimento deve ser claramente separado de produção (nunca misturar; nunca "fake" que pareça real).
+- Mercado inicial confirmado: **Cacoal – Rondônia** (2026-10-06). Cidades/bairros por catálogo canônico (código IBGE) — nunca string livre (ADR-014).
+- Público brasileiro; moeda BRL; LGPD aplicável (consentimento, minimização, exportação/exclusão).
+- Mobile-first: touch friendly, dados reduzidos, skeletons, estados de UX obrigatórios.
+- Sem pagamento no MVP: o dono fecha a mensalidade pessoalmente e o admin marca o plano da empresa manualmente, com auditoria (ADR-044).
+- Nome do produto: **Service Guide** (confirmado). Nome de trabalho antigo "SERVICE" e provisório "Guia Cidade" aposentados.
 
 ## Capabilities and Constraints
 
-Confirmado na spec (master build spec):
+Confirmado na spec Service Guide (`SERVICE-GUIDE-PROMPT-INICIO.md`):
 
-- Autenticação (email/password, recuperação de senha, sessão segura), perfis, serviços, categorias, busca por categoria/cidade/bairro/preço/nota/disponibilidade/favoritos.
-- Agendamento com disponibilidade, exceções, folgas, bloqueios; double booking garantido no banco; máquina de estados de booking validada no backend (pending → confirmed → in_progress → completed; cancelamentos). **Implementado (M4) e testado no banco real.**
-- Fluxo financeiro: pagamento iniciado/confirmado → serviço concluído → avaliação → liberação conforme regra → comissão → repasse → cashback. Nenhuma etapa financeira depende de clique visual. **Core implementado (M6):** `complete_booking` dispara `process_booking_financials` (idempotente).
-- Ledger imutável (`wallet_transactions`): credit, debit, cashback, refund, adjustment, platform_fee, payout; saldo derivado ou projeção reconciliável; correções via transação compensatória. **Implementado (M6)** com trigger que bloqueia UPDATE/DELETE até para postgres.
-- Idempotency key obrigatória: pagamento, refund, cashback, indicação, payout, ajustes administrativos. **Implementado (M6)** via `idempotency_key` única.
-- Cashback e referral com regras configuráveis, tetos, estados (pending/approved/rejected/review), antifraude; recompensa nunca liberada só pelo cadastro. **Cashback implementado (M6)** — percentual configurável + teto mensal; referral fica para M9.
-- Chat ligado a booking/cliente/profissional, com paginação, unread, rate limiting, denúncia, bloqueio (não é rede social). Supabase Realtime. **Implementado (M7)** — conversa única por booking, RLS por participação, 10 msg/min, unread/read status, realtime.
-- Notificações centralizadas (booking, payment, payout, cashback, review, referral, system, dispute, security) com arquitetura para in-app/email/push. **In-app implementado (M7)**; email/push na arquitetura.
-- Reviews apenas de clientes reais do booking concluído; proteção contra duplicadas/falsas/autoavaliação; profissional pode responder. **Implementado (M8)** — 1 avaliação por booking (unique no banco), resposta única do profissional, imutável.
-- Disputas (open/under_review/resolved/rejected), com evidências e decisão administrativa. **Implementado (M8)** — 1 por booking, mensagens + evidências (URL; R2 na M11), decisão só admin. Verificação de profissionais e badges com regra objetiva também implementados (M8).
-- Admin: dashboard, usuários, profissionais, financeiro (sem edição direta de saldo), auditoria (`admin_audit_logs`), permissões por least privilege (super_admin, support, moderator, finance, operations, marketing, analyst), preview/dry run/confirmation/audit/rollback honesto, kill switches, feature flags com rollout gradual.
-- SEO: páginas públicas indexáveis reais (categorias, cidades, bairros, profissionais, serviços), meta tags, canonical, Open Graph, structured data (schema.org), URLs amigáveis (`/profissionais/guaruja/maria-silva`); nunca gerar páginas vazias em massa.
-- Performance: Core Web Vitals excelentes, HTML rápido, JS mínimo, code splitting, WebP/AVIF, CDN, cache; rate limiting em login/cadastro/chat/busca/booking/pagamento/referral/avaliação/upload/admin.
-- Custo: quase zero no início (Supabase/Cloudflare free tiers com limites monitorados), sem Redis/Elasticsearch/VPS prematuros; "Supabase ou Cloudflare já resolve isso?" antes de qualquer serviço externo.
-- Deploy: development/staging/production; migrations nunca destrutivas automaticamente em produção; backups/DR com RPO/RTO documentados.
-- Banco: UUID, created_at/updated_at, índices apropriados, FKs, constraints, CHECK/UNIQUE, RLS em todas as tabelas críticas; entidades principais listadas na spec (seção 50); cursor pagination em mensagens/bookings/notificações/avaliações/transações.
-- Stack e não-stack são vinculantes: TanStack Start, React, TS strict, Vite, Tailwind, TanStack Query, Zod, React Hook Form; NÃO usar Next.js, Convex, Firebase, nem outro banco/backend proprietário como fonte de verdade.
-
-Decisões em aberto (não confirmadas, registrar conforme surgir): nome legal/marca final (nome de trabalho: SERVICE), design final além da identidade verde → azul claro, percentuais exatos de comissão, regiões atendidas iniciais.
+- **Usuário**: cadastro gratuito (nome, telefone, e-mail, senha); pesquisar; ver empresas/produtos/serviços; favoritar; contatar; clicar no WhatsApp; avaliar; comentar. Sem CPF para navegar.
+- **Empresa como entidade própria** (`companies`), independente de usuário, cadastrada pelo admin (ADR-042). Endereço estruturado; cidade por IBGE.
+- **Produtos e serviços como entidades próprias** (`products`, `services`), ligados à empresa; mesmo produto em várias empresas (ADR-043).
+- **Busca por produto/serviço/empresa/categoria** com filtros (categoria, localização, faixa de preço quando houver, plano, avaliação); PostgreSQL `tsvector` + `pg_trgm` na Fase 1, evolutiva.
+- **Planos configuráveis** em dados (`plans`, `company_subscriptions`) — proibido `if plan === "pro"` (ADR-044). FREE x PRO com limites e recursos.
+- **Contato**: WhatsApp (`wa.me`, mensagem pré-preenchida, evento `whatsapp_click` antes do redirect) + orçamento/conversa interna (`conversations`). **Clique/contato nunca é tratado como venda** (ADR-046).
+- **Analytics event-sourced desde o nascimento** (`analytics_events`, append-only): search, company_view, product_view, service_view, favorite, contact_start, whatsapp_click, phone_click, website_click, review_created, share (ADR-045).
+- **Favoritos** independentes de avaliação. **Avaliações** 1–5 com comentário + moderação admin (sem avaliação "verificada por compra" no MVP).
+- **Painel administrativo**: cadastro/edição de empresa, categoria, produto, serviço, mídia, avaliações, usuários, contatos básicos, métricas básicas, plano da empresa (auditado).
+- **Permissões hierárquicas preparadas** (admin → empresa → funcionário) via `company_members`, opcional no MVP (ADR-047).
+- **SEO**: páginas públicas indexáveis reais (home, categorias, empresas `/empresas/<cidade>/<slug>`, produtos/serviços quando houver conteúdo); meta/canonical/OG/JSON-LD `LocalBusiness`; nunca gerar páginas vazias em massa.
+- **Segurança/abuso**: auth, confirmação de telefone quando aplicável, RLS default deny, rotas admin protegidas, validação, rate limiting, anti-spam, bloqueio de usuário/empresa, auditoria de ações administrativas.
+- **Performance/custo**: Core Web Vitals, code splitting, WebP/AVIF, CDN, cache; "Supabase ou Vercel já resolve?" antes de serviço externo (ADR-017).
+- **Não construir agora**: checkout, pagamento, comissão, repasse, reembolso, agendamento completo, marketplace financeiro, antifraude avançado, recomendação por IA, painel do comerciante completo.
+- Stack e não-stack vinculantes: TanStack Start/React/TS strict/Vite/Tailwind/Query/Zod/RHF + Supabase. Sem Next.js/Convex/Firebase.
 
 ## Brand Commitments
 
-- Nome de trabalho: **SERVICE** — marketplace de serviços locais.
-- Identidade: **verde → azul claro** (gradiente); visual moderno, confiável, limpo, amigável, profissional.
-- **Logo (asset inicial):** `public/service.png` (1254×1254, PNG, fundo branco, sem transparência — ainda não isolada). Paleta medida: azuis `#3580FD`–`#5697FB`, verde claro `#C0E9CF`, fundo branco. Precisa de isolamento/recorte, versões SVG e otimização (964 KB hoje) em trabalho futuro.
-- Mobile-first, cards arredondados, microinterações discretas; não sacrificar performance por animações.
+- **Nome do produto: Service Guide** (confirmado 2026-10-06).
+- **Logo:** `public/service-guide.png` — nova composição horizontal fornecida pelo usuário; "Service" em azul, "Guide" em verde, pin e ícones de categorias. Usar esta versão no cabeçalho e rodapé.
+- **Identidade:** azul + verde; visual moderno, confiável, limpo, amigável, profissional, mobile-first.
+- **Direção visual aprovada pelo pedido de 15/10/2026:** amplificar a identidade em padrão premium, com escala generosa, fotografia comercial e selo **PREMIUM GUIDE** em dourado champanhe para destaques pagos, conforme ajuste solicitado na prévia. A exposição deriva do recurso `featured` do plano existente; a apresentação não altera preços, quotas, cobrança, autenticação nem reputação.
+- **Pendências de asset** (fase futura): peso atual 1,8 MB → WebP/AVIF; variantes (favicon/ícone/horizontal); recorte com transparência. Evitar espalhar o nome comercial pelo código (usar `platform_settings`).
 
 ## Evidence on Hand
 
-- Master build spec: `./SERVICE-PROMPT-INICIO.md` (fonte da verdade de produto; arquitetura, segurança, monetização, SEO, escalabilidade, milestones 0–12).
-- ADRs: `./DECISIONS.md` (ADR-001 a ADR-040, adaptados/registrados até 2026-08-13).
-- Validação técnica real: **73 testes SQL aprovados no banco real** (`supabase/tests/`: rls 15, ledger 11, chat 11, reviews/confiança/disputas 36 — rodar via `node scripts/sql-tests.mjs <arquivo>`).
-- Site publicado em produção (Vercel) com fundação M0–M8.
-- Nenhum usuário real, dado, avaliação, testemunho ou asset além da logo. Seeds de desenvolvimento são claramente identificados; nunca tratar dados fictícios como reais.
+- Spec-mãe do Service Guide: `SERVICE-GUIDE-PROMPT-INICIO.md` (fonte da verdade de produto).
+- Spec-mãe antiga (marketplace de profissionais): `SERVICE-PROMPT-INICIO.md` (superada, histórico).
+- ADRs: `DECISIONS.md` — ADR-001 a ADR-040 (modelo antigo) + **ADR-041 a ADR-047 (virada Service Guide)**.
+- Mapa de reaproveitamento: `REUSE-MAP.md`.
+- Fundação técnica real herdada: Supabase/RLS, auth, design system, busca/SEO, favoritos, reviews, notificações, chat, mídia, admin parcial; 73 testes SQL verdes no banco real (RLS 15, ledger 11, chat 11, reviews 36).
+- Logo `public/service-guide.png`. **Nenhum** usuário real, empresa, produto, avaliação ou testemunho. Seeds de desenvolvimento claramente identificados; nunca tratar dado fictício como real.
 
 ## Product Principles
 
-1. **Segurança e integridade financeira primeiro** — RLS no banco, nunca confiar na interface; ledger imutável, idempotência e auditoria; nenhuma etapa financeira dependente de clique visual.
-2. **Economia radical sem sacrificar segurança** — Supabase/Cloudflare first, serverless, cache, custo próximo de zero no início com limites monitorados; escalar gradualmente conforme a receita.
-3. **Confiança construída com regras objetivas** — verificação, badges com critério, avaliações só de compras reais, patrocinados identificados, disputas justas; nunca manipular reputação para vender destaque.
-4. **Escala progressiva** — simplicidade primeiro (Fase 1); introduzir complexidade (fila, search engine, caching avançado) apenas com necessidade real comprovada.
-5. **Não inventar** — decisões ambíguas apresentadas com problema/opções/recomendação/impacto/custo/risco e aguardar autorização para mudanças estruturais; milestones com typecheck, lint, testes e build antes de marcar pronto.
+1. **Descoberta honesta e verificável** — busca por produto, curadoria manual, analytics real. Destaque é rotulado; reputação não se compra (ADR-044/046).
+2. **Empresa e produto são estruturas de primeira classe** — nunca tratados como texto ou como usuário; decisões que seriam caras de corrigir ficam certas desde o início (ADR-042/043).
+3. **Escopo disciplinado** — construir agora só o que evita refazer a base; o resto entra como módulo em fase própria, com aval. MVP não é arquitetura descartável.
+4. **Segurança e privacidade por construção** — RLS default deny, escrita via RPC/backend, minimização de dados, CPF só quando necessário (ADR-002/LGPD).
+5. **Economia radical** — Supabase/Vercel first, custo próximo de zero no início, escalar com receita (ADR-017).
+6. **Não inventar** — dado ausente fica ausente; decisão estrutural apresentada com problema/opções/recomendação/impacto/custo/risco e aguardando aval; gate de qualidade antes de marcar pronto.
 
 ## Accessibility & Inclusion
 

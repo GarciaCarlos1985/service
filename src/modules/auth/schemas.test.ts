@@ -5,6 +5,7 @@ describe('signUpSchema', () => {
   it('aceita dados válidos', () => {
     const result = signUpSchema.safeParse({
       fullName: 'Maria da Silva',
+      phone: '(69) 99999-9999',
       email: 'maria@exemplo.com.br',
       password: 'senha-segura-1',
     })
@@ -14,6 +15,7 @@ describe('signUpSchema', () => {
   it('rejeita nome muito curto', () => {
     const result = signUpSchema.safeParse({
       fullName: 'M',
+      phone: '(69) 99999-9999',
       email: 'maria@exemplo.com',
       password: 'senha-segura-1',
     })
@@ -23,6 +25,7 @@ describe('signUpSchema', () => {
   it('rejeita email inválido', () => {
     const result = signUpSchema.safeParse({
       fullName: 'Maria da Silva',
+      phone: '(69) 99999-9999',
       email: 'nao-e-email',
       password: 'senha-segura-1',
     })
@@ -32,6 +35,7 @@ describe('signUpSchema', () => {
   it('rejeita senha curta (spec: mínimo 8)', () => {
     const result = signUpSchema.safeParse({
       fullName: 'Maria da Silva',
+      phone: '(69) 99999-9999',
       email: 'maria@exemplo.com',
       password: '1234567',
     })
@@ -41,6 +45,7 @@ describe('signUpSchema', () => {
   it('normaliza espaços do email e nome', () => {
     const result = signUpSchema.safeParse({
       fullName: '  Maria da Silva  ',
+      phone: '(69) 99999-9999',
       email: '  MARIA@EXEMPLO.COM  ',
       password: 'senha-segura-1',
     })
@@ -48,7 +53,19 @@ describe('signUpSchema', () => {
     if (result.success) {
       expect(result.data.fullName).toBe('Maria da Silva')
       expect(result.data.email).toBe('MARIA@EXEMPLO.COM')
+      expect(result.data.phone).toBe('69999999999')
     }
+  })
+
+  it('exige telefone com DDD no cadastro comercial', () => {
+    expect(
+      signUpSchema.safeParse({
+        fullName: 'Maria da Silva',
+        email: 'maria@exemplo.com',
+        password: 'senha-segura-1',
+        phone: '123',
+      }).success,
+    ).toBe(false)
   })
 })
 

@@ -10,13 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as ContaRouteImport } from './routes/conta'
 import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PainelRouteImport } from './routes/painel'
+import { Route as PreviaRouteImport } from './routes/previa'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as CategorySlugCitySlugRouteImport } from './routes/$categorySlug.$citySlug'
+import { Route as EmpresaCompanyIdRouteImport } from './routes/empresa.$companyId'
+import { Route as ItemItemIdRouteImport } from './routes/item.$itemId'
 import { Route as PainelIndexRouteImport } from './routes/painel.index'
 import { Route as PainelAgendaRouteImport } from './routes/painel.agenda'
 import { Route as PainelCarteiraRouteImport } from './routes/painel.carteira'
@@ -24,6 +32,7 @@ import { Route as PainelDisponibilidadeRouteImport } from './routes/painel.dispo
 import { Route as PainelNotificacoesRouteImport } from './routes/painel.notificacoes'
 import { Route as PainelPerfilRouteImport } from './routes/painel.perfil'
 import { Route as PainelServicosRouteImport } from './routes/painel.servicos'
+import { Route as EmpresasCitySlugCompanySlugRouteImport } from './routes/empresas.$citySlug.$companySlug'
 import { Route as PainelDisputasDisputeIdRouteImport } from './routes/painel.disputas.$disputeId'
 import { Route as PainelMensagensIndexRouteImport } from './routes/painel.mensagens.index'
 import { Route as PainelMensagensConversationIdRouteImport } from './routes/painel.mensagens.$conversationId'
@@ -32,6 +41,16 @@ import { Route as ProfissionaisCitySlugProfileSlugRouteImport } from './routes/p
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AjudaRoute = AjudaRouteImport.update({
+  id: '/ajuda',
+  path: '/ajuda',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BuscarRoute = BuscarRouteImport.update({
@@ -44,9 +63,19 @@ const CadastroRoute = CadastroRouteImport.update({
   path: '/cadastro',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContaRoute = ContaRouteImport.update({
+  id: '/conta',
+  path: '/conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EntrarRoute = EntrarRouteImport.update({
   id: '/entrar',
   path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -59,6 +88,16 @@ const PainelRoute = PainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PreviaRoute = PreviaRouteImport.update({
+  id: '/previa',
+  path: '/previa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
@@ -67,6 +106,16 @@ const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
 const CategorySlugCitySlugRoute = CategorySlugCitySlugRouteImport.update({
   id: '/$categorySlug/$citySlug',
   path: '/$categorySlug/$citySlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmpresaCompanyIdRoute = EmpresaCompanyIdRouteImport.update({
+  id: '/empresa/$companyId',
+  path: '/empresa/$companyId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ItemItemIdRoute = ItemItemIdRouteImport.update({
+  id: '/item/$itemId',
+  path: '/item/$itemId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PainelIndexRoute = PainelIndexRouteImport.update({
@@ -104,6 +153,12 @@ const PainelServicosRoute = PainelServicosRouteImport.update({
   path: '/servicos',
   getParentRoute: () => PainelRoute,
 } as any)
+const EmpresasCitySlugCompanySlugRoute =
+  EmpresasCitySlugCompanySlugRouteImport.update({
+    id: '/empresas/$citySlug/$companySlug',
+    path: '/empresas/$citySlug/$companySlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PainelDisputasDisputeIdRoute = PainelDisputasDisputeIdRouteImport.update({
   id: '/disputas/$disputeId',
   path: '/disputas/$disputeId',
@@ -129,13 +184,21 @@ const ProfissionaisCitySlugProfileSlugRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ajuda': typeof AjudaRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
+  '/conta': typeof ContaRoute
   '/entrar': typeof EntrarRoute
+  '/favoritos': typeof FavoritosRoute
   '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRouteWithChildren
+  '/previa': typeof PreviaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
+  '/empresa/$companyId': typeof EmpresaCompanyIdRoute
+  '/item/$itemId': typeof ItemItemIdRoute
   '/painel/agenda': typeof PainelAgendaRoute
   '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
@@ -143,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
+  '/empresas/$citySlug/$companySlug': typeof EmpresasCitySlugCompanySlugRoute
   '/painel/disputas/$disputeId': typeof PainelDisputasDisputeIdRoute
   '/painel/mensagens/$conversationId': typeof PainelMensagensConversationIdRoute
   '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
@@ -150,12 +214,20 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ajuda': typeof AjudaRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
+  '/conta': typeof ContaRoute
   '/entrar': typeof EntrarRoute
+  '/favoritos': typeof FavoritosRoute
   '/onboarding': typeof OnboardingRoute
+  '/previa': typeof PreviaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
+  '/empresa/$companyId': typeof EmpresaCompanyIdRoute
+  '/item/$itemId': typeof ItemItemIdRoute
   '/painel/agenda': typeof PainelAgendaRoute
   '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
@@ -163,6 +235,7 @@ export interface FileRoutesByTo {
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel': typeof PainelIndexRoute
+  '/empresas/$citySlug/$companySlug': typeof EmpresasCitySlugCompanySlugRoute
   '/painel/disputas/$disputeId': typeof PainelDisputasDisputeIdRoute
   '/painel/mensagens/$conversationId': typeof PainelMensagensConversationIdRoute
   '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
@@ -171,13 +244,21 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ajuda': typeof AjudaRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
+  '/conta': typeof ContaRoute
   '/entrar': typeof EntrarRoute
+  '/favoritos': typeof FavoritosRoute
   '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRouteWithChildren
+  '/previa': typeof PreviaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/$categorySlug/$citySlug': typeof CategorySlugCitySlugRoute
+  '/empresa/$companyId': typeof EmpresaCompanyIdRoute
+  '/item/$itemId': typeof ItemItemIdRoute
   '/painel/agenda': typeof PainelAgendaRoute
   '/painel/carteira': typeof PainelCarteiraRoute
   '/painel/disponibilidade': typeof PainelDisponibilidadeRoute
@@ -185,6 +266,7 @@ export interface FileRoutesById {
   '/painel/perfil': typeof PainelPerfilRoute
   '/painel/servicos': typeof PainelServicosRoute
   '/painel/': typeof PainelIndexRoute
+  '/empresas/$citySlug/$companySlug': typeof EmpresasCitySlugCompanySlugRoute
   '/painel/disputas/$disputeId': typeof PainelDisputasDisputeIdRoute
   '/painel/mensagens/$conversationId': typeof PainelMensagensConversationIdRoute
   '/profissionais/$citySlug/$profileSlug': typeof ProfissionaisCitySlugProfileSlugRoute
@@ -194,13 +276,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/ajuda'
     | '/buscar'
     | '/cadastro'
+    | '/conta'
     | '/entrar'
+    | '/favoritos'
     | '/onboarding'
     | '/painel'
+    | '/previa'
+    | '/privacidade'
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
+    | '/empresa/$companyId'
+    | '/item/$itemId'
     | '/painel/agenda'
     | '/painel/carteira'
     | '/painel/disponibilidade'
@@ -208,6 +298,7 @@ export interface FileRouteTypes {
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
+    | '/empresas/$citySlug/$companySlug'
     | '/painel/disputas/$disputeId'
     | '/painel/mensagens/$conversationId'
     | '/profissionais/$citySlug/$profileSlug'
@@ -215,12 +306,20 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
+    | '/ajuda'
     | '/buscar'
     | '/cadastro'
+    | '/conta'
     | '/entrar'
+    | '/favoritos'
     | '/onboarding'
+    | '/previa'
+    | '/privacidade'
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
+    | '/empresa/$companyId'
+    | '/item/$itemId'
     | '/painel/agenda'
     | '/painel/carteira'
     | '/painel/disponibilidade'
@@ -228,6 +327,7 @@ export interface FileRouteTypes {
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel'
+    | '/empresas/$citySlug/$companySlug'
     | '/painel/disputas/$disputeId'
     | '/painel/mensagens/$conversationId'
     | '/profissionais/$citySlug/$profileSlug'
@@ -235,13 +335,21 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/ajuda'
     | '/buscar'
     | '/cadastro'
+    | '/conta'
     | '/entrar'
+    | '/favoritos'
     | '/onboarding'
     | '/painel'
+    | '/previa'
+    | '/privacidade'
     | '/recuperar-senha'
     | '/$categorySlug/$citySlug'
+    | '/empresa/$companyId'
+    | '/item/$itemId'
     | '/painel/agenda'
     | '/painel/carteira'
     | '/painel/disponibilidade'
@@ -249,6 +357,7 @@ export interface FileRouteTypes {
     | '/painel/perfil'
     | '/painel/servicos'
     | '/painel/'
+    | '/empresas/$citySlug/$companySlug'
     | '/painel/disputas/$disputeId'
     | '/painel/mensagens/$conversationId'
     | '/profissionais/$citySlug/$profileSlug'
@@ -257,13 +366,22 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AjudaRoute: typeof AjudaRoute
   BuscarRoute: typeof BuscarRoute
   CadastroRoute: typeof CadastroRoute
+  ContaRoute: typeof ContaRoute
   EntrarRoute: typeof EntrarRoute
+  FavoritosRoute: typeof FavoritosRoute
   OnboardingRoute: typeof OnboardingRoute
   PainelRoute: typeof PainelRouteWithChildren
+  PreviaRoute: typeof PreviaRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   CategorySlugCitySlugRoute: typeof CategorySlugCitySlugRoute
+  EmpresaCompanyIdRoute: typeof EmpresaCompanyIdRoute
+  ItemItemIdRoute: typeof ItemItemIdRoute
+  EmpresasCitySlugCompanySlugRoute: typeof EmpresasCitySlugCompanySlugRoute
   ProfissionaisCitySlugProfileSlugRoute: typeof ProfissionaisCitySlugProfileSlugRoute
 }
 
@@ -274,6 +392,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ajuda': {
+      id: '/ajuda'
+      path: '/ajuda'
+      fullPath: '/ajuda'
+      preLoaderRoute: typeof AjudaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/buscar': {
@@ -290,11 +422,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CadastroRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/conta': {
+      id: '/conta'
+      path: '/conta'
+      fullPath: '/conta'
+      preLoaderRoute: typeof ContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/entrar': {
       id: '/entrar'
       path: '/entrar'
       fullPath: '/entrar'
       preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -311,6 +457,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/previa': {
+      id: '/previa'
+      path: '/previa'
+      fullPath: '/previa'
+      preLoaderRoute: typeof PreviaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recuperar-senha': {
       id: '/recuperar-senha'
       path: '/recuperar-senha'
@@ -323,6 +483,20 @@ declare module '@tanstack/react-router' {
       path: '/$categorySlug/$citySlug'
       fullPath: '/$categorySlug/$citySlug'
       preLoaderRoute: typeof CategorySlugCitySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/empresa/$companyId': {
+      id: '/empresa/$companyId'
+      path: '/empresa/$companyId'
+      fullPath: '/empresa/$companyId'
+      preLoaderRoute: typeof EmpresaCompanyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/item/$itemId': {
+      id: '/item/$itemId'
+      path: '/item/$itemId'
+      fullPath: '/item/$itemId'
+      preLoaderRoute: typeof ItemItemIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/painel/': {
@@ -373,6 +547,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/painel/servicos'
       preLoaderRoute: typeof PainelServicosRouteImport
       parentRoute: typeof PainelRoute
+    }
+    '/empresas/$citySlug/$companySlug': {
+      id: '/empresas/$citySlug/$companySlug'
+      path: '/empresas/$citySlug/$companySlug'
+      fullPath: '/empresas/$citySlug/$companySlug'
+      preLoaderRoute: typeof EmpresasCitySlugCompanySlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/painel/disputas/$disputeId': {
       id: '/painel/disputas/$disputeId'
@@ -436,13 +617,22 @@ const PainelRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AjudaRoute: AjudaRoute,
   BuscarRoute: BuscarRoute,
   CadastroRoute: CadastroRoute,
+  ContaRoute: ContaRoute,
   EntrarRoute: EntrarRoute,
+  FavoritosRoute: FavoritosRoute,
   OnboardingRoute: OnboardingRoute,
   PainelRoute: PainelRouteWithChildren,
+  PreviaRoute: PreviaRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   CategorySlugCitySlugRoute: CategorySlugCitySlugRoute,
+  EmpresaCompanyIdRoute: EmpresaCompanyIdRoute,
+  ItemItemIdRoute: ItemItemIdRoute,
+  EmpresasCitySlugCompanySlugRoute: EmpresasCitySlugCompanySlugRoute,
   ProfissionaisCitySlugProfileSlugRoute: ProfissionaisCitySlugProfileSlugRoute,
 }
 export const routeTree = rootRouteImport

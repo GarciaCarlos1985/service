@@ -2,10 +2,11 @@ import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Button, Card, CardBody, Input } from '~/modules/ui'
+import { Alert, Button, Card, CardBody, Input } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { signUpSchema } from '~/modules/auth/schemas'
 import type { SignUpInput } from '~/modules/auth/schemas'
+import { GuideAuthLayout } from '~/modules/guide/GuideShell'
 
 export const Route = createFileRoute('/cadastro')({
   component: SignUpPage,
@@ -16,6 +17,7 @@ function SignUpPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [confirmation, setConfirmation] = useState(false)
 
   const {
     register,
@@ -29,8 +31,9 @@ function SignUpPage() {
     setError(null)
     setLoading(true)
     try {
-      await signUp(values)
-      await router.navigate({ to: '/onboarding' })
+      const result = await signUp(values)
+      if (result.requiresConfirmation) setConfirmation(true)
+      else await router.navigate({ to: '/conta' })
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Não foi possível criar a conta. Tente novamente.',
@@ -41,20 +44,20 @@ function SignUpPage() {
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center px-4 py-12">
+    <GuideAuthLayout>
       <Card className="w-full max-w-md">
         <CardBody className="space-y-6">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-slate-900">Criar conta</h1>
-            <p className="mt-1 text-sm text-slate-500">Leva menos de um minuto</p>
+            <p className="mt-1 text-sm text-slate-500">
+              Guarde seus favoritos e descubra negócios locais.
+            </p>
           </div>
 
-          {error ? (
-            <p
-              role="alert"
-              className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-            >
-              {error}
+          {error ? <Alert variant="error">{error}</Alert> : null}
+          {confirmation ? (
+            <p className="rounded-xl bg-green-50 p-4 text-sm text-green-800" role="status">
+              Confira seu e-mail para confirmar a conta. Depois, entre com sua senha.
             </p>
           ) : null}
 
@@ -72,6 +75,14 @@ function SignUpPage() {
               placeholder="Maria da Silva"
               error={errors.fullName?.message}
               {...register('fullName')}
+            />
+            <Input
+              label="Telefone com DDD"
+              type="tel"
+              autoComplete="tel"
+              placeholder="(69) 99999-9999"
+              error={errors.phone?.message}
+              {...register('phone')}
             />
             <Input
               label="E-mail"
@@ -103,6 +114,6 @@ function SignUpPage() {
           </p>
         </CardBody>
       </Card>
-    </main>
+    </GuideAuthLayout>
   )
 }

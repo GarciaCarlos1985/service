@@ -226,7 +226,9 @@ function DisputeDetailPage() {
                     }`}
                   >
                     <p>{message.body}</p>
-                    <p className={`mt-0.5 text-[10px] ${mine ? 'text-white/70' : 'text-slate-400'}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${mine ? 'text-white/70' : 'text-slate-400'}`}
+                    >
                       {new Date(message.created_at).toLocaleString('pt-BR', {
                         dateStyle: 'short',
                         timeStyle: 'short',

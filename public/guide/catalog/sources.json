@@ -1,0 +1,38 @@
+[
+  {
+    "file": "barber.webp",
+    "width": 800,
+    "height": 450,
+    "bytes": 30680,
+    "photographer": "Nate Johnston",
+    "sourceUrl": "https://unsplash.com/photos/a-man-cutting-another-mans-hair-with-a-pair-of-scissors-tgPrIYnW3g4",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "altPtBR": "Barbeiro cortando o cabelo de um cliente com tesoura e pente.",
+    "usage": "Illustrative demo business image; does not depict or endorse an actual Cacoal company."
+  },
+  {
+    "file": "paint.webp",
+    "width": 800,
+    "height": 450,
+    "bytes": 30608,
+    "photographer": "Pavel Danilyuk",
+    "sourceUrl": "https://www.pexels.com/photo/paint-roller-on-top-of-a-pail-6764266/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/",
+    "altPtBR": "Rolo de pintura sobre baldes de tinta para reforma residencial.",
+    "usage": "Illustrative demo business image; does not depict or endorse an actual Cacoal company."
+  },
+  {
+    "file": "repair.webp",
+    "width": 800,
+    "height": 450,
+    "bytes": 41618,
+    "photographer": "Mediahooch Pixels",
+    "sourceUrl": "https://www.pexels.com/photo/a-woman-repairing-laptop-16385070/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/",
+    "altPtBR": "Técnica reparando um notebook aberto com ferramentas sobre a bancada.",
+    "usage": "Illustrative demo business image; does not depict or endorse an actual Cacoal company."
+  }
+]

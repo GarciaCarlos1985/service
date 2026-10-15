@@ -1,0 +1,566 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T15:39:06.055960+00:00",
+  "title": "Design System: Service Guide",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Azul de ação",
+        "tonalRamp": [
+          "oklch(15% 0.18015 257.88)",
+          "oklch(27% 0.18015 257.88)",
+          "oklch(38% 0.18015 257.88)",
+          "oklch(50% 0.18015 257.88)",
+          "oklch(61% 0.18015 257.88)",
+          "oklch(73% 0.18015 257.88)",
+          "oklch(84% 0.18015 257.88)",
+          "oklch(95% 0.18015 257.88)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Azul de ação em hover",
+        "tonalRamp": [
+          "oklch(15% 0.15806 258.15)",
+          "oklch(27% 0.15806 258.15)",
+          "oklch(38% 0.15806 258.15)",
+          "oklch(50% 0.15806 258.15)",
+          "oklch(61% 0.15806 258.15)",
+          "oklch(73% 0.15806 258.15)",
+          "oklch(84% 0.15806 258.15)",
+          "oklch(95% 0.15806 258.15)"
+        ]
+      },
+      "premium-ink": {
+        "role": "primary",
+        "displayName": "Marinho premium",
+        "tonalRamp": [
+          "oklch(15% 0.06737 252.19)",
+          "oklch(27% 0.06737 252.19)",
+          "oklch(38% 0.06737 252.19)",
+          "oklch(50% 0.06737 252.19)",
+          "oklch(61% 0.06737 252.19)",
+          "oklch(73% 0.06737 252.19)",
+          "oklch(84% 0.06737 252.19)",
+          "oklch(95% 0.06737 252.19)"
+        ]
+      },
+      "premium-ink-hover": {
+        "role": "primary",
+        "displayName": "Marinho premium em hover",
+        "tonalRamp": [
+          "oklch(15% 0.09817 250.87)",
+          "oklch(27% 0.09817 250.87)",
+          "oklch(38% 0.09817 250.87)",
+          "oklch(50% 0.09817 250.87)",
+          "oklch(61% 0.09817 250.87)",
+          "oklch(73% 0.09817 250.87)",
+          "oklch(84% 0.09817 250.87)",
+          "oklch(95% 0.09817 250.87)"
+        ]
+      },
+      "premium-green": {
+        "role": "secondary",
+        "displayName": "Verde premium",
+        "tonalRamp": [
+          "oklch(15% 0.15560 134.69)",
+          "oklch(27% 0.15560 134.69)",
+          "oklch(38% 0.15560 134.69)",
+          "oklch(50% 0.15560 134.69)",
+          "oklch(61% 0.15560 134.69)",
+          "oklch(73% 0.15560 134.69)",
+          "oklch(84% 0.15560 134.69)",
+          "oklch(95% 0.15560 134.69)"
+        ]
+      },
+      "search-green-hover": {
+        "role": "secondary",
+        "displayName": "Verde de busca em hover",
+        "tonalRamp": [
+          "oklch(15% 0.12977 135.45)",
+          "oklch(27% 0.12977 135.45)",
+          "oklch(38% 0.12977 135.45)",
+          "oklch(50% 0.12977 135.45)",
+          "oklch(61% 0.12977 135.45)",
+          "oklch(73% 0.12977 135.45)",
+          "oklch(84% 0.12977 135.45)",
+          "oklch(95% 0.12977 135.45)"
+        ]
+      },
+      "search-ink": {
+        "role": "secondary",
+        "displayName": "Tinta da busca",
+        "tonalRamp": [
+          "oklch(15% 0.07433 142.50)",
+          "oklch(27% 0.07433 142.50)",
+          "oklch(38% 0.07433 142.50)",
+          "oklch(50% 0.07433 142.50)",
+          "oklch(61% 0.07433 142.50)",
+          "oklch(73% 0.07433 142.50)",
+          "oklch(84% 0.07433 142.50)",
+          "oklch(95% 0.07433 142.50)"
+        ]
+      },
+      "whatsapp": {
+        "role": "secondary",
+        "displayName": "Contato convencional",
+        "tonalRamp": [
+          "oklch(15% 0.13126 151.17)",
+          "oklch(27% 0.13126 151.17)",
+          "oklch(38% 0.13126 151.17)",
+          "oklch(50% 0.13126 151.17)",
+          "oklch(61% 0.13126 151.17)",
+          "oklch(73% 0.13126 151.17)",
+          "oklch(84% 0.13126 151.17)",
+          "oklch(95% 0.13126 151.17)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Branco",
+        "tonalRamp": [
+          "oklch(15% 0.00000 0.00)",
+          "oklch(27% 0.00000 0.00)",
+          "oklch(38% 0.00000 0.00)",
+          "oklch(50% 0.00000 0.00)",
+          "oklch(61% 0.00000 0.00)",
+          "oklch(73% 0.00000 0.00)",
+          "oklch(84% 0.00000 0.00)",
+          "oklch(95% 0.00000 0.00)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Tinta global",
+        "tonalRamp": [
+          "oklch(15% 0.05665 255.40)",
+          "oklch(27% 0.05665 255.40)",
+          "oklch(38% 0.05665 255.40)",
+          "oklch(50% 0.05665 255.40)",
+          "oklch(61% 0.05665 255.40)",
+          "oklch(73% 0.05665 255.40)",
+          "oklch(84% 0.05665 255.40)",
+          "oklch(95% 0.05665 255.40)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Cinza azulado",
+        "tonalRamp": [
+          "oklch(15% 0.04353 253.46)",
+          "oklch(27% 0.04353 253.46)",
+          "oklch(38% 0.04353 253.46)",
+          "oklch(50% 0.04353 253.46)",
+          "oklch(61% 0.04353 253.46)",
+          "oklch(73% 0.04353 253.46)",
+          "oklch(84% 0.04353 253.46)",
+          "oklch(95% 0.04353 253.46)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Linha de campo",
+        "tonalRamp": [
+          "oklch(15% 0.01850 250.60)",
+          "oklch(27% 0.01850 250.60)",
+          "oklch(38% 0.01850 250.60)",
+          "oklch(50% 0.01850 250.60)",
+          "oklch(61% 0.01850 250.60)",
+          "oklch(73% 0.01850 250.60)",
+          "oklch(84% 0.01850 250.60)",
+          "oklch(95% 0.01850 250.60)"
+        ]
+      },
+      "card-border": {
+        "role": "neutral",
+        "displayName": "Linha de cartão",
+        "tonalRamp": [
+          "oklch(15% 0.01563 248.00)",
+          "oklch(27% 0.01563 248.00)",
+          "oklch(38% 0.01563 248.00)",
+          "oklch(50% 0.01563 248.00)",
+          "oklch(61% 0.01563 248.00)",
+          "oklch(73% 0.01563 248.00)",
+          "oklch(84% 0.01563 248.00)",
+          "oklch(95% 0.01563 248.00)"
+        ]
+      },
+      "surface-soft": {
+        "role": "neutral",
+        "displayName": "Superfície suave",
+        "tonalRamp": [
+          "oklch(15% 0.00622 255.47)",
+          "oklch(27% 0.00622 255.47)",
+          "oklch(38% 0.00622 255.47)",
+          "oklch(50% 0.00622 255.47)",
+          "oklch(61% 0.00622 255.47)",
+          "oklch(73% 0.00622 255.47)",
+          "oklch(84% 0.00622 255.47)",
+          "oklch(95% 0.00622 255.47)"
+        ]
+      },
+      "brand-soft": {
+        "role": "neutral",
+        "displayName": "Azul suave",
+        "tonalRamp": [
+          "oklch(15% 0.01878 255.53)",
+          "oklch(27% 0.01878 255.53)",
+          "oklch(38% 0.01878 255.53)",
+          "oklch(50% 0.01878 255.53)",
+          "oklch(61% 0.01878 255.53)",
+          "oklch(73% 0.01878 255.53)",
+          "oklch(84% 0.01878 255.53)",
+          "oklch(95% 0.01878 255.53)"
+        ]
+      },
+      "field-soft": {
+        "role": "neutral",
+        "displayName": "Fundo de campo",
+        "tonalRamp": [
+          "oklch(15% 0.00623 255.47)",
+          "oklch(27% 0.00623 255.47)",
+          "oklch(38% 0.00623 255.47)",
+          "oklch(50% 0.00623 255.47)",
+          "oklch(61% 0.00623 255.47)",
+          "oklch(73% 0.00623 255.47)",
+          "oklch(84% 0.00623 255.47)",
+          "oklch(95% 0.00623 255.47)"
+        ]
+      },
+      "master-soft": {
+        "role": "secondary",
+        "displayName": "Dourado champanhe do selo Premium Guide",
+        "tonalRamp": [
+          "oklch(15% 0.09701 87.69)",
+          "oklch(27% 0.09701 87.69)",
+          "oklch(38% 0.09701 87.69)",
+          "oklch(50% 0.09701 87.69)",
+          "oklch(61% 0.09701 87.69)",
+          "oklch(73% 0.09701 87.69)",
+          "oklch(84% 0.09701 87.69)",
+          "oklch(95% 0.09701 87.69)"
+        ]
+      },
+      "master-ink": {
+        "role": "secondary",
+        "displayName": "Tinta escura do selo Premium Guide",
+        "tonalRamp": [
+          "oklch(15% 0.04524 76.64)",
+          "oklch(27% 0.04524 76.64)",
+          "oklch(38% 0.04524 76.64)",
+          "oklch(50% 0.04524 76.64)",
+          "oklch(61% 0.04524 76.64)",
+          "oklch(73% 0.04524 76.64)",
+          "oklch(84% 0.04524 76.64)",
+          "oklch(95% 0.04524 76.64)"
+        ]
+      },
+      "premium-muted": {
+        "role": "neutral",
+        "displayName": "Texto auxiliar premium",
+        "tonalRamp": [
+          "oklch(15% 0.02949 244.95)",
+          "oklch(27% 0.02949 244.95)",
+          "oklch(38% 0.02949 244.95)",
+          "oklch(50% 0.02949 244.95)",
+          "oklch(61% 0.02949 244.95)",
+          "oklch(73% 0.02949 244.95)",
+          "oklch(84% 0.02949 244.95)",
+          "oklch(95% 0.02949 244.95)"
+        ]
+      },
+      "destructive": {
+        "role": "secondary",
+        "displayName": "Erro",
+        "tonalRamp": [
+          "oklch(15% 0.18205 29.51)",
+          "oklch(27% 0.18205 29.51)",
+          "oklch(38% 0.18205 29.51)",
+          "oklch(50% 0.18205 29.51)",
+          "oklch(61% 0.18205 29.51)",
+          "oklch(73% 0.18205 29.51)",
+          "oklch(84% 0.18205 29.51)",
+          "oklch(95% 0.18205 29.51)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Busca ampla",
+        "purpose": "Título até 6rem; variantes responsivas registradas em DESIGN.md."
+      },
+      "headline": {
+        "displayName": "Seção",
+        "purpose": "Resultados com peso 800."
+      },
+      "title": {
+        "displayName": "Nome da empresa",
+        "purpose": "Cartões; categoria permanece abaixo do nome."
+      },
+      "body": {
+        "displayName": "Leitura",
+        "purpose": "Descrição e conteúdo de perfil."
+      }
+    },
+    "shadows": [
+      {
+        "name": "master-card",
+        "value": "0 12px 30px rgb(11 41 72 / 12%)",
+        "purpose": "Cartão patrocinado em repouso."
+      },
+      {
+        "name": "master-card-hover",
+        "value": "0 16px 36px rgb(11 41 72 / 16%)",
+        "purpose": "Elevação do cartão patrocinado em hover."
+      },
+      {
+        "name": "favorite",
+        "value": "0 3px 8px rgb(0 0 0 / 10%)",
+        "purpose": "Favorito sobre fotografia."
+      },
+      {
+        "name": "consent",
+        "value": "0 10px 30px rgb(18 47 82 / 10%)",
+        "purpose": "Consentimento sobreposto."
+      },
+      {
+        "name": "mobile-nav",
+        "value": "0 -6px 24px rgb(11 41 72 / 5%)",
+        "purpose": "Barra móvel."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "background 0.18s, color 0.18s",
+        "purpose": "Controles gerais do guia."
+      },
+      {
+        "name": "card-transition",
+        "value": "transform 250ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Deslocamento de -5px no hover; removido em reduced motion."
+      },
+      {
+        "name": "cover-transition",
+        "value": "transform 0.3s",
+        "purpose": "Ampliação 1.035 em hover; removida em reduced motion."
+      },
+      {
+        "name": "master-reveal",
+        "value": "650ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "Clip e blur na troca manual de foto; sem autoplay; removido em reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile-max",
+        "value": "640px"
+      },
+      {
+        "name": "hero-stack-max",
+        "value": "720px"
+      },
+      {
+        "name": "help-stack-max",
+        "value": "800px"
+      },
+      {
+        "name": "two-columns-max",
+        "value": "950px"
+      },
+      {
+        "name": "admin-horizontal-max",
+        "value": "1050px"
+      },
+      {
+        "name": "compact-desktop-max",
+        "value": "1180px"
+      },
+      {
+        "name": "hero-wide-min",
+        "value": "1500px"
+      }
+    ],
+    "rampPolicy": "Rampas OKLCH sintetizadas apenas para visualização; não são cores aprovadas para novas telas. Frontmatter permanece normativo.",
+    "sources": [
+      "src/styles/guide.css",
+      "src/styles/guide-premium.css",
+      "src/modules/guide/GuideShell.tsx",
+      "src/modules/guide/components/Premium.tsx",
+      "src/modules/guide/components/shared.tsx",
+      "src/modules/guide/screens/Directory.tsx",
+      "src/modules/guide/screens/CompanyDetail.tsx",
+      "src/modules/ui/button.tsx",
+      "src/styles/app.css"
+    ],
+    "assets": {
+      "logo": {
+        "path": "public/service-guide.png",
+        "width": 1672,
+        "height": 941,
+        "source": "Original fornecido pelo usuário, usado sem alteração visual.",
+        "provenance": "public/service-guide.png.json"
+      },
+      "existingRasterProvenance": [
+        "public/guide/service-guide.webp.json",
+        "public/guide/catalog/barber.webp.json",
+        "public/guide/catalog/paint.webp.json",
+        "public/guide/catalog/tech.webp.json"
+      ],
+      "photographySources": "public/guide/catalog/sources.json",
+      "generation": "Nenhum asset gerado nesta evolução."
+    },
+    "review": {
+      "path": ".impeccable/review/premium/finish-review.md",
+      "initialDisposition": "fix",
+      "postFixDisposition": "ship",
+      "scope": "Adendo resolve somente auth e categorias; não foram visíveis regressões nas oito capturas substitutas. Persistência atendida por este par de documentos. Sem validação de CRUD autenticado, banco remoto ou produção.",
+      "captures": [
+        ".impeccable/review/premium/desktop.jpg",
+        ".impeccable/review/premium/desktop-cards.jpg",
+        ".impeccable/review/premium/mobile.jpg",
+        ".impeccable/review/premium/mobile-spotlight.jpg",
+        ".impeccable/review/premium/company-mobile.jpg",
+        ".impeccable/review/premium/company-items-mobile.jpg",
+        ".impeccable/review/premium/auth-mobile.jpg",
+        ".impeccable/review/premium/user-614.jpg"
+      ],
+      "captureLimitations": "Recortes de viewport ou após rolagem. Desktop 1440 reduzido nativamente a 600; mobile 390x640; user-614 614x672. Nenhuma captura full-page válida.",
+      "reportedValidation": {
+        "source": "Agente principal; não executada novamente pelo documenter.",
+        "typecheck": "PASS",
+        "lint": "0 erros, 37 avisos",
+        "tests": "56 testes em 9 arquivos",
+        "build": "PASS",
+        "detector": "Uma execução: []",
+        "provenance": "5 rasters sem procedência faltante"
+      },
+      "reportedAuthContrast": {
+        "normalWhiteLabel": "14.74:1",
+        "hoverWhiteLabel": "8.86:1",
+        "placeholderOnWhite": "5.98:1",
+        "limitation": "Valores comunicados pelo agente principal; o revisor visual não certificou independentemente medições computadas de hover/foco."
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Ação principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Salvar alterações",
+      "html": "<button type=\"button\" class=\"ds-primary\">Salvar alterações</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;border:0;border-radius:10px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:var(--primary,#1264ce);color:#fff;}.ds-primary:hover{background:#0b50aa;}.ds-primary:focus-visible{outline:3px solid #2078d3;outline-offset:3px;}.ds-primary:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Ação contornada",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Só essenciais",
+      "html": "<button type=\"button\" class=\"ds-outline\">Só essenciais</button>",
+      "css": ".ds-outline{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;border:0;border-radius:10px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:#fff;color:var(--foreground,#172c47);border:1px solid var(--border,#d8e2ed);}.ds-outline:hover{background:#edf4fe;color:var(--primary,#1264ce);}.ds-outline:focus-visible{outline:3px solid #2078d3;outline-offset:3px;}.ds-outline:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-outline{transition:none}}"
+    },
+    {
+      "name": "Busca",
+      "kind": "button",
+      "refersTo": "button-search",
+      "description": "Buscar",
+      "html": "<button type=\"button\" class=\"ds-search\">Buscar</button>",
+      "css": ".ds-search{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;border:0;border-radius:8px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:var(--premium-green,#a2e579);color:#123510;height:54px;min-width:96px;}.ds-search:hover{background:#b7f199;}.ds-search:focus-visible{outline:3px solid #2078d3;outline-offset:3px;}.ds-search:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-search{transition:none}}"
+    },
+    {
+      "name": "Contato WhatsApp",
+      "kind": "button",
+      "refersTo": "button-whatsapp",
+      "description": "WhatsApp",
+      "html": "<button type=\"button\" class=\"ds-whatsapp\">WhatsApp</button>",
+      "css": ".ds-whatsapp{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;border:0;border-radius:10px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:#137c3e;color:#fff;}.ds-whatsapp:hover{background:#137c3e;}.ds-whatsapp:focus-visible{outline:3px solid #2078d3;outline-offset:3px;}.ds-whatsapp:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-whatsapp{transition:none}}"
+    },
+    {
+      "name": "Campo com rótulo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de texto nomeado; leitura de 16px.",
+      "html": "<label class=\"ds-field\">Nome<input type=\"text\" placeholder=\"Seu nome\" /></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:7px;font:700 14px/1.6 Manrope,Arial,sans-serif;color:var(--foreground,#172c47)}.ds-field input{width:100%;min-width:0;font:400 16px/1.6 Manrope,Arial,sans-serif;background:#fff;color:var(--foreground,#172c47);border:1px solid var(--border,#d8e2ed);border-radius:8px;padding:11px 13px;caret-color:var(--primary,#1264ce)}.ds-field input::placeholder{color:#52657c;opacity:1}.ds-field input:focus-visible{outline:3px solid #2078d3;outline-offset:3px;}.ds-field input[readonly]{background:#f4f7fb}"
+    },
+    {
+      "name": "Filtro aplicado",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Filtro ativo e removível com nome acessível.",
+      "html": "<button type=\"button\" class=\"ds-filter\" aria-label=\"Remover filtro: Cacoal\">Cacoal<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m18 6-12 12M6 6l12 12\"/></svg></button>",
+      "css": ".ds-filter{display:inline-flex;align-items:center;gap:8px;background:var(--brand-soft,#eaf3ff);color:#164b8e;border:0;border-radius:6px;padding:8px 10px;min-height:40px;font:400 14px/1.6 Manrope,Arial,sans-serif;cursor:pointer}.ds-filter:hover{background:#dceaff}.ds-filter:focus-visible{outline:3px solid #2078d3;outline-offset:3px;}"
+    },
+    {
+      "name": "Patrocínio Premium Guide",
+      "kind": "chip",
+      "refersTo": "master-badge",
+      "description": "Destaque patrocinado por plan.featured; não representa reputação.",
+      "html": "<span class=\"ds-master\"><svg aria-hidden=\"true\" width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m2 8 5 4 5-9 5 9 5-4-3 13H5L2 8Z\"/></svg><span>PREMIUM GUIDE<small>Destaque patrocinado</small></span></span>",
+      "css": ".ds-master{display:inline-flex;align-items:center;gap:8px;flex:none;background:#e5c77f;color:#3a2a11;border-radius:7px;padding:9px 12px;font:800 12px/1.25 Manrope,Arial,sans-serif;text-align:left}.ds-master small{display:block;margin-top:3px;font-size:9px;font-weight:600}"
+    },
+    {
+      "name": "Cartão Premium Guide",
+      "kind": "card",
+      "refersTo": "company-card-master",
+      "description": "Variante patrocinada, com categoria abaixo do nome. Exemplo esquemático sem reputação ou foto inventada.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-body\"><span class=\"ds-sponsored\">PREMIUM GUIDE · Destaque patrocinado</span><h3><a href=\"#perfil\">Empresa de exemplo</a></h3><p class=\"ds-card-category\">Categoria</p><p class=\"ds-location\">Cacoal</p><p class=\"ds-description\">Descrição ilustrativa de um perfil demonstrativo do guia.</p><div class=\"ds-bottom\"><span>Perfil de exemplo</span><a href=\"#perfil\">Ver perfil</a></div></div></article>",
+      "css": ".ds-card{overflow:hidden;display:flex;flex-direction:column;border:0;border-radius:16px;color:#fff;background:var(--premium-ink,#0b2948);font:400 16px/1.6 Manrope,Arial,sans-serif;box-shadow:0 12px 30px rgb(11 41 72 / 12%);transition:transform 250ms cubic-bezier(.16,1,.3,1)}.ds-card:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgb(11 41 72 / 16%)}.ds-card-body{padding:26px;display:flex;flex-direction:column;flex:1}.ds-sponsored{align-self:flex-start;background:#e5c77f;color:#3a2a11;border-radius:7px;padding:9px 12px;font-size:12px;font-weight:800;margin-bottom:18px}.ds-card h3{margin:0;font-size:23px;font-weight:800;line-height:1.35;letter-spacing:-.025em}.ds-card a{color:inherit;text-decoration:none}.ds-card a:focus-visible{outline:3px solid #c8f2a9;outline-offset:3px}.ds-card h3 a:hover{color:var(--premium-green,#a2e579)}.ds-card-category{margin:10px 0 0;font-size:14px;color:#c5d7e7}.ds-location{margin:8px 0 0;color:#c5d7e7;font-size:14px}.ds-description{margin:16px 0 20px;color:#c5d7e7;line-height:1.75;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ds-bottom{display:flex;justify-content:space-between;align-items:center;gap:5px;border-top:1px solid #3a5772;padding-top:19px;margin-top:26px;font-size:14px}.ds-bottom span{font-size:12px;color:#c5d7e7}.ds-bottom a{display:inline-flex;align-items:center;min-height:44px;color:var(--premium-green,#a2e579);font-weight:700}.ds-bottom a:hover{text-decoration:underline}@media(max-width:1180px){.ds-card-body{padding:22px}}@media(max-width:640px){.ds-card-body{padding:24px}.ds-card h3{font-size:24px}.ds-description{font-size:14px}}@media(prefers-reduced-motion:reduce){.ds-card{transition:none}.ds-card:hover{transform:none}}"
+    },
+    {
+      "name": "Navegação principal",
+      "kind": "nav",
+      "description": "Links de cabeçalho com conta sólida marinho e indicação da página atual.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegação principal\"><a href=\"#explorar\" aria-current=\"page\">Explorar</a><a href=\"#favoritos\">Favoritos</a><a href=\"#ajuda\">Ajuda</a><a class=\"ds-account\" href=\"#conta\">Entrar</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:28px;font:700 14px/1.6 Manrope,Arial,sans-serif;color:var(--foreground,#172c47)}.ds-nav a{display:inline-flex;align-items:center;gap:8px;min-height:44px;text-decoration:none;color:inherit}.ds-nav a[aria-current=\"page\"],.ds-nav a:hover{color:var(--primary,#1264ce)}.ds-nav a:focus-visible{outline:3px solid #2078d3;outline-offset:3px;}.ds-account{padding:0 20px;border:0;border-radius:10px;background:var(--premium-ink,#0b2948);color:#fff;min-height:48px}@media(max-width:1180px){.ds-nav{gap:22px}}@media(max-width:640px){.ds-nav>a:not(.ds-account){display:none}.ds-account{padding:0 14px}}.ds-nav .ds-account:hover{background:#194c7d;color:#fff}",
+      "refersTo": "navigation"
+    },
+    {
+      "name": "Submit de autenticação",
+      "kind": "button",
+      "refersTo": "button-auth",
+      "description": "Ação sólida compartilhada por login, cadastro e recuperação; sem gradiente legado.",
+      "html": "<button type=\"submit\" class=\"ds-auth\">Entrar</button>",
+      "css": ".ds-auth{background-image:none;background-color:var(--premium-ink,#0b2948);color:#fff;border:0;border-radius:12px;height:44px;width:100%;padding:0 20px;font:600 14px/1.5 Manrope,Arial,sans-serif;cursor:pointer}.ds-auth:hover:not(:disabled){background-color:#194c7d}.ds-auth:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--color-brand-blue-500,#3580fd)}.ds-auth:disabled{opacity:.5;cursor:not-allowed}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Guia comercial local",
+    "overview": "Branco, marinho, azul e verde apresentam o comércio de Cacoal com busca direta, Manrope ampla e fotografias comerciais. A evolução Premium Master autorizada em 15/10/2026 amplia a identidade escolhida: títulos grandes, maior respiro e superfícies marinho distinguem exposição patrocinada, mantendo a descoberta legível no celular.\n\nEm 15/10/2026, por solicitação do usuário, o selo passou a “PREMIUM GUIDE” em dourado champanhe, mantendo “Destaque patrocinado” e a elegibilidade por `plan.featured`; contraste informado entre fundo e texto: 8.43:1.\n\nEste registro mescla as decisões confirmadas do sistema anterior com o código final em `src/styles/guide.css` e seus overrides prioritários em `src/styles/guide-premium.css`. A logo horizontal fornecida pelo usuário (`public/service-guide.png`, original 1672 × 941) aparece sem edição, com proporção preservada por `object-fit: contain`; sua procedência está em `public/service-guide.png.json`. Fotografias demonstrativas mantêm rótulos e procedência. A composição específica da primeira tela permanece em `.impeccable/surfaces/directory.md`.\n\nA revisão `.impeccable/review/premium/finish-review.md` preserva o parecer inicial `fix` e registra adendo `ship` para as duas correções visuais: autenticação e categorias abaixo dos nomes. A pendência documental desse parecer é atendida por este registro e pelo sidecar. As oito capturas em `.impeccable/review/premium/` são recortes de viewport ou estados após rolagem: desktop de 1440 reduzido nativamente a 600, mobile de 390 × 640 e `user-614` de 614 × 672; nenhuma captura é de página inteira. O adendo não certifica independentemente medições computadas de hover/foco, CRUD autenticado, banco remoto ou produção. Gates e procedência comunicados pelo agente principal constam no sidecar; esta documentação não abre nova auditoria.",
+    "keyCharacteristics": [
+      "Logo azul/verde original e Manrope local mantêm continuidade.",
+      "Marinho profundo, campo branco e verde claro organizam ações e exposição paga.",
+      "Fotografias grandes e cartões com variantes comum e Premium Guide.",
+      "Categoria como informação de apoio abaixo do nome da empresa.",
+      "Refluxo móvel, navegação inferior, movimento reduzido e estados explícitos."
+    ],
+    "rules": [
+      {
+        "name": "The Cor com Função Rule",
+        "body": "Patrocínio e reputação têm evidências separadas: dourado e marinho acompanham o selo textual, nunca substituem avaliações.",
+        "section": "colors"
+      },
+      {
+        "name": "The Leitura Antes da Densidade Rule",
+        "body": "Reduza colunas e reorganize controles ao adaptar, preservando nomes, rótulos e ações visíveis.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "**Do** preservar logo original azul/verde, Manrope e marinho com verde funcional.",
+      "**Do** usar escala ampla com refluxo e leitura confortável nas faixas observadas.",
+      "**Do** apresentar categoria abaixo do nome e patrocínio explicitamente rotulado.",
+      "**Do** manter foco visível, controles nomeados, movimento reduzido e área segura.",
+      "**Do** distinguir dados comerciais reais, exemplos e ausência de dados."
+    ],
+    "donts": [
+      "**Don't** inferir reputação ou patrocínio do nome do plano.",
+      "**Don't** tratar fotos ilustrativas, preços ou avaliações ausentes como evidência comercial real.",
+      "**Don't** restaurar gradiente de autenticação, placeholders tênues ou categorias como kickers acima do título.",
+      "**Don't** adicionar autoplay à vitrine ou reutilizar medidas superadas ignorando a cascata final.",
+      "**Don't** tratar aprovação visual local como validação de CRUD autenticado, banco remoto ou produção."
+    ]
+  }
+}

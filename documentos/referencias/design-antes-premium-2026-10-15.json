@@ -1,0 +1,432 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T04:31:06.036054+00:00",
+  "title": "Design System: Service Guide",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Azul de ação",
+        "tonalRamp": [
+          "oklch(15% 0.18015 257.88)",
+          "oklch(27% 0.18015 257.88)",
+          "oklch(38% 0.18015 257.88)",
+          "oklch(50% 0.18015 257.88)",
+          "oklch(61% 0.18015 257.88)",
+          "oklch(73% 0.18015 257.88)",
+          "oklch(84% 0.18015 257.88)",
+          "oklch(95% 0.18015 257.88)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Azul de ação em hover",
+        "tonalRamp": [
+          "oklch(15% 0.15806 258.15)",
+          "oklch(27% 0.15806 258.15)",
+          "oklch(38% 0.15806 258.15)",
+          "oklch(50% 0.15806 258.15)",
+          "oklch(61% 0.15806 258.15)",
+          "oklch(73% 0.15806 258.15)",
+          "oklch(84% 0.15806 258.15)",
+          "oklch(95% 0.15806 258.15)"
+        ]
+      },
+      "navy": {
+        "role": "primary",
+        "displayName": "Marinho de busca",
+        "tonalRamp": [
+          "oklch(15% 0.07578 255.88)",
+          "oklch(27% 0.07578 255.88)",
+          "oklch(38% 0.07578 255.88)",
+          "oklch(50% 0.07578 255.88)",
+          "oklch(61% 0.07578 255.88)",
+          "oklch(73% 0.07578 255.88)",
+          "oklch(84% 0.07578 255.88)",
+          "oklch(95% 0.07578 255.88)"
+        ]
+      },
+      "search-green": {
+        "role": "secondary",
+        "displayName": "Verde de busca",
+        "tonalRamp": [
+          "oklch(15% 0.21730 136.35)",
+          "oklch(27% 0.21730 136.35)",
+          "oklch(38% 0.21730 136.35)",
+          "oklch(50% 0.21730 136.35)",
+          "oklch(61% 0.21730 136.35)",
+          "oklch(73% 0.21730 136.35)",
+          "oklch(84% 0.21730 136.35)",
+          "oklch(95% 0.21730 136.35)"
+        ]
+      },
+      "search-green-hover": {
+        "role": "secondary",
+        "displayName": "Verde de busca em hover",
+        "tonalRamp": [
+          "oklch(15% 0.20041 133.68)",
+          "oklch(27% 0.20041 133.68)",
+          "oklch(38% 0.20041 133.68)",
+          "oklch(50% 0.20041 133.68)",
+          "oklch(61% 0.20041 133.68)",
+          "oklch(73% 0.20041 133.68)",
+          "oklch(84% 0.20041 133.68)",
+          "oklch(95% 0.20041 133.68)"
+        ]
+      },
+      "search-ink": {
+        "role": "secondary",
+        "displayName": "Tinta da busca",
+        "tonalRamp": [
+          "oklch(15% 0.08148 139.06)",
+          "oklch(27% 0.08148 139.06)",
+          "oklch(38% 0.08148 139.06)",
+          "oklch(50% 0.08148 139.06)",
+          "oklch(61% 0.08148 139.06)",
+          "oklch(73% 0.08148 139.06)",
+          "oklch(84% 0.08148 139.06)",
+          "oklch(95% 0.08148 139.06)"
+        ]
+      },
+      "whatsapp": {
+        "role": "secondary",
+        "displayName": "Verde de contato",
+        "tonalRamp": [
+          "oklch(15% 0.13126 151.17)",
+          "oklch(27% 0.13126 151.17)",
+          "oklch(38% 0.13126 151.17)",
+          "oklch(50% 0.13126 151.17)",
+          "oklch(61% 0.13126 151.17)",
+          "oklch(73% 0.13126 151.17)",
+          "oklch(84% 0.13126 151.17)",
+          "oklch(95% 0.13126 151.17)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Branco",
+        "tonalRamp": [
+          "oklch(15% 0.00000 0.00)",
+          "oklch(27% 0.00000 0.00)",
+          "oklch(38% 0.00000 0.00)",
+          "oklch(50% 0.00000 0.00)",
+          "oklch(61% 0.00000 0.00)",
+          "oklch(73% 0.00000 0.00)",
+          "oklch(84% 0.00000 0.00)",
+          "oklch(95% 0.00000 0.00)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Tinta azul",
+        "tonalRamp": [
+          "oklch(15% 0.05665 255.40)",
+          "oklch(27% 0.05665 255.40)",
+          "oklch(38% 0.05665 255.40)",
+          "oklch(50% 0.05665 255.40)",
+          "oklch(61% 0.05665 255.40)",
+          "oklch(73% 0.05665 255.40)",
+          "oklch(84% 0.05665 255.40)",
+          "oklch(95% 0.05665 255.40)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Cinza azulado",
+        "tonalRamp": [
+          "oklch(15% 0.04353 253.46)",
+          "oklch(27% 0.04353 253.46)",
+          "oklch(38% 0.04353 253.46)",
+          "oklch(50% 0.04353 253.46)",
+          "oklch(61% 0.04353 253.46)",
+          "oklch(73% 0.04353 253.46)",
+          "oklch(84% 0.04353 253.46)",
+          "oklch(95% 0.04353 253.46)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Linha suave",
+        "tonalRamp": [
+          "oklch(15% 0.01850 250.60)",
+          "oklch(27% 0.01850 250.60)",
+          "oklch(38% 0.01850 250.60)",
+          "oklch(50% 0.01850 250.60)",
+          "oklch(61% 0.01850 250.60)",
+          "oklch(73% 0.01850 250.60)",
+          "oklch(84% 0.01850 250.60)",
+          "oklch(95% 0.01850 250.60)"
+        ]
+      },
+      "surface-soft": {
+        "role": "neutral",
+        "displayName": "Superfície suave",
+        "tonalRamp": [
+          "oklch(15% 0.00622 255.47)",
+          "oklch(27% 0.00622 255.47)",
+          "oklch(38% 0.00622 255.47)",
+          "oklch(50% 0.00622 255.47)",
+          "oklch(61% 0.00622 255.47)",
+          "oklch(73% 0.00622 255.47)",
+          "oklch(84% 0.00622 255.47)",
+          "oklch(95% 0.00622 255.47)"
+        ]
+      },
+      "brand-soft": {
+        "role": "neutral",
+        "displayName": "Azul suave",
+        "tonalRamp": [
+          "oklch(15% 0.01878 255.53)",
+          "oklch(27% 0.01878 255.53)",
+          "oklch(38% 0.01878 255.53)",
+          "oklch(50% 0.01878 255.53)",
+          "oklch(61% 0.01878 255.53)",
+          "oklch(73% 0.01878 255.53)",
+          "oklch(84% 0.01878 255.53)",
+          "oklch(95% 0.01878 255.53)"
+        ]
+      },
+      "field-soft": {
+        "role": "neutral",
+        "displayName": "Fundo de campo",
+        "tonalRamp": [
+          "oklch(15% 0.00623 255.47)",
+          "oklch(27% 0.00623 255.47)",
+          "oklch(38% 0.00623 255.47)",
+          "oklch(50% 0.00623 255.47)",
+          "oklch(61% 0.00623 255.47)",
+          "oklch(73% 0.00623 255.47)",
+          "oklch(84% 0.00623 255.47)",
+          "oklch(95% 0.00623 255.47)"
+        ]
+      },
+      "plan-soft": {
+        "role": "secondary",
+        "displayName": "Fundo de plano",
+        "tonalRamp": [
+          "oklch(15% 0.03733 130.37)",
+          "oklch(27% 0.03733 130.37)",
+          "oklch(38% 0.03733 130.37)",
+          "oklch(50% 0.03733 130.37)",
+          "oklch(61% 0.03733 130.37)",
+          "oklch(73% 0.03733 130.37)",
+          "oklch(84% 0.03733 130.37)",
+          "oklch(95% 0.03733 130.37)"
+        ]
+      },
+      "plan-ink": {
+        "role": "secondary",
+        "displayName": "Tinta de plano",
+        "tonalRamp": [
+          "oklch(15% 0.12469 136.26)",
+          "oklch(27% 0.12469 136.26)",
+          "oklch(38% 0.12469 136.26)",
+          "oklch(50% 0.12469 136.26)",
+          "oklch(61% 0.12469 136.26)",
+          "oklch(73% 0.12469 136.26)",
+          "oklch(84% 0.12469 136.26)",
+          "oklch(95% 0.12469 136.26)"
+        ]
+      },
+      "destructive": {
+        "role": "secondary",
+        "displayName": "Erro",
+        "tonalRamp": [
+          "oklch(15% 0.18205 29.51)",
+          "oklch(27% 0.18205 29.51)",
+          "oklch(38% 0.18205 29.51)",
+          "oklch(50% 0.18205 29.51)",
+          "oklch(61% 0.18205 29.51)",
+          "oklch(73% 0.18205 29.51)",
+          "oklch(84% 0.18205 29.51)",
+          "oklch(95% 0.18205 29.51)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Título de busca",
+        "purpose": "Hierarquia maior da faixa de busca; 2rem no celular."
+      },
+      "title": {
+        "displayName": "Nome da empresa",
+        "purpose": "Título do cartão comercial."
+      },
+      "body": {
+        "displayName": "Leitura",
+        "purpose": "Descrições e conteúdo de perfil."
+      }
+    },
+    "shadows": [
+      {
+        "name": "search",
+        "value": "0 7px 20px rgb(0 0 0 / 12%)",
+        "purpose": "Campo branco sobre marinho."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 8px 24px rgb(16 45 82 / 8%)",
+        "purpose": "Cartão em hover."
+      },
+      {
+        "name": "favorite",
+        "value": "0 3px 8px rgb(0 0 0 / 10%)",
+        "purpose": "Favorito sobre a capa."
+      },
+      {
+        "name": "elevation",
+        "value": "0 10px 30px rgb(18 47 82 / 10%)",
+        "purpose": "Consentimento sobreposto."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "background 0.18s, color 0.18s",
+        "purpose": "Botões do guia."
+      },
+      {
+        "name": "card-transition",
+        "value": "border-color 0.18s, box-shadow 0.18s",
+        "purpose": "Cartão comercial."
+      },
+      {
+        "name": "cover-transition",
+        "value": "transform 0.3s",
+        "purpose": "Ampliação scale(1.035) no hover; transições removidas em prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile-max",
+        "value": "640px"
+      },
+      {
+        "name": "help-stack-max",
+        "value": "800px"
+      },
+      {
+        "name": "two-columns-max",
+        "value": "950px"
+      },
+      {
+        "name": "admin-horizontal-max",
+        "value": "1050px"
+      },
+      {
+        "name": "wide-min",
+        "value": "1400px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ação principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Salvar alterações",
+      "html": "<button type=\"button\" class=\"ds-primary\">Salvar alterações</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border:0;border-radius:8px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:var(--primary,#1264ce);color:#fff;}.ds-primary:hover{background:#0b50aa;}.ds-primary:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}.ds-primary:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Ação contornada",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Só essenciais",
+      "html": "<button type=\"button\" class=\"ds-outline\">Só essenciais</button>",
+      "css": ".ds-outline{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border:0;border-radius:8px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:#fff;color:var(--foreground,#172c47);border:1px solid var(--border,#d8e2ed);}.ds-outline:hover{background:#edf4fe;color:var(--primary,#1264ce);}.ds-outline:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}.ds-outline:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-outline{transition:none}}"
+    },
+    {
+      "name": "Busca",
+      "kind": "button",
+      "refersTo": "button-search",
+      "description": "Buscar",
+      "html": "<button type=\"button\" class=\"ds-search\">Buscar</button>",
+      "css": ".ds-search{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border:0;border-radius:8px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:#6dd329;color:#17390c;height:48px;min-width:112px;}.ds-search:hover{background:#90e34b;}.ds-search:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}.ds-search:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-search{transition:none}}"
+    },
+    {
+      "name": "Contato WhatsApp",
+      "kind": "button",
+      "refersTo": "button-whatsapp",
+      "description": "WhatsApp",
+      "html": "<button type=\"button\" class=\"ds-whatsapp\">WhatsApp</button>",
+      "css": ".ds-whatsapp{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border:0;border-radius:8px;padding:10px 18px;font:700 14px/1.6 Manrope,Arial,sans-serif;text-align:center;white-space:normal;cursor:pointer;transition:background .18s,color .18s;background:#137c3e;color:#fff;}.ds-whatsapp:hover{background:#137c3e;}.ds-whatsapp:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}.ds-whatsapp:disabled{cursor:not-allowed;opacity:.5}@media(prefers-reduced-motion:reduce){.ds-whatsapp{transition:none}}"
+    },
+    {
+      "name": "Campo com rótulo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de texto nomeado; leitura de 16px.",
+      "html": "<label class=\"ds-field\">Nome<input type=\"text\" placeholder=\"Seu nome\" /></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:7px;font:700 14px/1.6 Manrope,Arial,sans-serif;color:var(--foreground,#172c47)}.ds-field input{width:100%;min-width:0;font:400 16px/1.6 Manrope,Arial,sans-serif;background:#fff;color:var(--foreground,#172c47);border:1px solid var(--border,#d8e2ed);border-radius:8px;padding:11px 13px;caret-color:var(--primary,#1264ce)}.ds-field input::placeholder{color:#64778a}.ds-field input:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}.ds-field input[readonly]{background:#f4f7fb}"
+    },
+    {
+      "name": "Filtro aplicado",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Filtro ativo e removível com nome acessível.",
+      "html": "<button type=\"button\" class=\"ds-filter\" aria-label=\"Remover filtro: Cacoal\">Cacoal<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m18 6-12 12M6 6l12 12\"/></svg></button>",
+      "css": ".ds-filter{display:inline-flex;align-items:center;gap:8px;background:var(--brand-soft,#eaf3ff);color:#164b8e;border:0;border-radius:6px;padding:8px 10px;min-height:40px;font:400 14px/1.6 Manrope,Arial,sans-serif;cursor:pointer}.ds-filter:hover{background:#dceaff}.ds-filter:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}"
+    },
+    {
+      "name": "Selo de plano",
+      "kind": "chip",
+      "refersTo": "plan-badge",
+      "description": "Nome do plano cujo atributo featured está ativo.",
+      "html": "<span class=\"ds-plan\">PRO</span>",
+      "css": ".ds-plan{display:inline-block;background:#e9f7dd;color:#376a18;border-radius:4px;padding:3px 8px;font:800 12px/1.6 Manrope,Arial,sans-serif;letter-spacing:.04em}"
+    },
+    {
+      "name": "Cartão comercial",
+      "kind": "card",
+      "refersTo": "company-card",
+      "description": "Estrutura demonstrativa sem fotografia ou reputação inventada.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-cover\"><svg aria-hidden=\"true\" width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 10h18L19 3H5l-2 7Z M5 10v11h14V10 M9 21v-7h6v7\"/></svg><span>Comércio local</span></div><div class=\"ds-card-body\"><div class=\"ds-card-tags\">Categoria</div><h3><a href=\"#perfil\">Empresa de exemplo</a></h3><p class=\"ds-location\">Cacoal</p><p class=\"ds-description\">Descrição ilustrativa de um perfil demonstrativo do guia.</p><div class=\"ds-bottom\"><span>Perfil de exemplo</span><a href=\"#perfil\">Ver perfil</a></div></div></article>",
+      "css": ".ds-card{overflow:hidden;display:flex;flex-direction:column;border:1px solid #dce5ef;border-radius:14px;color:var(--foreground,#172c47);font:400 16px/1.6 Manrope,Arial,sans-serif;transition:border-color .18s,box-shadow .18s}.ds-card:hover{border-color:#88b6ee;box-shadow:0 8px 24px rgb(16 45 82 / 8%)}.ds-cover{height:194px;background:#eaf2fd;color:#376187;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:14px}.ds-card-body{padding:22px;display:flex;flex-direction:column;flex:1}.ds-card-tags{font-size:14px;font-weight:700;color:#416281;margin-bottom:10px}.ds-card h3{margin:0;font-size:20px;font-weight:700;line-height:1.35;letter-spacing:-.025em}.ds-card a{color:inherit;text-decoration:none}.ds-card a:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}.ds-location{margin:8px 0 0;color:var(--muted,#52657c);font-size:14px}.ds-description{margin:14px 0 20px;color:var(--muted,#52657c);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:53px}.ds-bottom{display:flex;justify-content:space-between;align-items:center;gap:5px;border-top:1px solid #e6edf5;padding-top:15px;margin-top:auto;font-size:14px}.ds-bottom span{font-size:12px;color:var(--muted,#52657c)}.ds-bottom a{display:inline-flex;align-items:center;min-height:44px;color:var(--primary,#1264ce);font-weight:700}@media(max-width:950px){.ds-cover{height:180px}}@media(max-width:640px){.ds-cover{height:auto;aspect-ratio:16/9}.ds-card-body{padding:20px}.ds-description{min-height:0}}@media(prefers-reduced-motion:reduce){.ds-card{transition:none}}"
+    },
+    {
+      "name": "Navegação principal",
+      "kind": "nav",
+      "description": "Links textuais de cabeçalho com indicação da página atual.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegação principal\"><a href=\"#explorar\" aria-current=\"page\">Explorar</a><a href=\"#favoritos\">Favoritos</a><a href=\"#ajuda\">Ajuda</a><a class=\"ds-account\" href=\"#conta\">Entrar</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:28px;font:700 14px/1.6 Manrope,Arial,sans-serif;color:var(--foreground,#172c47)}.ds-nav a{display:inline-flex;align-items:center;gap:8px;min-height:44px;text-decoration:none;color:inherit}.ds-nav a[aria-current=\"page\"],.ds-nav a:hover{color:var(--primary,#1264ce)}.ds-nav a:focus-visible{outline:3px solid #3584ec;outline-offset:3px;}.ds-account{padding:0 20px;border:1px solid var(--border,#d8e2ed);border-radius:8px}@media(max-width:950px){.ds-nav{gap:20px}}@media(max-width:640px){.ds-nav>a:not(.ds-account){display:none}.ds-account{padding:0 14px}}",
+      "refersTo": "navigation"
+    }
+  ],
+  "narrative": {
+    "northStar": "Guia comercial local",
+    "overview": "O sistema registra a versão exportada escolhida pelo usuário e sua adaptação local. Branco, marinho, azul e verde organizam um guia comercial direto, amigável e legível. A busca tem o maior contraste; cartões, categorias e perfis apresentam o comércio de Cacoal com informação progressiva.\n\nO documento descreve o artefato em `src/styles/guide.css`, seus componentes em `src/modules/guide/` e os primitivos efetivamente usados. Considera as declarações posteriores do CSS, que substituem medidas anteriores. A revisão visual registrada em `.impeccable/review/finish-review.md` cobre esta adaptação local. A prévia `/previa` é exclusiva de desenvolvimento, rotulada e sem escritas; migração remota, CRUD autenticado e prontidão de produção não são garantias deste documento.",
+    "keyCharacteristics": [
+      "Busca em faixa marinho, campo branco e botão verde.",
+      "Manrope nos títulos, textos e controles do guia.",
+      "Cartões com borda suave, fotografia ou alternativa de categoria.",
+      "Refluxo para celular com navegação inferior e área segura.",
+      "Destaques, exemplos, ausência de dados e estados de consulta identificados em texto."
+    ],
+    "rules": [
+      {
+        "name": "The Cor com Função Rule",
+        "body": "Azul orienta ações gerais, verde vivo destaca a busca e o selo de plano permanece identificado pelo nome; cor sozinha não comunica estado.",
+        "section": "colors"
+      },
+      {
+        "name": "The Leitura Antes da Densidade Rule",
+        "body": "Preserve o corpo de leitura e os rótulos explícitos ao adaptar para celular; reduza colunas e reorganize controles.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "**Do** preservar a busca marinho com campo branco e ação verde da versão escolhida.",
+      "**Do** usar Manrope, hierarquia de leitura e refluxo de colunas observados.",
+      "**Do** manter nomes acessíveis, foco visível, estados anunciados e texto nos controles principais.",
+      "**Do** identificar planos em destaque, dados demonstrativos e ausência de avaliações em texto.",
+      "**Do** reservar espaço para navegação móvel, consentimento e área segura."
+    ],
+    "donts": [
+      "**Don't** apresentar exemplos, preços ilustrativos ou contagens ausentes como dados comerciais reais.",
+      "**Don't** substituir avaliação por selo de plano ou deduzir reputação da posição comercial.",
+      "**Don't** reintroduzir medidas antigas do CSS sem considerar as regras posteriores de adaptação.",
+      "**Don't** tratar a aprovação visual local como comprovação de migração remota ou operação em produção."
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Badge, Card, CardBody, EmptyState, Skeleton } from '~/modules/ui'
+import { Alert, Badge, Button, Card, CardBody, EmptyState, Skeleton } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { getProfile } from '~/modules/profile/profile-api'
 import { listMyServices } from '~/modules/services/services-api'
@@ -51,13 +51,10 @@ function PainelHome() {
     return (
       <Card>
         <CardBody>
-          <p
-            role="alert"
-            className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-          >
-            Não foi possível carregar seus dados. Verifique se as migrations do banco já foram
-            aplicadas (documentos/APLICANDO_MIGRATIONS.md).
-          </p>
+          <Alert variant="error" title="Não foi possível carregar seus dados">
+            Verifique se as migrations do banco já foram aplicadas
+            (documentos/APLICANDO_MIGRATIONS.md).
+          </Alert>
         </CardBody>
       </Card>
     )
@@ -115,10 +112,8 @@ function PainelHome() {
               title="Cadastre seus serviços"
               description="Quanto mais serviços cadastrados, mais fácil o cliente encontrar você."
               action={
-                <Link to="/painel/servicos" className="w-full">
-                  <span className="inline-flex h-11 w-full items-center justify-center rounded-xl brand-gradient px-5 text-sm font-semibold text-white">
-                    Gerenciar serviços
-                  </span>
+                <Link to="/painel/servicos">
+                  <Button href="/painel/servicos">Gerenciar serviços</Button>
                 </Link>
               }
             />

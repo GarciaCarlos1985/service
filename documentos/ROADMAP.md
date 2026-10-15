@@ -1,133 +1,123 @@
-# ROADMAP — SERVICE
+# ROADMAP — Service Guide
 
-Milestones da spec §76. **Status atual: Milestone 0 em andamento.**
+> **Mudança de produto (2026-10-06):** o **SERVICE** (marketplace de profissionais)
+> foi substituído pelo **Service Guide** (plataforma de descoberta comercial
+> local). Fonte de verdade: `SERVICE-GUIDE-PROMPT-INICIO.md`. Decisões:
+> `DECISIONS.md` ADR-041+. Mapa do que fazer com o código existente:
+> `REUSE-MAP.md`.
 
-## M0 — Arquitetura + auditoria (ATUAL)
+Status atual (2026-10-15): **envio do código à main autorizado pelo usuário;
+fundação comercial preparada, ainda não aplicada ao Supabase real.**
 
-- [x] Auditoria do projeto (greenfield) — `./AUDITORIA_2026-08-12.md`
-- [x] Validação TanStack Start × Cloudflare Workers (ADR-034)
-- [x] Scaffold: TanStack Start + React + TS strict + Vite + Tailwind + Query + Zod + RHF
-- [x] Design system base (`src/modules/ui/` — 15 componentes)
-- [x] Tooling Supabase (migrations) + `.env.example`
-- [x] CI: typecheck · lint · test · build
-- [x] Documentação base (ARCHITECTURE, SECURITY, DATABASE, PAYMENTS,
-      DEPLOYMENT, SEO, ADMIN, DISASTER-RECOVERY)
-- [x] Hospedagem atual: Vercel free + Supabase (ADR-036/037); repo GitHub
-      `GarciaCarlos1985/service`
-- [x] Deploy validado na Vercel (site no ar com M0–M8)
-- [ ] Decisões de fundação: nome/domínio, regiões de lançamento
+### Candidato local de 15/10/2026
 
-## M1 — Database + Auth + RLS
+A interface do pacote foi adaptada ao TanStack Start existente, com Supabase
+Auth e RPCs próprias para o domínio comercial. Busca, perfis, conta, favoritos,
+avaliações, ajuda e administração estão implementados no candidato local.
+O legado permanece separado. Ver a proposta **ADR-048**, o relatório
+`ADAPTACAO-SERVICE-GUIDE-2026-10-15.md` e a prévia DEV `/previa`.
 
-- [x] Migration init: profiles, cities, service_categories, services + RLS baseline (ADR-002)
-- [x] Seed catálogo canônico: 11 cidades (IBGE) + 12 categorias (ADR-014)
-- [x] Auth: entrar, cadastro, recuperar senha, onboarding (spec §49)
-- [x] Suíte SQL de testes de RLS (spec §63/§64 itens 1-2)
-- [x] Fix SSR dos portais (Toast/Modal)
-- [x] **Aplicar migrations no Supabase** — ✅ aplicadas em 2026-08-13 (5 correções: `make_interval`→`ends_at` em índice; `unique` parcial→índice)
-- [x] Rodar `supabase/tests/rls-security.sql` — ✅ automatizado: `node scripts/sql-tests.mjs` (15/15 verdes)
+O envio à `main` inclui a integração automática da Vercel, mas não executa
+migrações. O catálogo de produção permanece em preparação até a ativação
+e validação da fundação comercial no Supabase.
 
-## M2 — Cliente + Profissional + Serviços
+Atualização visual solicitada em 15/10: nova logo horizontal, composição de
+maior escala e apresentação **Premium Guide** para destaques patrocinados,
+derivada do recurso do plano existente. Inclui vitrine manual, cartões, perfis
+e identidade compartilhada nas telas de acesso; não conecta cobrança nem
+promove a fase de monetização a produção.
 
-- [x] Onboarding com escolha de tipo de conta (RPC `choose_user_type`, RLS mantém bloqueio direto — spec §63)
-- [x] Painel com navegação mobile-first (spec §25): Início, Serviços, Perfil
-- [x] CRUD de serviços (criar, editar, pausar/ativar, excluir com confirmação)
-- [x] Perfil editável (nome, telefone, cidade) com merge por completude (ADR-007)
-- [x] Estados de UX obrigatórios (spec §62): loading/empty/error em todas as telas
-- [ ] Dashboards completos (ganhos, avaliações, analytics) — M6/M8/M10
+Ajuste posterior na prévia: selo **PREMIUM GUIDE** com fundo dourado champanhe
+e texto escuro, aplicado pelo componente compartilhado.
 
-## M3 — Busca + SEO + Perfil público
-
-- [x] Perfil público do profissional `/profissionais/<cidade>/<nome>` com SEO (title/meta/canonical/OG/JSON-LD LocalBusiness) — spec §20/§22/§23
-- [x] Páginas categoria × cidade `/<categoria>/<cidade>` indexáveis (spec §21), só com conteúdo real (ADR-014)
-- [x] Busca com filtros categoria + cidade (PostgreSQL, spec §30) + landing com categorias e cidades
-- [x] Favoritos (spec §29) com RLS por dono
-- [x] Contrato público reduzido (ADR-016): anon lê só colunas públicas de profissionais
-- [x] Loaders resilientes (estado de erro honesto sem banco — ADR-018)
-- [ ] Ranking (proximidade/avaliação/patrocinado) — fases 2/3 (spec §66)
-
-## M4 — Agendamento + disponibilidade + double booking
-
-- [x] Disponibilidade semanal + folgas/bloqueios por data (`professional_availability`, `availability_exceptions`)
-- [x] Máquina de estados dos bookings (spec §14) com eventos auditados (`booking_events`) e guarda de transições no banco
-- [x] **Double booking bloqueado pelo banco** (EXCLUDE USING gist — ADR-009) + RPC `create_booking` com validação completa
-- [x] RPCs seguros de transição (confirmar/iniciar/concluir/cancelar — quem pode cada uma, spec §63)
-- [x] RPC `available_slots` (horários livres sem expor dados de terceiros)
-- [x] UI: seletor de dia/horário no perfil, agenda no painel (cliente e profissional), editor de disponibilidade
-- [ ] Testes SQL de double booking (adição à suíte `supabase/tests/` junto com a aplicação das migrations)
-
-## M5 — Pagamentos + Stripe abstraction
-
-- [x] Contrato `PaymentProvider` + Registry (ADR-001) + `MockProvider` claramente separado (spec §73)
-- [x] Migração: `payments`, `payment_events`, `webhook_events` (Bronze, ADR-008) com idempotency_key e `confianca_identidade` (ADR-005)
-- [x] Testes do registry/mock (19 testes no total)
-- [ ] `StripeProvider` (requer chaves Stripe Connect) — registro no registry quando existir
-- [ ] Ledger + comissão (M6) sobre o mesmo contrato
-- [ ] Fluxo booking → pagamento → confirmação (spec §15)
-
-## M6 — Ledger + cashback + comissão
-
-- [x] Ledger append-only (ADR-003): wallets + wallet_transactions **imutáveis por trigger** (vale até para postgres)
-- [x] Saldo derivado do ledger (spec §11) via `get_wallet_balance`; nenhum saldo vem do frontend
-- [x] Idempotência financeira (spec §12): `idempotency_key` única; booking processado 1x só
-- [x] Comissão configurável (spec §6): `commission_rules` (categoria/prioridade/período, bps) — default 10%, admin na M10
-- [x] Cashback pós-conclusão (spec §16): `cashback_rules` com teto mensal (5%, teto R$200/mês)
-- [x] `process_booking_financials` idempotente disparado pelo `complete_booking` (spec §15 — nada de clique manual)
-- [x] UI: `/painel/carteira` (saldo + histórico) e cartão de saldo no painel (ambos os papéis)
-- [x] **Testes no banco real: 11/11** (valores, idempotência, imutabilidade, teto mensal) + RLS 15/15 sem regressão
-- [ ] Saque/payout (profissional) e ajuste admin — M10
-- [ ] Reconciliação periódica automatizada — Fase 2 (spec §66)
-
-## M7 — Chat + notificações
-
-- [x] Conversa única por booking (spec §27: nunca rede social); só participantes (testado: terceiro bloqueado)
-- [x] Escrita 100% via RPC (ADR-002); rate limit 10 msg/min no banco; unread/read status
-- [x] Realtime em mensagens e notificações (publicação supabase_realtime)
-- [x] Notificações in-app centralizadas (spec §28) — eventos de negócio geram avisos (booking/cashback)
-- [x] UI: lista de conversas, thread com realtime, sino com contadores, página de notificações
-- [x] **Testes no banco real: 11/11** (participantes, rate limit, unread, isolamento)
-- [ ] Email/push (canais preparados na arquitetura — ativar quando fizer sentido)
-
-## M8 — Reviews + confiança + disputas
-
-- [x] Reviews só de booking concluído, só pelo cliente, 1 por booking (unique no banco) — spec §33
-- [x] Resposta do profissional à própria avaliação (1x, `review_responses`)
-- [x] Verificação: `verification_status` no banco + solicitação pelo profissional + mudança só por admin (guarda ativa agora; UI admin na M10) — spec §32
-- [x] Badges com regra objetiva (verificado / alta avaliação / top; `pro` aguarda M9) + selo inventado removido (ADR-004)
-- [x] Disputas: 1 por booking, estados open/under_review/resolved/rejected com guarda no banco, mensagens + evidências (URL — R2 na M11), decisão só admin — spec §34
-- [x] Notificações de review/dispute + lembrete de avaliação na conclusão (trigger, spec §53)
-- [x] UI: nota e badges reais no perfil público, lista de avaliações com resposta, avaliar na agenda, abrir disputa, página da disputa, verificação no perfil
-- [x] **Testes no banco real: 36/36** (total 73: RLS 15 + ledger 11 + chat 11 + reviews 36), sem regressão
-- [ ] Upload de evidências com R2 (M11) e decisões de disputa pela UI (M10)
-## M9 — Premium + PRO + Referral
-
-Planos com benefícios e expiração (automação) · referral com antifraude e
-estados (pending/approved/rejected/review) · recompensa nunca só pelo cadastro
-
-## M10 — Admin completo
-
-Dashboard · usuários/profissionais · financeiro (sem edição direta de saldo) ·
-auditoria · permissões por least privilege · preview/dry run/confirmação ·
-kill switches · feature flags com rollout
-
-## M11 — Cloudflare + R2 + performance + PWA
-
-(Retorno ao Cloudflare conforme ADR-036/037 quando houver receita; R2 com
-guardrails de custo — ADR-013.) R2 para mídia · otimização de imagens
-(WebP/AVIF) · PWA (instalação, ícones, offline sem operações financeiras) ·
-Core Web Vitals · logo: isolamento + variantes + otimização
-
-## M12 — Security audit + load/perf + production readiness
-
-Auditoria completa (spec §63) · load test · backups/DR exercitados · revisão
-de cotas/custo · checklist spec §78
+Os itens abaixo permanecem abertos como critérios de entrega integrada:
+aprovação do contrato, aplicação e testes no Supabase real, cadastro/importação
+de conteúdo comercial real e validação autenticada dos fluxos. A prévia utiliza
+exemplos identificados, sem gravá-los no banco. Nenhuma fase está promovida a
+produção por esta implementação.
 
 ---
 
-## Princípios de execução (spec §77, §78)
+## FASE 1 — FUNDAÇÃO (a iniciar)
 
-Antes de marcar cada milestone pronto: ler código existente → identificar
+Arquitetura · banco · autenticação · permissões · empresas · categorias ·
+produtos · serviços · mídia · planos · eventos · estrutura administrativa.
+
+- [ ] ADRs de schema da Fase 1 (nomenclatura de produto/serviço e categorias)
+- [ ] Migrations: `companies`, `company_members`, `products`, `services`(novo),
+      `company_media`, `plans`, `company_subscriptions`, `analytics_events`,
+      `conversations`, `platform_settings` + RLS default deny
+- [ ] Suítes SQL de teste por domínio no banco real (ADR-039)
+- [ ] Branding **Service Guide** + `platform_settings` (nome/branding central)
+- [ ] Reapontar favoritos/reviews do profissional → empresa
+- [ ] Simplificar onboarding (usuário = consumidor; sem client/professional)
+- [ ] Cacoal como cidade de lançamento (catálogo IBGE) + bairros canônicos
+
+## FASE 2 — MVP PÚBLICO
+
+Homepage · pesquisa (produto/serviço/empresa) · filtros · resultados · páginas
+de empresa · páginas de produto/serviço · cadastro/login · favoritos · contato
+(WhatsApp rastreado + orçamento interno) · avaliações · eventos de analytics.
+
+- [ ] Home de descoberta
+- [ ] Busca (PostgreSQL `tsvector` + `pg_trgm`) com filtros
+- [ ] Página de empresa `/empresas/<cidade>/<slug>` (SEO + JSON-LD LocalBusiness)
+- [ ] Páginas de produto/serviço (só com conteúdo real — ADR-014)
+- [ ] Adapter/credential do logotipo
+- [ ] Contato: botão WhatsApp (`wa.me` + origem) e orçamento interno
+- [ ] Favoritos e avaliações de empresa
+- [ ] Coleta de eventos (`analytics_events`) em todas as ações públicas
+- [ ] Estados de UX obrigatórios (loading/empty/error) em toda tela
+
+## FASE 3 — MONETIZAÇÃO
+
+Planos PRO · cobrança (inicialmente manual, sem gateway) · recursos PRO ·
+analytics para empresas · campanhas.
+
+- [ ] `plans` configuráveis (limites/recursos) — sem `if plan === "pro"`
+- [ ] Admin marca plano da empresa manualmente, com auditoria
+- [ ] Destaques rotulados; ranking com proporção limitada de patrocinados
+- [ ] Painel/relatório de exposição e leads por empresa (analytics)
+- [ ] Painel do comerciante (opcional; pode seguir manual no admin)
+- [ ] (Futuro) assinatura automatizada via gateway — novo ADR antes
+
+## FASE 4 — MARKETPLACE (somente com demanda real)
+
+Agendamento · orçamento formal · contratação · pagamento · (comissão/repasse, se
+voltar a fazer sentido).
+
+- [ ] Reativar/adaptar módulos hoje parados (booking, payments, ledger)
+- [ ] Regras de negócio, segurança e requisitos legais (CPF/pagamento) antes de cód.
+
+---
+
+## Legado — SERVICE (marketplace de profissionais) — concluído e parado
+
+M0–M8 foram construídos, aplicados e testados no banco real (73 testes SQL).
+**Não são mais a linha de trabalho**, mas a fundação reaproveitável é mantida
+(ver `REUSE-MAP.md`). Módulos financeiros ficam parados, não deletados (ADR-010).
+
+- **M0** Arquitetura + auditoria + deploy Vercel
+- **M1** Database + Auth + RLS (15 testes)
+- **M2** Cliente + Profissional + Serviços
+- **M3** Busca + SEO + perfil público
+- **M4** Agendamento + double booking
+- **M5** Pagamentos + Stripe abstraction
+- **M6** Ledger + cashback + comissão (11 testes)
+- **M7** Chat + notificações (11 testes)
+- **M8** Reviews + confiança + disputas (36 testes)
+- **M9** Premium + PRO + Referral — ❌ substituído pelas Fases do Service Guide
+- **M10** Admin completo — ⚙️ vira o painel admin do Service Guide (Fase 1/3)
+- **M11** Cloudflare + R2 + performance + PWA — ⚙️ vale para o Service Guide
+- **M12** Security audit + production readiness — ⚙️ vale para o Service Guide
+
+---
+
+## Princípios de execução
+
+Antes de marcar cada fase pronta: ler código existente → identificar
 dependências → explicar alterações → implementar → typecheck → lint → test →
-build → verificar regressões. Funcionalidade só pronta quando funciona, está
-tipada, protegida, com estados de erro/loading, RLS quando aplicável, sem
-duplicar dados, testada, build passa, sem secrets expostos e documentada.
+build → verificar regressões. Funcionalidade só é "pronta" quando funciona, está
+tipada, protegida por RLS, tem estados de erro/loading, sem duplicar dados,
+testada (incluindo SQL no banco real quando mexer em banco), build passa, sem
+secrets expostos e documentada (spec Service Guide §34).

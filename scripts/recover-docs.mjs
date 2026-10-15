@@ -61,8 +61,14 @@ for (const [gitPath, target] of [
     '- Disputas (open/under_review/resolved/rejected), com evidências e decisão administrativa. **Implementado (M8)** — 1 por booking, mensagens + evidências (URL; R2 na M11), decisão só admin. Verificação de profissionais e badges com regra objetiva também implementados (M8).',
   ])
   text = patch(text, ['(ADR-001 a ADR-039', '(ADR-001 a ADR-040'])
-  text = patch(text, ['**37 testes SQL aprovados no banco real**', '**73 testes SQL aprovados no banco real**'])
-  text = patch(text, ['rls 15, ledger 11, chat 11 ', 'rls 15, ledger 11, chat 11, reviews/confiança/disputas 36 '])
+  text = patch(text, [
+    '**37 testes SQL aprovados no banco real**',
+    '**73 testes SQL aprovados no banco real**',
+  ])
+  text = patch(text, [
+    'rls 15, ledger 11, chat 11 ',
+    'rls 15, ledger 11, chat 11, reviews/confiança/disputas 36 ',
+  ])
   text = patch(text, ['com fundação M0–M7', 'com fundação M0–M8'])
   results[join(DOCS, 'PRODUCT.md')] = text
 }

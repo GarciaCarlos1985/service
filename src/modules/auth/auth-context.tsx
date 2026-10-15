@@ -7,7 +7,12 @@ interface AuthContextValue {
   user: User | null
   session: Session | null
   isLoading: boolean
-  signUp: (input: { fullName: string; email: string; password: string }) => Promise<void>
+  signUp: (input: {
+    fullName: string
+    phone: string
+    email: string
+    password: string
+  }) => Promise<{ requiresConfirmation: boolean }>
   signIn: (input: { email: string; password: string }) => Promise<void>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
@@ -39,16 +44,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  async function signUp(input: { fullName: string; email: string; password: string }) {
+  async function signUp(input: {
+    fullName: string
+    phone: string
+    email: string
+    password: string
+  }) {
     const supabase = getSupabase()
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: input.email,
       password: input.password,
       options: {
-        data: { full_name: input.fullName },
+        data: { full_name: input.fullName, phone: input.phone },
       },
     })
     if (error) throw error
+    return { requiresConfirmation: data.session === null }
   }
 
   async function signIn(input: { email: string; password: string }) {

@@ -1,5 +1,12 @@
 # PAYMENTS — SERVICE
 
+> ⚠️ **SUSPENSO no Service Guide (2026-10-06).** O produto atual **não tem
+> comissão nem gateway de pagamento** no MVP: a mensalidade PRO é fechada
+> pessoalmente pelo dono e marcada manualmente pelo admin (ADR-044). Este
+> documento descreve o modelo financeiro do SERVICE antigo; os módulos de
+> pagamento/ledger existem no banco mas estão **parados** (não deletados —
+> ADR-010). Só reative se o marketplace financeiro voltar (Fase 4).
+
 ## Modelo (spec §6–§9)
 
 Intermediador: **cliente paga pela plataforma → SERVICE retém comissão

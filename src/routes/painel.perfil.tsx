@@ -3,7 +3,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Badge, Button, Card, CardBody, Input, Select, Skeleton, useToast } from '~/modules/ui'
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  Input,
+  Select,
+  Skeleton,
+  useToast,
+} from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { profileFormSchema, parseCityId } from '~/modules/profile/schemas'
 import type { ProfileFormInput } from '~/modules/profile/schemas'
@@ -89,13 +99,9 @@ function ProfilePage() {
     return (
       <Card>
         <CardBody>
-          <p
-            role="alert"
-            className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-          >
-            Não foi possível carregar o perfil. Verifique se as migrations foram aplicadas
-            (documentos/APLICANDO_MIGRATIONS.md).
-          </p>
+          <Alert variant="error" title="Não foi possível carregar o perfil">
+            Verifique se as migrations foram aplicadas (documentos/APLICANDO_MIGRATIONS.md).
+          </Alert>
         </CardBody>
       </Card>
     )
@@ -173,13 +179,7 @@ const verificationVariant: Record<string, 'default' | 'success' | 'warning' | 'd
   suspended: 'danger',
 }
 
-function VerificationCard({
-  status,
-  onChanged,
-}: {
-  status: string
-  onChanged: () => void
-}) {
+function VerificationCard({ status, onChanged }: { status: string; onChanged: () => void }) {
   const { toast } = useToast()
 
   const mutation = useMutation({

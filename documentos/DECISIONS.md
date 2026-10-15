@@ -699,6 +699,228 @@
   realtime em disputas (fluxo lento, decisão admin — não justifica publicação
   agora; pode ser adicionado quando houver demanda).
 
+## ADR-041 — Pivô de produto: Service Guide (descoberta comercial local) substitui o marketplace de profissionais
+**Status:** Aceita (2026-10-06) — decisão do dono do produto; substitui a premissa da spec-mãe antiga (`SERVICE-PROMPT-INICIO.md`)
+
+- **Contexto:** a spec-mãe original e os milestones M0–M8 construíram o
+  **SERVICE**, um marketplace de profissionais (cliente contrata, plataforma
+  intermedeia agendamento, pagamento com comissão, ledger, cashback). O dono
+  do produto mudou o modelo de negócio: o novo produto é o **Service Guide**,
+  uma **plataforma de descoberta comercial local** em que o consumidor busca
+  empresas, produtos e serviços cadastrados pela administração. Não há comissão
+  nem intermediação financeira no MVP.
+- **Decisão:**
+  1. A fonte de verdade de produto passa a ser
+     `SERVICE-GUIDE-PROMPT-INICIO.md`. A spec antiga é marcada como superada e
+     mantida só como registro histórico.
+  2. O nome do produto é **Service Guide** (logo `public/service-guide.png`);
+     "SERVICE" e "Guia Cidade" deixam de ser usados.
+  3. Fluxo central: **pesquisar → descobrir → conhecer → contatar → favoritar →
+     avaliar**. Agendamento/contratação/pagamento viram fase futura (Fase 4).
+  4. Os módulos financeiros já construídos (payments, ledger, comissão,
+     cashback, booking) **não são deletados**: param de ser expandidos e
+     permanecem compatíveis para frente (ADR-010). Nenhuma migração destrutiva.
+- **Motivo:** o negócio mudou de "intermediar transação" para "gerar descoberta
+  e lead para comércios locais", monetizado por assinatura (ADR-044). Insistir
+  no modelo antigo significaria pagamento/comissão que o dono não quer operar.
+- **Consequências:** M0–M8 deixam de ser a linha de trabalho principal. A
+  fundação reaproveitável (auth, RLS, design system, busca/SEO, favoritos,
+  reviews, notificações, chat, mídia) é mantida; o restante vira módulo
+  adormecido. Novo roadmap por fases em `ROADMAP.md`. Mapa de
+  reaproveitamento em `REUSE-MAP.md`.
+
+## ADR-042 — Empresa é entidade própria, independente do usuário; cadastro via admin
+**Status:** Aceita (2026-10-06) — atende spec Service Guide §5/§17/§18
+
+- **Contexto:** no modelo antigo, quem oferecia serviço era um `profile` com
+  `user_type = 'professional'`. No Service Guide, quem aparece é uma **empresa**,
+  cadastrada pelo administrador, que existe mesmo sem nenhum usuário responsável.
+- **Decisão:**
+  - Criar tabela `companies` (entidade própria): nome/nome comercial, descrição,
+    categoria, endereço estruturado (rua, número, bairro, cidade/IBGE, CEP),
+    telefone, WhatsApp, site, redes sociais, horário, status, plano, destaque.
+  - `companies` **não** referencia `auth.users`. Um vínculo usuário↔empresa, se
+    e quando existir, entra por tabela separada `company_members` (ADR-047).
+  - Cadastro/edição inicial somente pelo painel admin (RPC `SECURITY DEFINER`).
+  - Cidade sempre pelo catálogo canônico `cities` (código IBGE — ADR-014).
+- **Motivo:** confundir empresa com usuário é a decisão mais cara de corrigir
+  depois (spec §32). Separar permite: empresa sem login, várias pessoas por
+  empresa, e troca do responsável sem tocar na entidade.
+- **Consequências:** `profiles.user_type` deixa de ser o eixo do produto;
+  `professional_id` do schema antigo não é reaproveitado como identidade de
+  empresa. Empresa precisa de RLS `default deny` com leitura pública apenas das
+  colunas realmente públicas (mesmo padrão do ADR-016).
+
+## ADR-043 — Produtos e serviços são entidades próprias; a busca é por produto
+**Status:** Aceita (2026-10-06) — atende spec Service Guide §2/§6/§7/§10
+
+- **Contexto:** o diferencial do produto é buscar **o que se precisa** ("tinta
+  emborrachada") e encontrar as empresas que têm aquilo. Se produto fosse apenas
+  texto dentro da empresa, essa busca seria impossível.
+- **Decisão:**
+  - Criar `products` e `services` com `company_id → companies.id`, cada um com
+    nome, descrição, categoria, preço (quando houver), disponibilidade e mídia.
+  - O mesmo produto/conceito pode estar associado a várias empresas.
+  - Busca em Fase 1 com PostgreSQL: `tsvector` + `pg_trgm` sobre
+    nome/descrição de empresas, produtos e serviços, com filtros por
+    categoria/localização/plano/avaliação.
+  - Estrutura pensada para evoluir (sinônimos, ranking, motor dedicado) sem
+    reconstrução.
+- **Motivo:** a busca por produto é a ideia central do negócio; separar produto
+  de empresa é o que a viabiliza.
+- **Consequências:** a busca deixa de ser "lista de profissionais" e passa a
+  agregar três fontes (empresa/produto/serviço). Índices desde já; nenhuma
+  página pública vazia (ADR-014).
+
+## ADR-044 — Monetização por assinatura FREE/PRO, sem comissão e sem gateway no MVP
+**Status:** Aceita (2026-10-06) — decisão do dono do produto; atende spec Service Guide §11/§24
+
+- **Contexto:** o dono **não quer** o sistema de comissão. A monetização é a
+  mensalidade das empresas que querem destaque (PRO). O dono fecha a cobrança
+  pessoalmente com cada loja; não haverá integração de pagamento agora.
+- **Decisão:**
+  - Dois níveis: **FREE** (presença básica, busca orgânica, contato via
+    plataforma, limites de mídia/produtos) e **PRO** (destaque rotulado, selo
+    PRO, contato exposto, mais mídia/produtos, analytics, recursos promocionais).
+  - **Regras comerciais vivem em dados, não no código**: tabelas `plans`
+    (limites/recursos) e `company_subscriptions` (plano da empresa, origem
+    `manual`, quem marcou, quando, validade). Proibido `if plan === "pro"`.
+  - **Sem gateway no MVP.** O admin marca o plano manualmente, com auditoria.
+    Assinatura automatizada (Stripe Billing ou equivalente) é evolução futura.
+  - Destaques/patrocinados **sempre rotulados**; nunca manipular avaliação para
+    vender posição.
+- **Motivo:** é o modelo que o dono escolheu operar; mantém custo e escopo
+  baixos e evita amarrar o produto a integração financeira prematura.
+- **Consequências:** o módulo de pagamentos do modelo antigo (M5) fica parado e
+  não é usado pelo Service Guide. `plans`/`company_subscriptions` precisam de
+  RLS e de auditoria de alteração de plano. Mudança do plano pelo usuário
+  (autosserviço) só quando houver gateway, em fase futura.
+
+## ADR-045 — Analytics event-sourced desde o nascimento
+**Status:** Aceita (2026-10-06) — atende spec Service Guide §13
+
+- **Contexto:** o valor entregue ao comerciante (e ao Helon) é saber o que as
+  pessoas procuram e quem recebe atenção. Sem coleta desde o início, os dados
+  do primeiro período simplesmente não existem depois — não há como
+  reconstruir.
+- **Decisão:**
+  - Criar `analytics_events` (append-only, mesma disciplina do ledger —
+    ADR-003) com tipos: `search`, `company_view`, `product_view`,
+    `service_view`, `favorite`, `contact_start`, `whatsapp_click`, `phone_click`,
+    `website_click`, `review_created`, `share`.
+  - Campos, quando aplicáveis: usuário (ou sessão anônima), empresa, produto,
+    serviço, termo pesquisado, origem, timestamp, sessão, contexto.
+  - Escrita via RPC/back-end; nada de INSERT direto do cliente.
+  - **Minimização de dados** (LGPD): sem dado pessoal desnecessário.
+  - Dashboard completo é fase posterior; a **coleta** nasce agora.
+- **Motivo:** dado não coletado é irrecuperável; o analytics é a prova de valor
+  para vender PRO.
+- **Consequências:** toda funcionalidade pública relevante emite evento desde a
+  Fase 1. Eventos não podem ser editados/apagados (correções por compensação,
+  se necessário). Um clique de WhatsApp é registrado como **interesse**, nunca
+  como venda (ADR-046).
+
+## ADR-046 — Contato via WhatsApp rastreado + orçamento interno; lead ≠ venda
+**Status:** Aceita (2026-10-06) — atende spec Service Guide §12/§13/§24
+
+- **Contexto:** sem comissão, a plataforma gera **contato/lead**, não venda. No
+  Brasil, o comércio local opera principalmente por WhatsApp.
+- **Decisão:**
+  - Canal principal: **link `wa.me`** com mensagem pré-preenchida contendo
+    contexto/origem; registrar `whatsapp_click` **antes** do redirecionamento.
+  - Canal interno: **"Falar com a empresa" / pedir orçamento** via
+    `conversations` (exige login; contratação futura exige telefone verificado +
+    CPF conforme regra de negócio).
+  - Outras ações rastreadas: `phone_click`, `website_click`, `share`.
+  - **Nunca tratar clique/contato como venda.** Só afirmar venda se houver
+    comprovação real (fase futura).
+  - Sem checkout, sem pagamento no MVP.
+- **Motivo:** mede o interesse de forma honesta, entrega lead ao comerciante e
+  sustenta a proposta de valor do plano PRO sem prometer o que não se controla.
+- **Consequências:** `conversations`/lead precisam de RLS e de anti-spam/rate
+  limit. A mensagem pré-preenchida e o código de origem são o mecanismo de
+  atribuição — devem ser padronizados desde já. CPF só em ação nativa da
+  plataforma, nunca para navegar (ADR-004/LGPD).
+
+## ADR-047 — Permissões hierárquicas preparadas (admin → empresa → funcionário)
+**Status:** Aceita (2026-10-06) — atende spec Service Guide §17/§18/§32
+
+- **Contexto:** hoje só existe admin gerindo empresas. Amanhã poderá existir
+  super admin, admin, empresa e funcionário. Autorizar "de qualquer jeito"
+  agora tornaria a entrada dos comerciantes uma reestruturação grande.
+- **Decisão:**
+  - Manter `profiles` para usuários e criar `company_members` (vínculo
+    usuário↔empresa com papel), separado de `companies` (ADR-042). Vínculo é
+    opcional no MVP.
+  - Papéis administrativos e de empresa derivados de dados, com least privilege
+    e auditoria (`admin_audit_logs`), seguindo o que já existe para admin.
+  - Rotas administrativas protegidas e nunca expostas em páginas públicas.
+- **Motivo:** a evolução para comércios autogerenciando seu cadastro não pode
+  exigir remodelar autorização.
+- **Consequências:** o schema nasce preparado para multiusuário por empresa e
+  para a hierarquia de papéis, mesmo que a UI do painel do comerciante só venha
+  na Fase 3. RLS de `company_members` por empresa dona; nada de escrita
+  anônima.
+
+---
+
+## ADR-048 — Adaptação do pacote Service Guide à infraestrutura existente
+
+**Status:** Proposta implementada somente no candidato local (2026-10-15);
+revisão humana pendente antes da aplicação no banco e publicação.
+
+- **Contexto medido:** o ZIP fornecido usa Vinext/Next App Router, Cloudflare
+  Workers, D1/R2 e autenticação ChatGPT. O projeto existente usa TanStack Start,
+  Supabase Auth/PostgreSQL e Vercel. A consulta somente leitura ao Supabase
+  confirmou 25 tabelas legadas e 9 migrações, sem domínio comercial. O código
+  e o banco do pacote têm contratos incompatíveis com `services`, favoritos,
+  avaliações e conversas do legado.
+- **Proposta preparada para revisão:**
+  - Reaproveitar a composição visual, assets e experiência do pacote, mantendo
+    TanStack Start, Supabase e a saída Vercel. Não conectar D1 nem ChatGPT Auth.
+  - Criar `companies`, `products`, `company_services`, `company_members`, mídia,
+    planos/assinaturas manuais e entidades comerciais separadas. Preservar os
+    contratos e dados legados; não converter avaliações ou favoritos antigos.
+  - Usar categorias e bairros comerciais próprios, cidade referenciada ao
+    catálogo IBGE e endereços estruturados. Semear somente Cacoal (1100049),
+    configuração da marca e planos; nenhuma empresa/avaliação fictícia.
+  - Manter produto/serviço ligado à empresa (ADR-043). A página de item busca
+    ofertas equivalentes por nome normalizado, categoria e tipo, sem criar
+    catálogo mestre compartilhado. Essa equivalência não identifica SKU.
+  - Implementar contato interno inicialmente como `company_contacts`, uma
+    caixa acompanhada pela administração. É uma redução explícita do canal
+    `conversations` da ADR-046: não há chat nem entrega automática ao comércio.
+    Aprovar esse recorte ou conectar mensagens antes da liberação do canal.
+  - Executar escritas por RPC, com permissões verificadas no banco, tabelas
+    sem acesso direto pelo navegador, moderação, bloqueio e auditoria atômica.
+    Eventos e auditoria rejeitam alteração/exclusão.
+  - Paginar busca (até 24 empresas) e administração (20 registros). Agregar
+    métricas no servidor. A exportação atual contém somente a página visível.
+  - Derivar destaque, limites e contatos externos de dados de plano, sem
+    comparar o nome PRO. Configuração inicial proposta: FREE 5 itens/3 imagens,
+    PRO 30 itens/12 imagens; contato externo e destaque habilitados no PRO.
+    FREE mantém solicitação interna. Limites e recursos exigem revisão comercial.
+  - Estatísticas opcionais exigem consentimento. A prévia DEV `/previa` fica
+    identificada, sem escrita, sem analytics e indisponível em produção.
+- **Alternativas:** substituir a infraestrutura por Workers/D1/Auth ChatGPT
+  contraria o reaproveitamento pedido; converter tabelas legadas quebra seus
+  contratos; catálogo compartilhado exigiria rever a ADR-043. A proposta
+  conserva a infraestrutura e aceita a coexistência explícita dos domínios.
+- **Impacto:** novas rotas públicas e administrativas; home/busca/onboarding
+  passam ao produto comercial; cadastro passa a coletar telefone. O trigger
+  de criação de perfil mantém assinatura e recebe esse metadado opcional.
+  QueryClientProvider passa a atender também as rotas legadas que já usam Query.
+- **Custo e dívida:** sem novo serviço pago. Mídia cadastrada por URL HTTPS;
+  upload/Storage, integração Discord, importação D1, chat, campanhas e exportação
+  integral não foram portados. O limite anônimo de requisições é compartilhado
+  por minuto; tráfego público alto requer controle de abuso mais específico.
+  A identificação do responsável pela privacidade e os prazos operacionais
+  precisam ser definidos antes de publicação.
+- **Validação e limite:** as migrações foram executadas em PostgreSQL isolado
+  via PGlite, com testes de permissões e contratos. Isso não substitui os testes
+  no Supabase real exigidos pelo projeto. Nenhuma migração remota, deploy ou
+  aprovação estrutural é presumida pelo patch local.
+
 ---
 
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue

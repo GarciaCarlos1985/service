@@ -26,11 +26,7 @@ import {
 import type { Booking } from '~/modules/booking/booking-api'
 import { openConversation } from '~/modules/chat/chat-api'
 import { createReview, listMyReviews } from '~/modules/reviews/reviews-api'
-import {
-  disputeStatusLabel,
-  listMyDisputes,
-  openDispute,
-} from '~/modules/disputes/disputes-api'
+import { disputeStatusLabel, listMyDisputes, openDispute } from '~/modules/disputes/disputes-api'
 
 export const Route = createFileRoute('/painel/agenda')({
   component: AgendaPage,
@@ -44,12 +40,13 @@ const statusVariant: Record<string, 'default' | 'success' | 'warning' | 'danger'
   cancelled: 'danger',
 }
 
-const disputeStatusVariant: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
-  open: 'warning',
-  under_review: 'info',
-  resolved: 'success',
-  rejected: 'danger',
-}
+const disputeStatusVariant: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> =
+  {
+    open: 'warning',
+    under_review: 'info',
+    resolved: 'success',
+    rejected: 'danger',
+  }
 
 function AgendaPage() {
   const { user } = useAuth()
@@ -298,33 +295,33 @@ function AgendaPage() {
                     )
                   ) : null}
 
-                  {booking.status !== 'pending' ? (
-                    (() => {
-                      const dispute = disputesByBooking.get(booking.id)
-                      return dispute ? (
-                        <Link
-                          to="/painel/disputas/$disputeId"
-                          params={{ disputeId: dispute.id }}
-                          className="inline-flex items-center"
-                        >
-                          <Badge variant={disputeStatusVariant[dispute.status]}>
-                            Disputa: {disputeStatusLabel[dispute.status]}
-                          </Badge>
-                        </Link>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-slate-500"
-                          onClick={() => {
-                            setDisputeTarget(booking)
-                          }}
-                        >
-                          Abrir disputa
-                        </Button>
-                      )
-                    })()
-                  ) : null}
+                  {booking.status !== 'pending'
+                    ? (() => {
+                        const dispute = disputesByBooking.get(booking.id)
+                        return dispute ? (
+                          <Link
+                            to="/painel/disputas/$disputeId"
+                            params={{ disputeId: dispute.id }}
+                            className="inline-flex items-center"
+                          >
+                            <Badge variant={disputeStatusVariant[dispute.status]}>
+                              Disputa: {disputeStatusLabel[dispute.status]}
+                            </Badge>
+                          </Link>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-slate-500"
+                            onClick={() => {
+                              setDisputeTarget(booking)
+                            }}
+                          >
+                            Abrir disputa
+                          </Button>
+                        )
+                      })()
+                    : null}
                 </div>
 
                 {booking.status === 'cancelled' && booking.cancellation_reason ? (

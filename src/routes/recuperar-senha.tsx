@@ -6,6 +6,7 @@ import { Button, Card, CardBody, Input } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { resetPasswordSchema } from '~/modules/auth/schemas'
 import type { ResetPasswordInput } from '~/modules/auth/schemas'
+import { GuideAuthLayout } from '~/modules/guide/GuideShell'
 
 export const Route = createFileRoute('/recuperar-senha')({
   component: ResetPasswordPage,
@@ -39,7 +40,7 @@ function ResetPasswordPage() {
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center px-4 py-12">
+    <GuideAuthLayout>
       <Card className="w-full max-w-md">
         <CardBody className="space-y-6">
           <div className="text-center">
@@ -95,6 +96,6 @@ function ResetPasswordPage() {
           </p>
         </CardBody>
       </Card>
-    </main>
+    </GuideAuthLayout>
   )
 }

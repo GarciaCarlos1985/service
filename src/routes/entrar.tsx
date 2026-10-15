@@ -1,21 +1,27 @@
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import type { SearchSchemaInput } from '@tanstack/react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Button } from '~/modules/ui'
+import { Alert, Button } from '~/modules/ui'
 import { Card, CardBody } from '~/modules/ui'
 import { Input } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { signInSchema } from '~/modules/auth/schemas'
 import type { SignInInput } from '~/modules/auth/schemas'
+import { safeReturnPath } from '~/modules/auth/return-path'
+import { GuideAuthLayout } from '~/modules/guide/GuideShell'
 
 export const Route = createFileRoute('/entrar')({
+  validateSearch: (input: SearchSchemaInput & { redirect?: unknown }) => ({
+    redirect: safeReturnPath(input.redirect),
+  }),
   component: SignInPage,
 })
 
 function SignInPage() {
   const { signIn } = useAuth()
-  const router = useRouter()
+  const { redirect } = Route.useSearch()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -32,7 +38,7 @@ function SignInPage() {
     setLoading(true)
     try {
       await signIn(values)
-      await router.navigate({ to: '/' })
+      window.location.assign(redirect)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não foi possível entrar. Tente novamente.')
     } finally {
@@ -41,22 +47,15 @@ function SignInPage() {
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center px-4 py-12">
+    <GuideAuthLayout>
       <Card className="w-full max-w-md">
         <CardBody className="space-y-6">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-slate-900">Entrar</h1>
-            <p className="mt-1 text-sm text-slate-500">Bem-vindo de volta ao SERVICE</p>
+            <p className="mt-1 text-sm text-slate-500">Bem-vindo de volta ao Service Guide</p>
           </div>
 
-          {error ? (
-            <p
-              role="alert"
-              className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-            >
-              {error}
-            </p>
-          ) : null}
+          {error ? <Alert variant="error">{error}</Alert> : null}
 
           <form
             onSubmit={(event) => {
@@ -99,6 +98,6 @@ function SignInPage() {
           </div>
         </CardBody>
       </Card>
-    </main>
+    </GuideAuthLayout>
   )
 }

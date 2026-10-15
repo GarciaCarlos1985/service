@@ -13,6 +13,11 @@ export const passwordSchema = z
 
 export const signUpSchema = z.object({
   fullName: z.string().trim().min(2, 'Informe seu nome completo.').max(120, 'Nome muito longo.'),
+  phone: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/[^+\d]/g, ''))
+    .pipe(z.string().regex(/^\+?[0-9]{10,15}$/, 'Informe um telefone com DDD.')),
   email: emailSchema,
   password: passwordSchema,
 })

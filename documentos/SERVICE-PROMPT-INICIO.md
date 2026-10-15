@@ -1,3 +1,10 @@
+> ⚠️ **DOCUMENTO SUPERADO (2026-10-06).** Esta spec descrevia o **SERVICE**, um
+> marketplace de profissionais. Esse conceito foi **abandonado**. A fonte de
+> verdade atual é **[`SERVICE-GUIDE-PROMPT-INICIO.md`](SERVICE-GUIDE-PROMPT-INICIO.md)**
+> (Service Guide — plataforma de descoberta comercial local). Mantido apenas como
+> registro histórico; não use este documento para decidir o produto. Ver também
+> `DECISIONS.md` (ADR-041+) e `REUSE-MAP.md`.
+
 # SERVICE — MASTER BUILD SPECIFICATION
 ## Marketplace de Serviços Locais — Arquitetura, Produto, Segurança, Monetização, SEO e Escalabilidade
 
