@@ -1,5 +1,20 @@
 # ADMIN — SERVICE
 
+## Operação atual do Service Guide (16/10/2026)
+
+O painel comercial está em `/admin`. A entrada pode ser feita em
+`/entrar?redirect=%2Fadmin`, com a senha já cadastrada no Supabase Auth.
+Duas contas indicadas e confirmadas pelo responsável foram ativadas e auditadas.
+As ações comerciais verificam `profiles.is_admin` no banco por `_is_admin()` e
+`guide_private.require_user(true)`; metadados editáveis do usuário não concedem
+acesso. Ver `ATIVACAO-SUPABASE-2026-10-16.md` para a validação.
+
+O catálogo real ainda precisa de categorias, bairros e empresas. O painel
+permite essa configuração e a gestão manual dos planos/destaques. Os módulos
+financeiros descritos no histórico abaixo continuam fora do MVP comercial.
+
+## Referência histórica do marketplace
+
 Painel administrativo: central operacional, não CRUD (spec §35). Poder não
 significa acesso irrestrito (spec §75).
 

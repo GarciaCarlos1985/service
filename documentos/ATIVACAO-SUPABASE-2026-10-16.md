@@ -67,10 +67,31 @@ foi alterado ou excluído durante a ativação.
   Cloudflare `28ade995-a0c2-4614-8770-c4b48ac7d851` continua servindo o site
   com as RPCs agora disponíveis no Supabase.
 
+## Ativação administrativa após confirmação dos e-mails
+
+Após esclarecimento da divergência entre os e-mails informados, o usuário
+confirmou duas contas. Ambas já existiam no Auth do projeto correto, com senha,
+e-mail confirmado, perfil associado e sem bloqueio. Foram promovidas por uma
+transação restrita aos dois IDs, com dois eventos `admin_bootstrap` em
+`admin_audit_logs`. As senhas e os outros perfis foram preservados.
+
+Os eventos identificam a origem como autorização humana explícita, a execução
+pelo operador PostgreSQL e o contexto de bootstrap; a referência ao destinatário
+não representa uma sessão autenticada desse usuário. Os e-mails/IDs ficam no
+banco e no registro local ignorado pelo Git, fora da documentação pública.
+
+Para cada conta, `guide_me` retornou `admin=true` e os snapshots de visão geral
+e usuários foram autorizados sob o papel `authenticated` com o respectivo
+`auth.uid()`. A suíte SQL comercial passou novamente, incluindo negação de
+administração a consumidores. A entrada no navegador com a senha de cada pessoa
+fica a cargo dos titulares; nenhuma senha foi solicitada ou redefinida.
+
+Painel: **https://service-guide.helon280.workers.dev/admin**.
+Login com retorno ao painel:
+**https://service-guide.helon280.workers.dev/entrar?redirect=%2Fadmin**.
+
 ## Pendências que dependem do responsável
 
-- Confirmar o e-mail a receber o acesso administrativo: a base tem uma conta
-  cadastrada e nenhuma conta administradora. Nenhuma foi promovida por inferência.
 - Fornecer acesso de gerenciamento ao projeto para conferir e ajustar URLs de
   retorno do Auth e consultar os advisors do provedor. Não confundir esse acesso
   com a senha PostgreSQL que já permitiu a migração e os testes.

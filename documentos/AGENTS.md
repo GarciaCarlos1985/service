@@ -119,8 +119,10 @@ da transação protegida pelo runner.
 A fundação comercial foi **aplicada e validada no Supabase real** (ADR-050):
 10 migrações, dados legados preservados, suíte SQL transacional e teste real
 de cadastro/login/perfil aprovados. O catálogo público funciona e está vazio,
-aguardando conteúdo real. A definição do administrador e a conferência das
-URLs de retorno do Auth dependem das informações solicitadas ao responsável.
+aguardando conteúdo real. Duas contas administrativas foram confirmadas pelo
+usuário, ativadas e auditadas; as permissões foram verificadas no banco real.
+A conferência das URLs de retorno do Auth ainda depende de acesso válido de
+gerenciamento ao projeto.
 `/previa` existe apenas em DEV. O legado M0–M8 permanece preservado e com os
 módulos financeiros/booking **parados, não deletados**. Ver
 `ATIVACAO-SUPABASE-2026-10-16.md`, `CLOUDFLARE-2026-10-16.md` e `ROADMAP.md`

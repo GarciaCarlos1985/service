@@ -73,9 +73,10 @@ A migração `20261015032437_guide_commercial_foundation.sql` foi aplicada no
 Supabase real em 16/10/2026, após autorização, ensaio em transação e testes.
 Busca/RPCs comerciais estão ativas e o catálogo está vazio, aguardando dados
 reais. Cadastro, login e perfil foram verificados pelo SDK contra o Auth real.
-O projeto está com confirmação automática de e-mail habilitada; retorno/entrega
-de recuperação de senha e definição do administrador ainda precisam das
-informações solicitadas ao responsável. Ver `ATIVACAO-SUPABASE-2026-10-16.md`.
+O projeto está com confirmação automática de e-mail habilitada e duas contas
+administrativas confirmadas pelo usuário, ativadas e auditadas. Retorno/entrega
+de recuperação de senha ainda depende de acesso de gerenciamento para conferência
+das configurações. Ver `ATIVACAO-SUPABASE-2026-10-16.md`.
 
 ## Rollback
 

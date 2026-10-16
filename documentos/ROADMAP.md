@@ -8,7 +8,7 @@
 
 Status atual (2026-10-16): **site publicado no Cloudflare; fundação comercial
 aplicada e testada no Supabase real, com legado preservado.** Catálogo vazio,
-aguardando conteúdo real e a definição do acesso administrativo.
+aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 
 ### Candidato local de 15/10/2026
 
@@ -38,8 +38,9 @@ e texto escuro, aplicado pelo componente compartilhado.
 
 A aplicação e a suíte SQL comercial no Supabase real foram concluídas.
 Cadastro, login, perfil e negação de administração para consumidor foram
-validados contra o Auth real. Permanecem abertos: administrador confirmado,
-URLs de retorno do Auth/advisors, conteúdo comercial real e validação operacional
+validados contra o Auth real. Após confirmação dos e-mails, duas contas foram
+promovidas a administradoras com auditoria e validação de permissões.
+Permanecem abertos: URLs de retorno do Auth/advisors, conteúdo comercial real e validação operacional
 pelo responsável. A prévia continua com exemplos identificados somente em DEV.
 
 ---
