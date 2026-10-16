@@ -72,6 +72,9 @@ begin
      '{"full_name":"Admin Reviews"}'::jsonb, now(), now())
   on conflict (id) do nothing;
 
+  -- O predicado administrativo exige uma sessão existente, como o Auth real.
+  insert into auth.sessions(id,user_id) values(user_admin,user_admin) on conflict(id) do nothing;
+
   update public.profiles set user_type = 'professional' where id = user_pro;
   update public.profiles set is_admin = true where id = user_admin;
   select id into cat_id from public.service_categories order by id limit 1;
@@ -336,7 +339,7 @@ begin
     perform public._t_pass('não-admin NÃO altera verificação');
   end;
 
-  perform set_config('request.jwt.claims', jsonb_build_object('sub', user_admin::text, 'role', 'authenticated')::text, true);
+  perform set_config('request.jwt.claims', jsonb_build_object('sub', user_admin::text, 'role', 'authenticated', 'session_id', user_admin::text)::text, true);
   begin
     perform public.set_verification_status(user_pro, 'verified');
     perform public._t_pass('admin aprova verificação');
@@ -500,7 +503,7 @@ begin
     perform public._t_pass('não-admin NÃO resolve disputa');
   end;
 
-  perform set_config('request.jwt.claims', jsonb_build_object('sub', user_admin::text, 'role', 'authenticated')::text, true);
+  perform set_config('request.jwt.claims', jsonb_build_object('sub', user_admin::text, 'role', 'authenticated', 'session_id', user_admin::text)::text, true);
   begin
     perform public.resolve_dispute(dispute_id, 'resolved', 'Devolução combinada entre as partes.');
     perform public._t_pass('admin resolve disputa');

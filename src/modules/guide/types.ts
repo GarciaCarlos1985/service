@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { publicPresentationSchema } from './presentation'
 
 export const categorySchema = z.object({
   id: z.string(),
@@ -64,6 +65,7 @@ export const reviewSchema = z.object({
   author: z.string().optional(),
 })
 export const catalogSchema = z.object({
+  presentation: publicPresentationSchema.optional(),
   categories: z.array(categorySchema),
   plans: z.array(planSchema),
   companies: z.array(companySchema),

@@ -14,6 +14,10 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:admin:sql": "node scripts/admin-lab.mjs",
+    "test:admin:browser": "node scripts/admin-browser-lab.mjs",
+    "test:auth:security": "node scripts/verify-auth-security.mjs",
+    "build:lab": "vite build --mode e2e",
     "preview": "vite preview",
     "cf:typegen": "wrangler types",
     "deploy": "npm run build && node --env-file-if-exists=.env.local ./node_modules/wrangler/bin/wrangler.js deploy"

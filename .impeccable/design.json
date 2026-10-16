@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-15T15:39:06.055960+00:00",
+  "generatedAt": "2026-10-16T21:00:53.757351+00:00",
   "title": "Design System: Service Guide",
   "extensions": {
     "colorMeta": {
@@ -283,6 +283,62 @@
           "oklch(84% 0.18205 29.51)",
           "oklch(95% 0.18205 29.51)"
         ]
+      },
+      "admin-muted": {
+        "role": "neutral",
+        "displayName": "Leitura auxiliar administrativa",
+        "tonalRamp": [
+          "oklch(15% 0.04335 249.88)",
+          "oklch(27% 0.04335 249.88)",
+          "oklch(38% 0.04335 249.88)",
+          "oklch(50% 0.04335 249.88)",
+          "oklch(61% 0.04335 249.88)",
+          "oklch(73% 0.04335 249.88)",
+          "oklch(84% 0.04335 249.88)",
+          "oklch(95% 0.04335 249.88)"
+        ]
+      },
+      "admin-field-border": {
+        "role": "neutral",
+        "displayName": "Contorno de campo administrativo",
+        "tonalRamp": [
+          "oklch(15% 0.02966 249.81)",
+          "oklch(27% 0.02966 249.81)",
+          "oklch(38% 0.02966 249.81)",
+          "oklch(50% 0.02966 249.81)",
+          "oklch(61% 0.02966 249.81)",
+          "oklch(73% 0.02966 249.81)",
+          "oklch(84% 0.02966 249.81)",
+          "oklch(95% 0.02966 249.81)"
+        ]
+      },
+      "admin-field-ink": {
+        "role": "neutral",
+        "displayName": "Tinta de campo administrativo",
+        "tonalRamp": [
+          "oklch(15% 0.05809 248.66)",
+          "oklch(27% 0.05809 248.66)",
+          "oklch(38% 0.05809 248.66)",
+          "oklch(50% 0.05809 248.66)",
+          "oklch(61% 0.05809 248.66)",
+          "oklch(73% 0.05809 248.66)",
+          "oklch(84% 0.05809 248.66)",
+          "oklch(95% 0.05809 248.66)"
+        ]
+      },
+      "admin-button-hover": {
+        "role": "primary",
+        "displayName": "Marinho administrativo em hover",
+        "tonalRamp": [
+          "oklch(15% 0.09239 247.44)",
+          "oklch(27% 0.09239 247.44)",
+          "oklch(38% 0.09239 247.44)",
+          "oklch(50% 0.09239 247.44)",
+          "oklch(61% 0.09239 247.44)",
+          "oklch(73% 0.09239 247.44)",
+          "oklch(84% 0.09239 247.44)",
+          "oklch(95% 0.09239 247.44)"
+        ]
       }
     },
     "typographyMeta": {
@@ -350,6 +406,11 @@
         "name": "master-reveal",
         "value": "650ms cubic-bezier(0.16, 1, 0.3, 1) both",
         "purpose": "Clip e blur na troca manual de foto; sem autoplay; removido em reduced motion."
+      },
+      {
+        "name": "admin-order-state",
+        "value": "background-color 160ms ease-out",
+        "purpose": "Destino da reordenação; removido com prefers-reduced-motion."
       }
     ],
     "breakpoints": [
@@ -370,16 +431,28 @@
         "value": "950px"
       },
       {
-        "name": "admin-horizontal-max",
-        "value": "1050px"
-      },
-      {
         "name": "compact-desktop-max",
         "value": "1180px"
       },
       {
         "name": "hero-wide-min",
         "value": "1500px"
+      },
+      {
+        "name": "admin-compact-max",
+        "value": "1100px"
+      },
+      {
+        "name": "admin-records-max",
+        "value": "850px"
+      },
+      {
+        "name": "admin-settings-bar-max",
+        "value": "800px"
+      },
+      {
+        "name": "admin-form-stack-max",
+        "value": "600px"
       }
     ],
     "rampPolicy": "Rampas OKLCH sintetizadas apenas para visualização; não são cores aprovadas para novas telas. Frontmatter permanece normativo.",
@@ -392,7 +465,13 @@
       "src/modules/guide/screens/Directory.tsx",
       "src/modules/guide/screens/CompanyDetail.tsx",
       "src/modules/ui/button.tsx",
-      "src/styles/app.css"
+      "src/styles/app.css",
+      "src/styles/guide-admin.css",
+      "src/modules/guide/screens/Admin.tsx",
+      "src/modules/guide/admin/CatalogEditor.tsx",
+      "src/modules/guide/admin/OrderBoard.tsx",
+      "src/modules/guide/admin/PresentationSettings.tsx",
+      "src/modules/guide/admin/SecurityPanel.tsx"
     ],
     "assets": {
       "logo": {
@@ -442,6 +521,44 @@
         "placeholderOnWhite": "5.98:1",
         "limitation": "Valores comunicados pelo agente principal; o revisor visual não certificou independentemente medições computadas de hover/foco."
       }
+    },
+    "adminWorkspace": {
+      "mode": "Operate / code-led",
+      "status": "Candidato local na branch codex/painel-profissional; sem declaração de nova migração aplicada ou deploy.",
+      "surface": ".impeccable/surfaces/admin-workspace.md",
+      "review": {
+        "source": "Parecer comunicado pelo agente principal; não reexecutado pelo documenter.",
+        "initialDisposition": "fix",
+        "postFixVerdict": "pass",
+        "postFixDisposition": "ship",
+        "scope": "A correção material única separou a barra de configurações dos offsets de diálogo e a manteve acima da navegação móvel. Não certifica produção.",
+        "detector": "Uma execução comunicada, sem ocorrências.",
+        "captureDirectory": ".impeccable/review/admin-profissional/",
+        "captures": [
+          "desktop.jpg",
+          "mobile.jpg",
+          "user-1280.jpg",
+          "editor-desktop.jpg",
+          "editor-mobile.jpg",
+          "editor-user-1280.jpg",
+          "mobile-records.jpg",
+          "settings-mobile-form.jpg",
+          "order-desktop.jpg",
+          "public-desktop.jpg",
+          "public-mobile.jpg"
+        ]
+      },
+      "savebar": {
+        "dialog": "position: sticky; bottom: -32px; até 600px bottom: -22px",
+        "settingsDesktop": "position: sticky; bottom: 0",
+        "settingsMobile": "até 800px bottom: calc(76px + env(safe-area-inset-bottom))",
+        "settingsFormReserve": "até 800px padding-bottom: calc(104px + env(safe-area-inset-bottom))"
+      },
+      "notCanonized": [
+        "Variável --admin-ink sem aplicação.",
+        "Tons e medidas isolados não viram tokens globais.",
+        "Barra de configurações anteriormente encoberta, corrigida; não herdar o defeito."
+      ]
     }
   },
   "components": [
@@ -524,11 +641,27 @@
       "description": "Ação sólida compartilhada por login, cadastro e recuperação; sem gradiente legado.",
       "html": "<button type=\"submit\" class=\"ds-auth\">Entrar</button>",
       "css": ".ds-auth{background-image:none;background-color:var(--premium-ink,#0b2948);color:#fff;border:0;border-radius:12px;height:44px;width:100%;padding:0 20px;font:600 14px/1.5 Manrope,Arial,sans-serif;cursor:pointer}.ds-auth:hover:not(:disabled){background-color:#194c7d}.ds-auth:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--color-brand-blue-500,#3580fd)}.ds-auth:disabled{opacity:.5;cursor:not-allowed}"
+    },
+    {
+      "name": "Ação administrativa",
+      "kind": "button",
+      "refersTo": "admin-button-primary",
+      "description": "Salvar no editor, na ordenação ou nas configurações.",
+      "html": "<button class=\"ds-admin-primary\">Salvar alterações</button>",
+      "css": ".ds-admin-primary { font-family: Manrope, Arial, sans-serif; min-height: 48px; padding: 10px 18px; border: 1px solid #0b2948; border-radius: 10px; background: #0b2948; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .18s, color .18s; } .ds-admin-primary:hover { background: #174d79; } .ds-admin-primary:focus-visible { outline: 3px solid #2376cb; outline-offset: 3px; } .ds-admin-primary:disabled { opacity: .5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Campo administrativo",
+      "kind": "input",
+      "refersTo": "admin-input",
+      "description": "Campo nomeado no editor, nas configurações e na segurança.",
+      "html": "<label class=\"ds-admin-field\">Nome do negócio<input value=\"\" placeholder=\"Informe o nome\" /></label>",
+      "css": ".ds-admin-field { display: grid; gap: 8px; font-family: Manrope, Arial, sans-serif; color: #16324c; font-size: 14px; font-weight: 700; } .ds-admin-field input { min-width: 0; min-height: 48px; border: 1px solid #b7c7d8; border-radius: 8px; background: #fff; color: #16324c; padding: 11px 12px; font: 400 15px Manrope, Arial, sans-serif; } .ds-admin-field input::placeholder { color: #607389; opacity: 1; } .ds-admin-field input:focus { outline: 2px solid #297bc8; outline-offset: 2px; }"
     }
   ],
   "narrative": {
     "northStar": "Guia comercial local",
-    "overview": "Branco, marinho, azul e verde apresentam o comércio de Cacoal com busca direta, Manrope ampla e fotografias comerciais. A evolução Premium Master autorizada em 15/10/2026 amplia a identidade escolhida: títulos grandes, maior respiro e superfícies marinho distinguem exposição patrocinada, mantendo a descoberta legível no celular.\n\nEm 15/10/2026, por solicitação do usuário, o selo passou a “PREMIUM GUIDE” em dourado champanhe, mantendo “Destaque patrocinado” e a elegibilidade por `plan.featured`; contraste informado entre fundo e texto: 8.43:1.\n\nEste registro mescla as decisões confirmadas do sistema anterior com o código final em `src/styles/guide.css` e seus overrides prioritários em `src/styles/guide-premium.css`. A logo horizontal fornecida pelo usuário (`public/service-guide.png`, original 1672 × 941) aparece sem edição, com proporção preservada por `object-fit: contain`; sua procedência está em `public/service-guide.png.json`. Fotografias demonstrativas mantêm rótulos e procedência. A composição específica da primeira tela permanece em `.impeccable/surfaces/directory.md`.\n\nA revisão `.impeccable/review/premium/finish-review.md` preserva o parecer inicial `fix` e registra adendo `ship` para as duas correções visuais: autenticação e categorias abaixo dos nomes. A pendência documental desse parecer é atendida por este registro e pelo sidecar. As oito capturas em `.impeccable/review/premium/` são recortes de viewport ou estados após rolagem: desktop de 1440 reduzido nativamente a 600, mobile de 390 × 640 e `user-614` de 614 × 672; nenhuma captura é de página inteira. O adendo não certifica independentemente medições computadas de hover/foco, CRUD autenticado, banco remoto ou produção. Gates e procedência comunicados pelo agente principal constam no sidecar; esta documentação não abre nova auditoria.",
+    "overview": "Branco, marinho, azul e verde apresentam o comércio de Cacoal com busca direta, Manrope ampla e fotografias comerciais. A evolução Premium Master autorizada em 15/10/2026 amplia a identidade escolhida: títulos grandes, maior respiro e superfícies marinho distinguem exposição patrocinada, mantendo a descoberta legível no celular.\n\nEm 15/10/2026, por solicitação do usuário, o selo passou a “PREMIUM GUIDE” em dourado champanhe, mantendo “Destaque patrocinado” e a elegibilidade por `plan.featured`; contraste informado entre fundo e texto: 8.43:1.\n\nEste registro mescla as decisões confirmadas do sistema anterior com o código final em `src/styles/guide.css` e seus overrides prioritários em `src/styles/guide-premium.css`. A logo horizontal fornecida pelo usuário (`public/service-guide.png`, original 1672 × 941) aparece sem edição, com proporção preservada por `object-fit: contain`; sua procedência está em `public/service-guide.png.json`. Fotografias demonstrativas mantêm rótulos e procedência. A composição específica da primeira tela permanece em `.impeccable/surfaces/directory.md`.\n\nA revisão `.impeccable/review/premium/finish-review.md` preserva o parecer inicial `fix` e registra adendo `ship` para as duas correções visuais: autenticação e categorias abaixo dos nomes. A pendência documental desse parecer é atendida por este registro e pelo sidecar. As oito capturas em `.impeccable/review/premium/` são recortes de viewport ou estados após rolagem: desktop de 1440 reduzido nativamente a 600, mobile de 390 × 640 e `user-614` de 614 × 672; nenhuma captura é de página inteira. O adendo não certifica independentemente medições computadas de hover/foco, CRUD autenticado, banco remoto ou produção. Gates e procedência comunicados pelo agente principal constam no sidecar; esta documentação não abre nova auditoria.\n\nA extensão administrativa de 16/10/2026 foi registrada a partir de `src/styles/guide-admin.css`, `src/modules/guide/screens/Admin.tsx` e `src/modules/guide/admin/`. É uma evolução Operate da identidade existente, com prioridade em cadastrar empresas, produtos e serviços. Seu contrato e medidas de superfície ficam em `.impeccable/surfaces/admin-workspace.md`. O painel documentado é candidato local na branch `codex/painel-profissional`; este registro não declara aplicação de migração nem publicação em produção.",
     "keyCharacteristics": [
       "Logo azul/verde original e Manrope local mantêm continuidade.",
       "Marinho profundo, campo branco e verde claro organizam ações e exposição paga.",
@@ -546,6 +679,11 @@
         "name": "The Leitura Antes da Densidade Rule",
         "body": "Reduza colunas e reorganize controles ao adaptar, preservando nomes, rótulos e ações visíveis.",
         "section": "typography"
+      },
+      {
+        "name": "The Ação ao Alcance Rule",
+        "body": "Barras de diálogo e de configurações têm contextos próprios de posicionamento. Nas configurações, a barra adere à base (`bottom: 0`) no desktop; até 800px fica acima da navegação inferior (`76px` mais área segura), com reserva no formulário (`104px` mais área segura). Os offsets negativos dos diálogos não se aplicam ao formulário da página.",
+        "section": "components"
       }
     ],
     "dos": [
@@ -553,14 +691,16 @@
       "**Do** usar escala ampla com refluxo e leitura confortável nas faixas observadas.",
       "**Do** apresentar categoria abaixo do nome e patrocínio explicitamente rotulado.",
       "**Do** manter foco visível, controles nomeados, movimento reduzido e área segura.",
-      "**Do** distinguir dados comerciais reais, exemplos e ausência de dados."
+      "**Do** distinguir dados comerciais reais, exemplos e ausência de dados.",
+      "**Do** preservar contexto da empresa, alternativa de teclado à ordenação e ações de salvamento acessíveis acima da navegação móvel."
     ],
     "donts": [
       "**Don't** inferir reputação ou patrocínio do nome do plano.",
       "**Don't** tratar fotos ilustrativas, preços ou avaliações ausentes como evidência comercial real.",
       "**Don't** restaurar gradiente de autenticação, placeholders tênues ou categorias como kickers acima do título.",
       "**Don't** adicionar autoplay à vitrine ou reutilizar medidas superadas ignorando a cascata final.",
-      "**Don't** tratar aprovação visual local como validação de CRUD autenticado, banco remoto ou produção."
+      "**Don't** tratar aprovação visual local como validação de CRUD autenticado, banco remoto ou produção.",
+      "**Don't** compartilhar offsets de diálogos com barras de formulários de página nem usar champanhe para estados administrativos comuns."
     ]
   }
 }

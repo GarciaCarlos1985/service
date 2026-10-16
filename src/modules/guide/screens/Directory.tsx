@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useId } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { MapPin, Search, Heart, SlidersHorizontal, X, Loader2 } from 'lucide-react'
 import { Checkbox } from '~/modules/ui/primitives/checkbox'
@@ -25,6 +25,7 @@ import {
 import CompanyDetail from './CompanyDetail'
 import Account from './Account'
 import { PremiumSpotlight } from '../components/Premium'
+import { defaultPresentation } from '../presentation'
 type Filters = {
   q: string
   category: string
@@ -100,6 +101,7 @@ export default function Directory({
     [filtersOpen, setFiltersOpen] = useState(false)
   const [retry, setRetry] = useState(0)
   const resultHeading = useRef<HTMLHeadingElement>(null)
+  const suggestionsId = useId()
   const serialized = paramsFor(f).toString()
   const favoritesKey = favoritesOnly ? (viewer?.favorites ?? []).join('|') : ''
   const queryEnabled = !previewSearch && !companyId && !account && (!favoritesOnly || !!viewer)
@@ -123,7 +125,13 @@ export default function Directory({
   const loading = queryEnabled && resultQuery.isFetching
   const searchError = resultQuery.error instanceof Error ? resultQuery.error.message : ''
   const update = (changes: Partial<Filters>) => {
-    setF((previous) => ({ ...previous, ...changes, page: changes.page || 1 }))
+    const next = { ...f, ...changes, page: changes.page || 1 }
+    if (!previewSearch && !companyId && !account) {
+      const params = paramsFor(next)
+      const href = location.pathname + (params.size ? '?' + params.toString() : '')
+      if (href !== location.pathname + location.search) history.pushState(history.state, '', href)
+    }
+    setF(next)
   }
   useEffect(() => {
     const pop = () => {
@@ -140,7 +148,7 @@ export default function Directory({
     if (previewSearch || companyId || account) return
     const visible = new URLSearchParams(serialized)
     history.replaceState(
-      null,
+      history.state,
       '',
       location.pathname + (visible.size ? '?' + visible.toString() : ''),
     )
@@ -148,6 +156,20 @@ export default function Directory({
   const previewParams = paramsFor(f)
   if (itemId) previewParams.set('itemId', itemId)
   const catalog = previewSearch ? previewSearch(previewParams) : (resultQuery.data ?? null)
+  const presentation = catalog?.presentation ?? defaultPresentation
+  const suggestions = [
+    ...new Set([
+      ...(catalog?.categories.map((entry) => entry.name) ?? []),
+      ...(catalog?.items.map((entry) => entry.name) ?? []),
+      ...(catalog?.companies.map((entry) => entry.name) ?? []),
+    ]),
+  ]
+    .filter(
+      (entry) =>
+        query.length >= 2 &&
+        entry.toLocaleLowerCase('pt-BR').includes(query.toLocaleLowerCase('pt-BR')),
+    )
+    .slice(0, 8)
   const currentPage =
     (catalog && 'pagination' in catalog ? catalog.pagination.page : undefined) ?? f.page
   const item = catalog?.items.find((i) => i.id === itemId)
@@ -163,10 +185,17 @@ export default function Directory({
     setQuery(value)
     update({ q: value.trim() })
     track('search', { query: value.trim() })
+    requestAnimationFrame(() => {
+      resultHeading.current?.focus({ preventScroll: true })
+      resultHeading.current?.scrollIntoView({
+        block: 'start',
+        behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth',
+      })
+    })
   }
   const reset = () => {
     setQuery('')
-    setF({ ...defaults })
+    update({ ...defaults })
   }
   const filterCount = [
     !!f.neighborhood,
@@ -302,24 +331,18 @@ export default function Directory({
                   <div className="search-intro">
                     <div>
                       <h1>
-                        {favoritesOnly ? (
-                          'Seus favoritos, por perto.'
-                        ) : item ? (
-                          item.name
-                        ) : (
-                          <>
-                            Descubra
-                            <br />
-                            <span>Cacoal.</span>
-                          </>
-                        )}
+                        {favoritesOnly
+                          ? 'Seus favoritos, por perto.'
+                          : item
+                            ? item.name
+                            : presentation.heroTitle}
                       </h1>
                       <p>
                         {favoritesOnly
                           ? 'Um lugar para guardar quem resolve o que você precisa.'
                           : item
                             ? item.description
-                            : 'Produtos, serviços e negócios locais. Encontre o que precisa e faça a cidade acontecer.'}
+                            : presentation.heroDescription}
                       </p>
                     </div>
                     <div className="city-label">
@@ -343,13 +366,19 @@ export default function Directory({
                         <Search size={22} />
                         <input
                           aria-label="O que você procura?"
-                          placeholder="Eletricista, tinta, barbearia…"
+                          placeholder={presentation.searchPlaceholder}
+                          list={suggestionsId}
                           value={query}
                           maxLength={150}
                           onChange={(e) => {
                             setQuery(e.target.value)
                           }}
                         />
+                        <datalist id={suggestionsId}>
+                          {suggestions.map((entry) => (
+                            <option value={entry} key={entry} />
+                          ))}
+                        </datalist>
                         {query && (
                           <button
                             type="button"
@@ -367,28 +396,27 @@ export default function Directory({
                           Buscar
                         </button>
                       </form>
-                      <div className="suggestions">
-                        <span>Experimente:</span>
-                        {[
-                          'Tinta emborrachada',
-                          'Corte masculino',
-                          'Eletricista',
-                          'Celular Samsung',
-                        ].map((t) => (
-                          <button
-                            key={t}
-                            onClick={() => {
-                              search(t)
-                            }}
-                          >
-                            {t}
-                          </button>
-                        ))}
-                      </div>
+                      {presentation.showSuggestions && (
+                        <div className="suggestions">
+                          <span>Experimente:</span>
+                          {presentation.quickSearches.map((t) => (
+                            <button
+                              key={t}
+                              onClick={() => {
+                                search(t)
+                              }}
+                            >
+                              {t}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
-                {!favoritesOnly && !itemId && catalog && <PremiumSpotlight data={catalog} />}
+                {!favoritesOnly && !itemId && catalog && presentation.showSpotlight && (
+                  <PremiumSpotlight data={catalog} />
+                )}
               </div>
             </section>
             {!favoritesOnly && !itemId && catalog && (

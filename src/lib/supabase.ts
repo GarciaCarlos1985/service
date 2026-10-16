@@ -23,6 +23,18 @@ export function getSupabase(): SupabaseClient {
   }
 
   client = createClient(url, anonKey, {
+    global: {
+      fetch: (input, options) => {
+        const target =
+          typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+        const deadline = AbortSignal.timeout(target.includes('/storage/v1/') ? 120_000 : 30_000)
+        const incoming = options?.signal ?? (input instanceof Request ? input.signal : null)
+        return fetch(input, {
+          ...options,
+          signal: incoming ? AbortSignal.any([incoming, deadline]) : deadline,
+        })
+      },
+    },
     auth: {
       persistSession: true,
       autoRefreshToken: true,

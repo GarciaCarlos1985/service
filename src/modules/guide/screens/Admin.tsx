@@ -1,6 +1,8 @@
-import { useRef, useState } from 'react'
-import type { SyntheticEvent } from 'react'
+import { useState } from 'react'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getSupabase } from '~/lib/supabase'
+import { useAuth } from '~/modules/auth/auth-context'
 import {
   BarChart3,
   Store,
@@ -19,6 +21,12 @@ import {
   Search,
   RefreshCw,
   Download,
+  Settings2,
+  ArrowUpDown,
+  ExternalLink,
+  ArrowLeft,
+  CheckCircle2,
+  KeyRound,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -28,15 +36,24 @@ import {
   DialogDescription,
 } from '~/modules/ui/primitives/dialog'
 import { Header, Footer, Picker, useCatalog } from '../components/shared'
-import { adminSnapshot, adminSave, text, priceCents } from '../admin'
-import type { AdminAction, AdminRow, AdminSection, AdminSnapshot } from '../admin'
-import { companySchema, normalize } from '../types'
+import { adminCompany, adminSnapshot, adminSave, text } from '../admin'
+import type { AdminAction, AdminRow, AdminSection } from '../admin'
+import { companySchema } from '../types'
 import type { Company } from '../types'
+import { Editor } from '../admin/CatalogEditor'
+import { CompanyPicker } from '../admin/CompanyPicker'
+import { OrderBoard } from '../admin/OrderBoard'
+import type { OrderScope } from '../admin'
+import { PresentationSettings } from '../admin/PresentationSettings'
+import { SecurityPanel } from '../admin/SecurityPanel'
+import { MediaUploader } from '../admin/MediaUploader'
+import { RoleDialog } from '../admin/RoleDialog'
 
 const sections = [
   ['overview', 'Visão geral', BarChart3],
   ['companies', 'Empresas', Store],
   ['items', 'Produtos e serviços', Package],
+  ['media', 'Imagens', Image],
   ['categories', 'Categorias', Tags],
   ['neighborhoods', 'Bairros', MapPin],
   ['plans', 'Planos', BadgeCheck],
@@ -44,9 +61,10 @@ const sections = [
   ['contacts', 'Contatos', MessageCircle],
   ['support', 'Ajuda e inclusões', LifeBuoy],
   ['users', 'Usuários', Users],
-  ['media', 'Imagens', Image],
   ['reports', 'Denúncias', Flag],
   ['audit', 'Auditoria', ShieldCheck],
+  ['settings', 'Aparência do site', Settings2],
+  ['security', 'Segurança da conta', KeyRound],
 ] as const
 const editorActions: Partial<Record<AdminSection, AdminAction>> = {
   companies: 'company',
@@ -74,14 +92,42 @@ const message = (error: unknown) =>
   error instanceof Error ? error.message : 'Não foi possível concluir. Tente novamente.'
 
 export default function Admin() {
+  const { user, session } = useAuth()
   const { viewer, viewerLoading, viewerError, loadViewer } = useCatalog(null, undefined, false)
   const queryClient = useQueryClient()
-  const [section, setSection] = useState<AdminSection>('overview')
-  const [page, setPage] = useState(1)
-  const [query, setQuery] = useState('')
-  const [search, setSearch] = useState('')
+  const params = useSearch({ from: '/admin' })
+  const routeNavigate = useNavigate({ from: '/admin' })
+  const section = params.area
+  const page = params.page
+  const query = params.query
   const [days, setDays] = useState('7')
-  const [company, setCompany] = useState<Company | null>(null)
+  const companyQuery = useQuery({
+    queryKey: ['guide-admin', user?.id, 'company', params.company],
+    queryFn: () => {
+      if (!params.company) throw new Error('Escolha uma empresa.')
+      return adminCompany(params.company)
+    },
+    enabled: !!viewer?.admin && !!params.company,
+    retry: false,
+  })
+  const company = companyQuery.data ?? null
+  const setCompany = (selected: Company | null) =>
+    routeNavigate({ search: (previous) => ({ ...previous, company: selected?.id, page: 1 }) })
+  const assurance = useQuery({
+    queryKey: ['guide-assurance', user?.id],
+    queryFn: async () => {
+      const result = await getSupabase().auth.mfa.getAuthenticatorAssuranceLevel()
+      if (result.error) throw result.error
+      return result.data
+    },
+    enabled: !!viewer?.admin,
+    retry: false,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+  })
+  const mfaRequired = assurance.data?.nextLevel === 'aal2' && assurance.data.currentLevel !== 'aal2'
+  const [ordering, setOrdering] = useState<OrderScope | null>(null)
+  const [roleTarget, setRoleTarget] = useState<AdminRow | null>(null)
   const [editor, setEditor] = useState<{ action: AdminAction; row?: AdminRow } | null>(null)
   const [details, setDetails] = useState<AdminRow | null>(null)
   const [confirmation, setConfirmation] = useState<{
@@ -91,32 +137,87 @@ export default function Admin() {
     title: string
   } | null>(null)
   const [saving, setSaving] = useState(false)
+  const [settingsDirty, setSettingsDirty] = useState(false)
   const snapshot = useQuery({
-    queryKey: ['guide-admin', section, page, query, company?.id, days],
-    queryFn: () => adminSnapshot(section, page, query, company?.id, Number(days)),
-    enabled: !!viewer?.admin,
+    queryKey: [
+      'guide-admin',
+      user?.id,
+      session?.expires_at,
+      section,
+      page,
+      query,
+      params.company,
+      days,
+    ],
+    queryFn: () => adminSnapshot(section, page, query, params.company, Number(days)),
+    enabled:
+      !!viewer?.admin &&
+      assurance.isSuccess &&
+      !mfaRequired &&
+      section !== 'security' &&
+      !(section === 'settings' && settingsDirty),
+    refetchOnWindowFocus: section !== 'settings',
     retry: false,
   })
   const data = snapshot.data
-  const navigate = (next: AdminSection) => {
-    setSection(next)
-    setPage(1)
-    setQuery('')
-    setSearch('')
+  const navigate = (next: AdminSection, selected?: Company) => {
+    void routeNavigate({
+      search: (previous) => ({
+        ...previous,
+        area: next,
+        page: 1,
+        query: '',
+        company: selected?.id ?? previous.company,
+      }),
+    })
   }
-  const refresh = () => queryClient.invalidateQueries({ queryKey: ['guide-admin'] })
+  const setPage = (next: number) => {
+    void routeNavigate({ search: (previous) => ({ ...previous, page: next }) })
+  }
+  const refresh = () =>
+    queryClient.invalidateQueries({
+      predicate: (entry) =>
+        typeof entry.queryKey[0] === 'string' && entry.queryKey[0].startsWith('guide-'),
+    })
   const manage = (row: AdminRow, area: 'items' | 'media') => {
-    setCompany(companySchema.parse(row))
-    navigate(area)
+    navigate(area, companySchema.parse(row))
+  }
+  const openEditor = async (action: AdminAction, row?: AdminRow) => {
+    if (row && ['item', 'media'].includes(action) && text(row, 'company_id') !== company?.id) {
+      try {
+        await setCompany(await adminCompany(text(row, 'company_id')))
+      } catch (error) {
+        toast.error(message(error))
+        return
+      }
+    }
+    setEditor({ action, row })
   }
   const save = async (action: AdminAction, payload: AdminRow) => {
     setSaving(true)
     try {
-      await adminSave(action, payload)
+      const saved = await adminSave(action, payload)
+      if (action === 'settings') {
+        setSettingsDirty(false)
+        await snapshot.refetch()
+      }
       await refresh()
       setEditor(null)
       setConfirmation(null)
       toast.success('Alteração salva e registrada na auditoria.')
+      if (action === 'company')
+        toast('Continue montando o catálogo da empresa.', {
+          action: {
+            label: 'Adicionar produtos',
+            onClick: () => {
+              void adminCompany(saved.id)
+                .then((selected) => {
+                  navigate('items', selected)
+                })
+                .catch((error: unknown) => toast.error(message(error)))
+            },
+          },
+        })
     } catch (error) {
       toast.error(message(error))
       throw error
@@ -149,22 +250,39 @@ export default function Admin() {
   return (
     <>
       <Header viewer={viewer} />
-      <main id="main-content" className="wrap admin-page">
-        <div className="section-top">
+      <main id="main-content" className="wrap admin-page professional-admin">
+        <div className="section-top admin-page-heading">
           <div>
-            <h1>Painel do guia</h1>
-            <p>Cadastros, contatos e resultados do comércio local.</p>
+            <h1>Gestão do Service Guide</h1>
+            <p>Seu catálogo, sua organização. Tudo em um só lugar.</p>
           </div>
           {viewer?.admin && (
-            <button
-              className="btn outline"
-              onClick={() => {
-                void refresh()
-              }}
-            >
-              <RefreshCw size={17} />
-              Atualizar
-            </button>
+            <div className="admin-heading-actions">
+              <a className="btn outline" href="/" target="_blank" rel="noopener noreferrer">
+                <ExternalLink size={18} />
+                Ver site
+              </a>
+              <button
+                className="btn outline icon-btn"
+                aria-label="Atualizar informações do painel"
+                disabled={settingsDirty || saving}
+                onClick={() => {
+                  void refresh()
+                }}
+              >
+                <RefreshCw size={18} />
+              </button>
+              <button
+                className="btn primary"
+                disabled={!data || mfaRequired}
+                onClick={() => {
+                  void openEditor('company')
+                }}
+              >
+                <Plus size={19} />
+                Nova empresa
+              </button>
+            </div>
           )}
         </div>
         {viewerLoading ? (
@@ -201,11 +319,35 @@ export default function Admin() {
           </div>
         ) : (
           <div className="guide-admin-layout">
+            <label className="admin-mobile-navigation">
+              Área do painel
+              <select
+                value={section}
+                onChange={(event) => {
+                  navigate(event.target.value as AdminSection)
+                }}
+              >
+                {sections.map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
             <nav className="guide-admin-nav" aria-label="Áreas administrativas">
+              <div className="admin-nav-heading">
+                <strong>Sua área de trabalho</strong>
+                <span>{viewer.name}</span>
+              </div>
               {sections.map(([key, label, Icon]) => (
                 <button
                   key={key}
-                  className={section === key ? 'selected' : ''}
+                  className={
+                    (section === key ? 'selected' : '') +
+                    (['companies', 'reviews', 'users', 'settings'].includes(key)
+                      ? ' admin-nav-group-start'
+                      : '')
+                  }
                   aria-current={section === key ? 'page' : undefined}
                   onClick={() => {
                     navigate(key)
@@ -215,54 +357,114 @@ export default function Admin() {
                   {label}
                 </button>
               ))}
+              <p className="admin-nav-footnote">
+                <ShieldCheck size={16} />
+                Ações autorizadas e auditadas
+              </p>
             </nav>
             <section className="guide-admin-content" aria-busy={snapshot.isFetching}>
               <div className="section-top">
-                <h2>{sections.find(([key]) => key === section)?.[1]}</h2>
-                {editorActions[section] && (
+                <div className="admin-section-title">
+                  <h2>{sections.find(([key]) => key === section)?.[1]}</h2>
+                  {section !== 'overview' && (
+                    <button
+                      className="text-button"
+                      onClick={() => {
+                        navigate('overview')
+                      }}
+                    >
+                      <ArrowLeft size={15} />
+                      Visão geral
+                    </button>
+                  )}
+                </div>
+                {['categories', 'items', 'media'].includes(section) &&
+                  (section === 'categories' || company) && (
+                    <button
+                      className="btn outline"
+                      disabled={!data || mfaRequired}
+                      onClick={() => {
+                        setOrdering(section as OrderScope)
+                      }}
+                    >
+                      <ArrowUpDown size={18} />
+                      Organizar ordem
+                    </button>
+                  )}
+                {section !== 'companies' && editorActions[section] && (
                   <button
                     className="btn primary"
-                    disabled={!data || ((section === 'items' || section === 'media') && !company)}
+                    disabled={!data || (section === 'media' && !company) || mfaRequired}
                     onClick={() => {
                       const action = editorActions[section]
-                      if (action) setEditor({ action })
+                      if (action) void openEditor(action)
                     }}
                   >
                     <Plus size={18} />
-                    Adicionar
+                    {section === 'items' ? 'Cadastrar produto ou serviço' : 'Adicionar'}
                   </button>
                 )}
               </div>
               {(section === 'items' || section === 'media') && (
-                <p className="status-note">
-                  {company ? (
-                    <>
-                      Gerenciando <strong>{company.name}</strong>.{' '}
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          navigate('companies')
-                        }}
-                      >
-                        Trocar empresa
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      Escolha uma empresa para gerenciar seus itens e imagens.{' '}
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          navigate('companies')
-                        }}
-                      >
-                        Escolher empresa
-                      </button>
-                    </>
-                  )}
-                </p>
+                <div className="admin-company-context">
+                  <CompanyPicker
+                    company={company}
+                    onChange={(selected) => {
+                      void setCompany(selected)
+                    }}
+                  />
+                  <p className="secondary">
+                    {company ? (
+                      <>
+                        Gerenciando <strong>{company.name}</strong>.{' '}
+                        <button
+                          className="text-button"
+                          onClick={() => {
+                            navigate('companies')
+                          }}
+                        >
+                          Trocar empresa
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        Escolha uma empresa para gerenciar seus itens e imagens.{' '}
+                        <button
+                          className="text-button"
+                          onClick={() => {
+                            navigate('companies')
+                          }}
+                        >
+                          Escolher empresa
+                        </button>
+                      </>
+                    )}
+                  </p>
+                </div>
               )}
-              {snapshot.isError ? (
+              {assurance.isPending ? (
+                <div className="admin-loading" role="status">
+                  <div />
+                  <div />
+                  <div />
+                  <span>Conferindo a proteção da sessão…</span>
+                </div>
+              ) : assurance.isError ? (
+                <div className="state-box" role="alert">
+                  <h3>Não foi possível conferir a sessão</h3>
+                  <p>Confira a conexão para continuar com segurança.</p>
+                  <button
+                    className="btn primary"
+                    onClick={() => {
+                      void assurance.refetch()
+                    }}
+                  >
+                    Tentar novamente
+                  </button>
+                </div>
+              ) : mfaRequired || section === 'security' ? (
+                <SecurityPanel required={mfaRequired} onVerified={refresh} />
+              ) : snapshot.isError ? (
                 <div className="state-box" role="alert">
                   <p>{message(snapshot.error)}</p>
                   <button
@@ -273,13 +475,67 @@ export default function Admin() {
                   >
                     Tentar novamente
                   </button>
+                  <a className="btn outline" href="/entrar?redirect=%2Fadmin">
+                    Entrar novamente
+                  </a>
                 </div>
               ) : !data ? (
-                <div className="state-box" role="status">
-                  Carregando informações…
+                <div className="admin-loading" role="status">
+                  <div />
+                  <div />
+                  <div />
+                  <span>Carregando informações…</span>
                 </div>
+              ) : section === 'settings' ? (
+                <PresentationSettings
+                  key={String(data.rows[0]?.revision)}
+                  row={data.rows[0] ?? { value: {}, revision: 0 }}
+                  busy={saving}
+                  onDirtyChange={setSettingsDirty}
+                  onSave={(payload) => save('settings', payload)}
+                />
               ) : section === 'overview' ? (
                 <>
+                  <div className="admin-workflow-intro">
+                    <div>
+                      <h3>Do cadastro à descoberta.</h3>
+                      <p>
+                        Prepare o guia, publique empresas e ajude os clientes a encontrar o que
+                        procuram.
+                      </p>
+                    </div>
+                    <button
+                      className="btn primary"
+                      onClick={() => {
+                        void openEditor('company')
+                      }}
+                    >
+                      <Plus size={18} />
+                      Cadastrar empresa
+                    </button>
+                  </div>
+                  <ol className="admin-onboarding">
+                    {[
+                      ['categories', 'Organize as categorias', data.catalog.categories.length > 0],
+                      ['neighborhoods', 'Cadastre os bairros', data.neighborhoods.length > 0],
+                      ['companies', 'Publique as empresas', Number(data.metrics.companies) > 0],
+                    ].map(([area, title, complete]) => (
+                      <li key={String(area)}>
+                        <span className={complete ? 'complete' : ''}>
+                          {complete ? <CheckCircle2 size={20} /> : <Store size={20} />}
+                        </span>
+                        <button
+                          className="text-button"
+                          onClick={() => {
+                            navigate(area as AdminSection)
+                          }}
+                        >
+                          {title}
+                        </button>
+                        <small>{complete ? 'Configurado' : 'Começar'}</small>
+                      </li>
+                    ))}
+                  </ol>
                   <div className="section-top">
                     <p className="secondary">
                       Interesse registrado com consentimento. Cliques não comprovam vendas.
@@ -327,12 +583,24 @@ export default function Admin() {
                 </>
               ) : (
                 <>
+                  {section === 'media' && company && (
+                    <MediaUploader company={company} onUploaded={refresh} />
+                  )}
                   <form
+                    key={section + query}
                     className="guide-admin-toolbar"
                     onSubmit={(event) => {
                       event.preventDefault()
-                      setQuery(search.trim())
-                      setPage(1)
+                      const submitted = new FormData(event.currentTarget).get('query')
+                      void routeNavigate({
+                        search: (previous) => ({
+                          ...previous,
+                          query: (typeof submitted === 'string' ? submitted : '')
+                            .trim()
+                            .slice(0, 150),
+                          page: 1,
+                        }),
+                      })
                     }}
                   >
                     <label className="admin-search">
@@ -340,10 +608,8 @@ export default function Admin() {
                       <input
                         aria-label="Pesquisar registros"
                         placeholder="Pesquisar nesta área"
-                        value={search}
-                        onChange={(event) => {
-                          setSearch(event.target.value)
-                        }}
+                        name="query"
+                        defaultValue={query}
                         maxLength={150}
                       />
                     </label>
@@ -367,8 +633,32 @@ export default function Admin() {
                   {!data.rows.length ? (
                     <div className="state-box">
                       <Store size={30} />
-                      <h3>Nenhum registro nesta área.</h3>
-                      <p>Os cadastros e solicitações aparecerão aqui.</p>
+                      <h3>
+                        {query
+                          ? 'Nenhum cadastro corresponde à busca.'
+                          : section === 'companies'
+                            ? 'Seu próximo negócio começa aqui.'
+                            : 'Tudo pronto para o primeiro cadastro.'}
+                      </h3>
+                      <p>
+                        {query
+                          ? 'Tente parte do nome ou limpe a pesquisa.'
+                          : editorActions[section]
+                            ? 'Use o botão de cadastro acima para preparar os dados. Você pode editar depois.'
+                            : 'As solicitações aparecerão aqui quando forem recebidas.'}
+                      </p>
+                      {query && (
+                        <button
+                          className="btn outline"
+                          onClick={() => {
+                            void routeNavigate({
+                              search: (previous) => ({ ...previous, query: '', page: 1 }),
+                            })
+                          }}
+                        >
+                          Limpar pesquisa
+                        </button>
+                      )}
                     </div>
                   ) : (
                     <div className="guide-table-scroll">
@@ -385,6 +675,14 @@ export default function Admin() {
                           {data.rows.map((row) => (
                             <tr key={text(row, 'id')}>
                               <td>
+                                {section === 'media' && text(row, 'url') && (
+                                  <img
+                                    className="admin-table-image"
+                                    src={text(row, 'url')}
+                                    alt={text(row, 'alt')}
+                                    loading="lazy"
+                                  />
+                                )}
                                 <strong>
                                   {text(row, 'name') ||
                                     text(row, 'company_name') ||
@@ -421,16 +719,20 @@ export default function Admin() {
                               </td>
                               <td>
                                 <span className="status">
-                                  {labels[text(row, 'status')] ||
-                                    (typeof row.is_active === 'boolean'
-                                      ? row.is_active
-                                        ? 'Ativa'
-                                        : 'Inativa'
-                                      : text(row, 'created_at')
-                                        ? new Date(text(row, 'created_at')).toLocaleDateString(
-                                            'pt-BR',
-                                          )
-                                        : '—')}
+                                  {section === 'items'
+                                    ? row.available
+                                      ? 'Disponível'
+                                      : 'Indisponível'
+                                    : labels[text(row, 'status')] ||
+                                      (typeof row.is_active === 'boolean'
+                                        ? row.is_active
+                                          ? 'Ativa'
+                                          : 'Inativa'
+                                        : text(row, 'created_at')
+                                          ? new Date(text(row, 'created_at')).toLocaleDateString(
+                                              'pt-BR',
+                                            )
+                                          : '—')}
                                 </span>
                               </td>
                               <td>
@@ -440,7 +742,7 @@ export default function Admin() {
                                       className="text-button"
                                       onClick={() => {
                                         const action = editorActions[section]
-                                        if (action) setEditor({ action, row })
+                                        if (action) void openEditor(action, row)
                                       }}
                                     >
                                       Editar
@@ -448,6 +750,19 @@ export default function Admin() {
                                   )}
                                   {section === 'companies' && (
                                     <>
+                                      <a
+                                        className="text-button"
+                                        href={
+                                          '/empresas/' +
+                                          text(row, 'city_slug') +
+                                          '/' +
+                                          text(row, 'slug')
+                                        }
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        Ver perfil
+                                      </a>
                                       <button
                                         className="text-button"
                                         onClick={() => {
@@ -465,6 +780,26 @@ export default function Admin() {
                                         Imagens
                                       </button>
                                     </>
+                                  )}
+                                  {['companies', 'items'].includes(section) && (
+                                    <button
+                                      className="text-button"
+                                      onClick={() => {
+                                        const action = editorActions[section]
+                                        if (action)
+                                          void openEditor(action, {
+                                            ...row,
+                                            id: '',
+                                            name: text(row, 'name') + ' (cópia)',
+                                            slug: text(row, 'slug') + '-copia',
+                                            ...(section === 'companies'
+                                              ? { status: 'inactive' }
+                                              : {}),
+                                          })
+                                      }}
+                                    >
+                                      Duplicar
+                                    </button>
                                   )}
                                   {['reviews', 'contacts', 'support', 'reports', 'audit'].includes(
                                     section,
@@ -559,6 +894,18 @@ export default function Admin() {
                                       Concluir
                                     </button>
                                   )}
+                                  {section === 'users' && text(row, 'id') !== viewer.id && (
+                                    <button
+                                      className="text-button"
+                                      onClick={() => {
+                                        setRoleTarget(row)
+                                      }}
+                                    >
+                                      {row.is_admin
+                                        ? 'Remover administração'
+                                        : 'Tornar administrador'}
+                                    </button>
+                                  )}
                                   {section === 'users' && !row.is_admin && (
                                     <button
                                       className="text-button"
@@ -594,7 +941,7 @@ export default function Admin() {
                         className="btn outline"
                         disabled={page <= 1 || snapshot.isFetching}
                         onClick={() => {
-                          setPage((value) => value - 1)
+                          setPage(page - 1)
                         }}
                       >
                         Anterior
@@ -606,7 +953,7 @@ export default function Admin() {
                         className="btn outline"
                         disabled={page >= data.pagination.pages || snapshot.isFetching}
                         onClick={() => {
-                          setPage((value) => value + 1)
+                          setPage(page + 1)
                         }}
                       >
                         Próxima
@@ -618,7 +965,7 @@ export default function Admin() {
             </section>
           </div>
         )}
-        {editor && data && (
+        {editor && data && viewer?.admin && !mfaRequired && (
           <Editor
             key={`${editor.action}-${text(editor.row ?? {}, 'id')}`}
             action={editor.action}
@@ -630,10 +977,30 @@ export default function Admin() {
               setEditor(null)
             }}
             onSave={(payload) => save(editor.action, payload)}
+            onRefresh={refresh}
+          />
+        )}
+        {ordering && viewer?.admin && !mfaRequired && (
+          <OrderBoard
+            scope={ordering}
+            companyId={company?.id}
+            onClose={() => {
+              setOrdering(null)
+            }}
+            onSaved={refresh}
+          />
+        )}
+        {roleTarget && viewer?.admin && !mfaRequired && (
+          <RoleDialog
+            row={roleTarget}
+            onClose={() => {
+              setRoleTarget(null)
+            }}
+            onSaved={refresh}
           />
         )}
         <Dialog
-          open={!!confirmation}
+          open={!!confirmation && !!viewer?.admin && !viewerError && !mfaRequired}
           onOpenChange={(open) => {
             if (!open && !saving) setConfirmation(null)
           }}
@@ -670,7 +1037,7 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
         <Dialog
-          open={!!details}
+          open={!!details && !!viewer?.admin && !viewerError && !mfaRequired}
           onOpenChange={(open) => {
             if (!open) setDetails(null)
           }}
@@ -680,6 +1047,9 @@ export default function Admin() {
             <DialogDescription>Informações restritas à administração.</DialogDescription>
             <dl className="guide-record-details">
               {details &&
+                viewer?.admin &&
+                !viewerError &&
+                !mfaRequired &&
                 Object.entries(details)
                   .filter(([key]) => !['search_text', 'search_vector'].includes(key))
                   .map(([key, value]) => (
@@ -717,401 +1087,5 @@ export default function Admin() {
       </main>
       <Footer />
     </>
-  )
-}
-
-type Field = {
-  key: string
-  label: string
-  kind?: 'textarea' | 'select' | 'checkbox' | 'number' | 'url'
-  required?: boolean
-  options?: { id: string; name: string }[]
-  step?: number
-  min?: number
-  max?: number
-  disabled?: boolean
-}
-function Editor({
-  action,
-  row,
-  data,
-  company,
-  busy,
-  onClose,
-  onSave,
-}: {
-  action: AdminAction
-  row?: AdminRow
-  data: AdminSnapshot
-  company: Company | null
-  busy: boolean
-  onClose: () => void
-  onSave: (payload: AdminRow) => Promise<void>
-}) {
-  const initial: AdminRow = {
-    name: '',
-    description: '',
-    slug: '',
-    category_id: data.catalog.categories[0]?.id ?? '',
-    city_id: data.cities[0]?.id ?? '',
-    neighborhood_id: '',
-    plan_id: data.catalog.plans[0]?.id ?? '',
-    status: 'inactive',
-    street: '',
-    address_number: '',
-    postal_code: '',
-    phone: '',
-    whatsapp: '',
-    website: '',
-    hours: '',
-    icon: 'Store',
-    is_active: true,
-    type: 'product',
-    company_id: company?.id ?? '',
-    available: true,
-    max_items: 5,
-    max_media: 3,
-    featured: false,
-    direct_contact: false,
-    url: '',
-    alt: '',
-    sort_order: 0,
-    ...row,
-  }
-  if (row && action === 'item')
-    initial.price = row.price_cents === null ? '' : String(Number(row.price_cents) / 100)
-  if (row && action === 'plan') {
-    const limits = row.limits as Record<string, unknown> | undefined
-    const features = row.features as Record<string, unknown> | undefined
-    initial.max_items = limits?.items ?? 5
-    initial.max_media = limits?.media ?? 3
-    initial.featured = features?.featured ?? false
-    initial.direct_contact = features?.direct_contact ?? false
-  }
-  const [form, setForm] = useState<AdminRow>(initial)
-  const [step, setStep] = useState(0)
-  const [error, setError] = useState('')
-  const formRef = useRef<HTMLFormElement>(null)
-  const update = (key: string, value: unknown) => {
-    setForm((previous) => ({
-      ...previous,
-      [key]: value,
-      ...(key === 'name' && !row && ['company', 'category'].includes(action)
-        ? {
-            slug: normalize(String(value))
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/^-|-$/g, ''),
-          }
-        : {}),
-      ...(key === 'city_id' ? { neighborhood_id: '' } : {}),
-    }))
-  }
-  const categories = data.catalog.categories.map((category) => ({
-    id: category.id,
-    name: category.name,
-  }))
-  const cities = data.cities.map((city) => ({ id: String(city.id), name: city.name }))
-  const fields: Field[] =
-    action === 'company'
-      ? step === 0
-        ? [
-            { key: 'name', label: 'Nome do negócio', required: true },
-            { key: 'slug', label: 'Nome na URL', required: true },
-            { key: 'description', label: 'Descrição', kind: 'textarea', required: true },
-            {
-              key: 'category_id',
-              label: 'Categoria',
-              kind: 'select',
-              required: true,
-              options: categories,
-            },
-          ]
-        : step === 1
-          ? [
-              { key: 'city_id', label: 'Cidade', kind: 'select', required: true, options: cities },
-              {
-                key: 'neighborhood_id',
-                label: 'Bairro cadastrado',
-                kind: 'select',
-                options: data.neighborhoods
-                  .filter((neighborhood) => String(neighborhood.city_id) === String(form.city_id))
-                  .map((neighborhood) => ({ id: neighborhood.id, name: neighborhood.name })),
-              },
-              { key: 'street', label: 'Rua' },
-              { key: 'address_number', label: 'Número' },
-              { key: 'postal_code', label: 'CEP (somente números)' },
-              { key: 'phone', label: 'Telefone com país e DDD' },
-              { key: 'whatsapp', label: 'WhatsApp com país e DDD' },
-              { key: 'website', label: 'Site (https://)', kind: 'url' },
-            ]
-          : [
-              {
-                key: 'plan_id',
-                label: 'Plano da empresa',
-                kind: 'select',
-                required: true,
-                options: data.catalog.plans.map((plan) => ({ id: plan.id, name: plan.name })),
-              },
-              {
-                key: 'status',
-                label: 'Publicação',
-                kind: 'select',
-                options: [
-                  { id: 'inactive', name: 'Salvar como rascunho' },
-                  { id: 'active', name: 'Ativa no guia' },
-                  { id: 'blocked', name: 'Bloqueada' },
-                ],
-              },
-              { key: 'hours', label: 'Horários informados', kind: 'textarea' },
-            ]
-      : action === 'item'
-        ? [
-            { key: 'name', label: 'Nome do item', required: true },
-            {
-              key: 'type',
-              label: 'Tipo',
-              kind: 'select',
-              disabled: !!row,
-              options: [
-                { id: 'product', name: 'Produto' },
-                { id: 'service', name: 'Serviço' },
-              ],
-            },
-            {
-              key: 'category_id',
-              label: 'Categoria',
-              kind: 'select',
-              required: true,
-              options: categories,
-            },
-            { key: 'description', label: 'Descrição', kind: 'textarea', required: true },
-            { key: 'price', label: 'Preço em reais (opcional)' },
-            { key: 'available', label: 'Disponível', kind: 'checkbox' },
-          ]
-        : action === 'category'
-          ? [
-              { key: 'name', label: 'Nome', required: true },
-              { key: 'slug', label: 'Nome na URL', required: true },
-              {
-                key: 'icon',
-                label: 'Ícone',
-                kind: 'select',
-                options: [
-                  { id: 'Store', name: 'Comércio' },
-                  { id: 'Scissors', name: 'Beleza' },
-                  { id: 'House', name: 'Casa' },
-                  { id: 'Laptop', name: 'Tecnologia' },
-                  { id: 'Car', name: 'Automotivo' },
-                  { id: 'Utensils', name: 'Alimentação' },
-                  { id: 'Wrench', name: 'Serviços' },
-                ],
-              },
-              { key: 'is_active', label: 'Categoria ativa', kind: 'checkbox' },
-            ]
-          : action === 'neighborhood'
-            ? [
-                { key: 'name', label: 'Nome canônico do bairro', required: true },
-                {
-                  key: 'city_id',
-                  label: 'Cidade',
-                  kind: 'select',
-                  options: cities,
-                  required: true,
-                },
-              ]
-            : action === 'plan'
-              ? [
-                  { key: 'name', label: 'Nome do plano', required: true },
-                  { key: 'max_items', label: 'Limite de itens', kind: 'number', min: 0, max: 500 },
-                  {
-                    key: 'max_media',
-                    label: 'Limite de imagens',
-                    kind: 'number',
-                    min: 0,
-                    max: 100,
-                  },
-                  {
-                    key: 'featured',
-                    label: 'Destaque identificado nos resultados',
-                    kind: 'checkbox',
-                  },
-                  {
-                    key: 'direct_contact',
-                    label: 'Exibir telefone, WhatsApp e site',
-                    kind: 'checkbox',
-                  },
-                ]
-              : [
-                  { key: 'url', label: 'URL da imagem (https://)', kind: 'url', required: true },
-                  { key: 'alt', label: 'Descrição acessível da imagem', required: true },
-                  {
-                    key: 'sort_order',
-                    label: 'Ordem (a primeira imagem será a capa)',
-                    kind: 'number',
-                    min: 0,
-                  },
-                ]
-  const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setError('')
-    if (!formRef.current?.reportValidity()) return
-    if (action === 'company' && step < 2) {
-      setStep((value) => value + 1)
-      return
-    }
-    try {
-      const payload = { ...form }
-      for (const key of ['city_id', 'max_items', 'max_media', 'sort_order'])
-        if (payload[key] !== undefined) payload[key] = Number(payload[key])
-      if (action === 'item') payload.price_cents = priceCents(text(form, 'price'))
-      if (action === 'company') {
-        payload.phone = text(form, 'phone').replace(/[^+\d]/g, '')
-        let whatsapp = text(form, 'whatsapp').replace(/\D/g, '')
-        if (whatsapp.length === 10 || whatsapp.length === 11) whatsapp = '55' + whatsapp
-        payload.whatsapp = whatsapp
-        payload.postal_code = text(form, 'postal_code').replace(/\D/g, '')
-      }
-      await onSave(payload)
-    } catch (failure) {
-      setError(message(failure))
-    }
-  }
-  return (
-    <Dialog
-      open
-      onOpenChange={(open) => {
-        if (!open && !busy) onClose()
-      }}
-    >
-      <DialogContent className="app-dialog company-wizard">
-        <DialogTitle>{row ? 'Editar cadastro' : 'Adicionar cadastro'}</DialogTitle>
-        <DialogDescription>
-          {action === 'company'
-            ? 'Prepare o perfil e revise antes de publicar. A inclusão e o plano são administrados manualmente.'
-            : company && ['item', 'media'].includes(action)
-              ? `Cadastro de ${company.name}.`
-              : 'Os dados serão validados e a alteração ficará na auditoria.'}
-        </DialogDescription>
-        {action === 'company' && (
-          <ol className="wizard-steps">
-            {['Perfil', 'Local e contato', 'Revisão'].map((label, index) => (
-              <li key={label} aria-current={step === index ? 'step' : undefined}>
-                <span>{index + 1}</span>
-                {label}
-              </li>
-            ))}
-          </ol>
-        )}
-        <form
-          ref={formRef}
-          onSubmit={(event) => {
-            void submit(event)
-          }}
-          className="admin-form guide-editor-form"
-        >
-          {fields.map((field) =>
-            field.kind === 'checkbox' ? (
-              <label className="guide-checkbox full" key={field.key}>
-                <input
-                  type="checkbox"
-                  checked={Boolean(form[field.key])}
-                  onChange={(event) => {
-                    update(field.key, event.target.checked)
-                  }}
-                />
-                {field.label}
-              </label>
-            ) : (
-              <label key={field.key} className={field.kind === 'textarea' ? 'full' : ''}>
-                {field.label}
-                {field.kind === 'textarea' ? (
-                  <textarea
-                    rows={4}
-                    value={text(form, field.key)}
-                    onChange={(event) => {
-                      update(field.key, event.target.value)
-                    }}
-                    required={field.required}
-                    minLength={
-                      field.key === 'description' ? (action === 'company' ? 10 : 2) : undefined
-                    }
-                    maxLength={2000}
-                  />
-                ) : field.kind === 'select' ? (
-                  <select
-                    value={text(form, field.key)}
-                    onChange={(event) => {
-                      update(field.key, event.target.value)
-                    }}
-                    required={field.required}
-                    disabled={field.disabled}
-                  >
-                    <option value="">Selecione</option>
-                    {field.options?.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.name}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={
-                      field.kind === 'number' ? 'number' : field.kind === 'url' ? 'url' : 'text'
-                    }
-                    value={text(form, field.key)}
-                    onChange={(event) => {
-                      update(field.key, event.target.value)
-                    }}
-                    required={field.required}
-                    min={field.min}
-                    max={field.max}
-                    maxLength={field.kind === 'url' ? 2048 : 150}
-                    step={field.step ?? 1}
-                  />
-                )}
-              </label>
-            ),
-          )}
-          {action === 'company' && step === 2 && (
-            <div className="status-note full">
-              <strong>{text(form, 'name')}</strong>
-              <p>{text(form, 'description')}</p>
-              <small>
-                Uma empresa ativa precisa de categoria, bairro e ao menos um contato. O destaque
-                segue os recursos do plano escolhido.
-              </small>
-            </div>
-          )}
-          {error && (
-            <p className="field-error full" role="alert">
-              {error}
-            </p>
-          )}
-          <div className="wizard-actions full">
-            <button
-              type="button"
-              className="btn outline"
-              disabled={busy}
-              onClick={() => {
-                if (action === 'company' && step > 0) {
-                  setStep((value) => value - 1)
-                } else {
-                  onClose()
-                }
-              }}
-            >
-              {action === 'company' && step > 0 ? 'Voltar' : 'Cancelar'}
-            </button>
-            <button type="submit" className="btn primary" disabled={busy}>
-              {busy
-                ? 'Salvando…'
-                : action === 'company' && step < 2
-                  ? 'Continuar'
-                  : 'Salvar cadastro'}
-            </button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
   )
 }

@@ -336,6 +336,7 @@ export function useCatalog(initial?: Catalog | null, companyId?: string, fetchCa
     enabled: !preview && !isLoading && !!user,
     retry: false,
     staleTime: 0,
+    refetchOnWindowFocus: true,
   })
   const catalogQuery = useQuery({
     queryKey: ['guide-catalog', companyId, preview],

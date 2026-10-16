@@ -17,6 +17,20 @@ O catálogo real ainda precisa de categorias, bairros e empresas. O painel
 permite essa configuração e a gestão manual dos planos/destaques. Os módulos
 financeiros descritos no histórico abaixo continuam fora do MVP comercial.
 
+## Painel profissional — candidato em revisão
+
+A evolução na branch `codex/painel-profissional` prioriza cadastrar empresas,
+produtos e serviços. Acrescenta editor com prévia e Salvar/Voltar persistentes,
+cadastro auxiliar de categoria/bairro, duplicação como rascunho, busca de
+empresa, upload de imagens, ocultação e ordenação por arraste ou botões.
+Também inclui apresentação do site com prévia e controle de concorrência,
+segurança TOTP opcional pelo titular e gestão auditada de acesso, com confirmação
+recente de senha ou autenticador e impedimento de autorremoção.
+
+A nova migração reforça sessão ativa e MFA quando configurado, inclusive no
+predicado administrativo legado. **Esse candidato ainda não foi publicado.**
+Ver `PAINEL-PROFISSIONAL-2026-10-16.md` para resultados, limitações e liberação.
+
 ## Referência histórica do marketplace
 
 Painel administrativo: central operacional, não CRUD (spec §35). Poder não
