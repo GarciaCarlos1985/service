@@ -53,7 +53,9 @@ D1, R2 ou novo banco é necessário para esta publicação.
 
 ## Limitação de produto preservada
 
-A migração `20261015032437_guide_commercial_foundation.sql` continua pendente
-no Supabase real. A página pública deve mostrar o catálogo em preparação;
-o deploy não aplica SQL nem cria empresas fictícias. `/previa` é exclusiva de
-desenvolvimento e deve responder 404 no build de produção.
+No momento do deploy, a migração comercial ainda estava pendente. Após nova
+autorização do usuário, foi aplicada e testada no Supabase real (ADR-050).
+O catálogo público agora responde normalmente, com zero empresas, sem exemplos
+fictícios. Ver `ATIVACAO-SUPABASE-2026-10-16.md` para os resultados e as pendências
+de configuração operacional. `/previa` permanece exclusiva de desenvolvimento
+e responde 404 em produção.

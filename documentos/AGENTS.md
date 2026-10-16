@@ -32,7 +32,7 @@ descobrir → conhecer → contatar → favoritar → avaliar**.
 | doc | conteúdo |
 | --- | --- |
 | `SERVICE-GUIDE-PROMPT-INICIO.md` | **spec-mãe atual** — fonte de verdade de produto |
-| `DECISIONS.md` | ADRs — antigos (001–040, modelo antigo) + **041–049 (produto e hospedagem)**; NÃO edite ADRs antigos |
+| `DECISIONS.md` | ADRs — antigos (001–040, modelo antigo) + **041–050 (produto e hospedagem)**; NÃO edite ADRs antigos |
 | `REUSE-MAP.md` | reaproveitar · parar de expandir · criar |
 | `PRODUCT.md` | contexto de produto (impeccable) |
 | `ROADMAP.md` | fases do Service Guide + legado M0–M8 |
@@ -93,12 +93,16 @@ node scripts/sql-tests.mjs supabase/tests/rls-security.sql
 node scripts/sql-tests.mjs supabase/tests/ledger-tests.sql
 node scripts/sql-tests.mjs supabase/tests/chat-tests.sql
 node scripts/sql-tests.mjs supabase/tests/reviews-tests.sql
+node scripts/sql-tests.mjs supabase/tests/guide-commercial.sql
 ```
 
-O runner lê `DATABASE_URL` do `.env.local` (conexão direta 5432). **Nunca
-imprima a senha**. Ao criar teste novo: crie usuários reais no `auth.users`
+O runner lê `DATABASE_URL` do `.env.local`, valida TLS (CA via `PGSSLROOTCERT`
+ou certificado da CLI) e executa a suíte em transação com **rollback**, inclusive
+em falha. **Nunca imprima a senha**. Ao criar teste novo: crie usuários no `auth.users`
 (o trigger cria perfis), use `set local role` + `set_config`, e **volte ao papel
-postgres antes de setup/cleanup**. Cleanup com `truncate ... cascade`.
+postgres antes de setup/cleanup**. Em projeto ativo, prefira a suíte comercial
+com fixtures isoladas; nunca execute a limpeza ampla das suítes legadas fora
+da transação protegida pelo runner.
 
 ## Variáveis de ambiente (resumo — detalhes em ENVIRONMENT.md)
 
@@ -112,12 +116,15 @@ postgres antes de setup/cleanup**. Cleanup com `truncate ... cascade`.
 
 **App publicado no Cloudflare Workers** (ADR-049), em
 `https://service-guide.helon280.workers.dev`. Código no repositório oficial.
-A interface Service Guide e a fundação comercial estão implementadas, mas a
-migração comercial segue **pendente no Supabase real** (ADR-048). O catálogo
-público mostra preparação até essa ativação e os respectivos testes reais.
+A fundação comercial foi **aplicada e validada no Supabase real** (ADR-050):
+10 migrações, dados legados preservados, suíte SQL transacional e teste real
+de cadastro/login/perfil aprovados. O catálogo público funciona e está vazio,
+aguardando conteúdo real. A definição do administrador e a conferência das
+URLs de retorno do Auth dependem das informações solicitadas ao responsável.
 `/previa` existe apenas em DEV. O legado M0–M8 permanece preservado e com os
 módulos financeiros/booking **parados, não deletados**. Ver
-`CLOUDFLARE-2026-10-16.md` e `ROADMAP.md` para evidências e pendências.
+`ATIVACAO-SUPABASE-2026-10-16.md`, `CLOUDFLARE-2026-10-16.md` e `ROADMAP.md`
+para evidências e pendências.
 
 ## Como trabalhar aqui (fluxo recomendado)
 

@@ -58,7 +58,8 @@ supabase/
 - **App:** TanStack Start com `@cloudflare/vite-plugin`, runtime Workers,
   `nodejs_compat` e assets estáticos. Publicação por Wrangler.
 - **Backend:** Supabase preservado; nenhuma cópia em D1 e nenhuma migração SQL
-  implícita no deploy. O domínio comercial ainda depende de ativação remota.
+  implícita no deploy. Fundação comercial aplicada e testada no banco real
+  por autorização posterior (ADR-050); catálogo aguardando conteúdo real.
 - **Ambientes:** desenvolvimento e preview de produção locais; Worker
   `service-guide` como destino publicado. Staging remoto não foi provisionado.
 - **Histórico:** Vercel/Nitro (ADR-037) substituído por autorização do usuário

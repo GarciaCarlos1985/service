@@ -14,7 +14,9 @@ Nunca use esse prefixo para service role, senha, token Cloudflare ou de CLI.
 | `CLOUDFLARE_API_TOKEN` | autenticação da ferramenta de publicação | processo Wrangler, nunca Worker/browser |
 | `CLOUDFLARE_ACCOUNT_ID` | conta Cloudflare de destino | processo Wrangler |
 | `DATABASE_URL` | runner SQL local, contém senha | somente `.env.local` / processo de teste autorizado |
+| `PGSSLROOTCERT` | caminho local do certificado público da CA do Postgres | runner/CLI local, validação TLS |
 | `SUPABASE_SERVICE_ROLE_KEY` | operações privilegiadas autorizadas | somente backend/ferramentas, nunca bundle |
+| `SUPABASE_ACCESS_TOKEN` | Management API para configuração de Auth/advisors do projeto | ferramentas autorizadas, nunca Worker/browser |
 
 Copie os nomes de `.env.example` e preencha localmente. A conta e o token de
 publicação devem ser verificados antes de enviar o app. O token precisa de

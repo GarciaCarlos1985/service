@@ -69,12 +69,13 @@ recebendo eventos do GitHub, mas não é o destino configurado deste build.
 
 ## Banco e autenticação
 
-A fundação comercial ainda depende da aplicação revisada da migração
-`20261015032437_guide_commercial_foundation.sql` e de testes no Supabase real.
-Até lá, o catálogo exibe o estado de preparação. Publicar o app não ativa
-cadastros comerciais, conteúdo real ou os fluxos dependentes dessas RPCs.
-Confirme as URLs de retorno do Supabase antes de liberar confirmação por e-mail
-e recuperação de senha no novo endereço; esses fluxos exigem teste autenticado.
+A migração `20261015032437_guide_commercial_foundation.sql` foi aplicada no
+Supabase real em 16/10/2026, após autorização, ensaio em transação e testes.
+Busca/RPCs comerciais estão ativas e o catálogo está vazio, aguardando dados
+reais. Cadastro, login e perfil foram verificados pelo SDK contra o Auth real.
+O projeto está com confirmação automática de e-mail habilitada; retorno/entrega
+de recuperação de senha e definição do administrador ainda precisam das
+informações solicitadas ao responsável. Ver `ATIVACAO-SUPABASE-2026-10-16.md`.
 
 ## Rollback
 

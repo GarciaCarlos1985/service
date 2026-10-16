@@ -6,8 +6,9 @@
 > `DECISIONS.md` ADR-041+. Mapa do que fazer com o código existente:
 > `REUSE-MAP.md`.
 
-Status atual (2026-10-16): **envio do código à main autorizado pelo usuário;
-fundação comercial preparada, ainda não aplicada ao Supabase real.**
+Status atual (2026-10-16): **site publicado no Cloudflare; fundação comercial
+aplicada e testada no Supabase real, com legado preservado.** Catálogo vazio,
+aguardando conteúdo real e a definição do acesso administrativo.
 
 ### Candidato local de 15/10/2026
 
@@ -20,9 +21,11 @@ O legado permanece separado. Ver a proposta **ADR-048**, o relatório
 O código está na `main` do repositório `GarciaCarlos1985/service`. Em 16/10,
 o usuário autorizou a hospedagem no Cloudflare Workers (ADR-049); o adaptador
 foi substituído e a evidência de validação/publicação está em
-`CLOUDFLARE-2026-10-16.md`. Isso não executa migrações. O catálogo de produção
-permanece em preparação até a ativação e validação da fundação comercial no
-Supabase. A integração antiga da Vercel não é o destino do novo build.
+`CLOUDFLARE-2026-10-16.md`. Em seguida, autorizou a ativação do Supabase
+(ADR-050): a migração foi aplicada e validada, incluindo cadastro/login/perfil
+reais e preservação dos dados antigos. A home passou a retornar catálogo vazio
+funcional. Ver `ATIVACAO-SUPABASE-2026-10-16.md`. A integração antiga da Vercel
+não é o destino do novo build.
 
 Atualização visual solicitada em 15/10: nova logo horizontal, composição de
 maior escala e apresentação **Premium Guide** para destaques patrocinados,
@@ -33,15 +36,15 @@ promove a fase de monetização a produção.
 Ajuste posterior na prévia: selo **PREMIUM GUIDE** com fundo dourado champanhe
 e texto escuro, aplicado pelo componente compartilhado.
 
-Os itens abaixo permanecem abertos como critérios de entrega integrada:
-aprovação do contrato, aplicação e testes no Supabase real, cadastro/importação
-de conteúdo comercial real e validação autenticada dos fluxos. A prévia utiliza
-exemplos identificados, sem gravá-los no banco. Nenhuma fase está promovida a
-produção por esta implementação.
+A aplicação e a suíte SQL comercial no Supabase real foram concluídas.
+Cadastro, login, perfil e negação de administração para consumidor foram
+validados contra o Auth real. Permanecem abertos: administrador confirmado,
+URLs de retorno do Auth/advisors, conteúdo comercial real e validação operacional
+pelo responsável. A prévia continua com exemplos identificados somente em DEV.
 
 ---
 
-## FASE 1 — FUNDAÇÃO (a iniciar)
+## FASE 1 — FUNDAÇÃO (aplicada; configuração operacional pendente)
 
 Arquitetura · banco · autenticação · permissões · empresas · categorias ·
 produtos · serviços · mídia · planos · eventos · estrutura administrativa.
@@ -51,7 +54,7 @@ produtos · serviços · mídia · planos · eventos · estrutura administrativa
       `company_media`, `plans`, `company_subscriptions`, `analytics_events`,
       `conversations`, `platform_settings` + RLS default deny
 - [ ] Suítes SQL de teste por domínio no banco real (ADR-039)
-- [ ] Branding **Service Guide** + `platform_settings` (nome/branding central)
+- [x] Branding **Service Guide** + `platform_settings` (nome/branding central)
 - [ ] Reapontar favoritos/reviews do profissional → empresa
 - [ ] Simplificar onboarding (usuário = consumidor; sem client/professional)
 - [ ] Cacoal como cidade de lançamento (catálogo IBGE) + bairros canônicos

@@ -961,6 +961,42 @@ e a saída Vercel da ADR-048; os contratos de banco da ADR-048 seguem pendentes.
 
 ---
 
+## ADR-050 — Ativação comercial no Supabase com preservação do legado
+
+**Status:** Aceita e aplicada (2026-10-16), por autorização expressa do usuário
+após a publicação no Cloudflare. Encerra a pendência de aplicação/testes reais
+da ADR-048, sem converter dados do marketplace nem ampliar seu recorte funcional.
+
+- **Contexto medido:** projeto `taabjnmsaaltsiehywbw`, 25 tabelas legadas,
+  9 migrações e uma conta sem administrador. O conector não alcança o projeto
+  e o token de gerenciamento da CLI está inválido; as credenciais PostgreSQL
+  locais permitem conexão com TLS e verificação da CA/hostname.
+- **Decisão:** ensaiar o SQL e os testes comerciais numa transação revertida,
+  depois aplicar somente `20261015032437_guide_commercial_foundation.sql` pela
+  CLI oficial. Manter a versão original no histórico de migrações. Não importar
+  empresas/avaliações do pacote demonstrativo e não converter tabelas legadas.
+- **Validação:** ensaio e suíte SQL pós-aplicação passaram; privilégios/RLS,
+  RPCs, limites, moderação, planos e auditoria foram exercitados no banco real.
+  Cadastro/login/perfil foram verificados com o Auth real; a conta técnica
+  temporária foi deslogada e removida. Dados originais das 25 tabelas conferidos
+  por contagens/fingerprints; somente a cidade canônica Cacoal foi acrescentada.
+- **Alternativas:** usar o token inválido não permite gerenciamento; trocar de
+  backend contraria o reaproveitamento; executar as suítes antigas diretamente
+  expõe dados à limpeza ampla. A suíte comercial usa fixtures em transação.
+- **Consequências:** o catálogo público funciona e permanece vazio até receber
+  conteúdo real. O runner SQL passa a validar TLS e sempre fazer rollback.
+  E-mail administrativo e acesso à configuração de Auth foram solicitados;
+  nenhuma conta foi promovida automaticamente e os retornos por e-mail ainda
+  não foram verificados. Contato interno é uma caixa acompanhada pelo admin,
+  sem entrega automática às empresas, como preparado na ADR-048.
+- **Custo e limite:** nenhum serviço ou plano pago novo. Cadastro está com a
+  confirmação automática de e-mail já existente; essa política não foi alterada.
+  Permanece pendente a definição do administrador, conteúdo comercial real e
+  conferência de Auth/advisors com acesso de gerenciamento válido.
+- **Evidência:** `ATIVACAO-SUPABASE-2026-10-16.md`.
+
+---
+
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue
 > a mesma disciplina — Contexto medido ou declarado como hipótese, Decisão com
 > alternativas consideradas, Motivo, Consequências (incluindo custo aceito e
