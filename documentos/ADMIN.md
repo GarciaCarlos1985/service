@@ -5,6 +5,10 @@
 O painel comercial está em `/admin`. A entrada pode ser feita em
 `/entrar?redirect=%2Fadmin`, com a senha já cadastrada no Supabase Auth.
 Duas contas indicadas e confirmadas pelo responsável foram ativadas e auditadas.
+No site publicado, a entrada direta é
+`https://service-guide.helon280.workers.dev/entrar?redirect=%2Fadmin`.
+Em caso de esquecimento, use `/recuperar-senha`: o link recebido retorna ao site
+publicado e permite definir a nova senha. As senhas reais foram preservadas.
 As ações comerciais verificam `profiles.is_admin` no banco por `_is_admin()` e
 `guide_private.require_user(true)`; metadados editáveis do usuário não concedem
 acesso. Ver `ATIVACAO-SUPABASE-2026-10-16.md` para a validação.

@@ -31,6 +31,17 @@ export const resetPasswordSchema = z.object({
   email: emailSchema,
 })
 
+export const updatePasswordSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, 'Confirme a nova senha.'),
+  })
+  .refine((values) => values.password === values.confirmPassword, {
+    message: 'As senhas precisam ser iguais.',
+    path: ['confirmPassword'],
+  })
+
 export type SignUpInput = z.infer<typeof signUpSchema>
 export type SignInInput = z.infer<typeof signInSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
+export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>

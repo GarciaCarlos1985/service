@@ -74,9 +74,13 @@ Supabase real em 16/10/2026, após autorização, ensaio em transação e testes
 Busca/RPCs comerciais estão ativas e o catálogo está vazio, aguardando dados
 reais. Cadastro, login e perfil foram verificados pelo SDK contra o Auth real.
 O projeto está com confirmação automática de e-mail habilitada e duas contas
-administrativas confirmadas pelo usuário, ativadas e auditadas. Retorno/entrega
-de recuperação de senha ainda depende de acesso de gerenciamento para conferência
-das configurações. Ver `ATIVACAO-SUPABASE-2026-10-16.md`.
+administrativas confirmadas pelo usuário, ativadas e auditadas. O `site_url`
+do Auth é `https://service-guide.helon280.workers.dev`; a lista de retornos inclui
+os caminhos exatos `/conta` e `/recuperar-senha` desse site e dos ambientes locais
+documentados. O cliente informa esses destinos no cadastro e na recuperação.
+Uma sessão válida pode definir a nova senha em `/recuperar-senha`. Link, retorno,
+atualização e novo login foram testados com conta descartável, sem enviar e-mails.
+A entrega na caixa do titular não foi exercitada. Ver `ATIVACAO-SUPABASE-2026-10-16.md`.
 
 ## Rollback
 

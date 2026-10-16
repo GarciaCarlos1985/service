@@ -40,7 +40,11 @@ A aplicação e a suíte SQL comercial no Supabase real foram concluídas.
 Cadastro, login, perfil e negação de administração para consumidor foram
 validados contra o Auth real. Após confirmação dos e-mails, duas contas foram
 promovidas a administradoras com auditoria e validação de permissões.
-Permanecem abertos: URLs de retorno do Auth/advisors, conteúdo comercial real e validação operacional
+As URLs de retorno do Auth foram ajustadas para o Cloudflare e o fluxo de
+recuperação de senha foi completado, com teste real de link, troca e novo login
+em conta descartável. Os advisors de segurança foram consultados; os avisos
+remanescentes estão registrados no relatório de ativação. Permanecem abertos:
+entrega de e-mail ao titular, conteúdo comercial real e validação operacional
 pelo responsável. A prévia continua com exemplos identificados somente em DEV.
 
 ---

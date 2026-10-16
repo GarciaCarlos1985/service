@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { signInSchema, signUpSchema } from './schemas'
+import { signInSchema, signUpSchema, updatePasswordSchema } from './schemas'
 
 describe('signUpSchema', () => {
   it('aceita dados válidos', () => {
@@ -81,5 +81,34 @@ describe('signInSchema', () => {
   it('rejeita senha vazia', () => {
     const result = signInSchema.safeParse({ email: 'maria@exemplo.com', password: '' })
     expect(result.success).toBe(false)
+  })
+})
+
+describe('updatePasswordSchema', () => {
+  it('aceita a nova senha com confirmação igual', () => {
+    expect(
+      updatePasswordSchema.safeParse({
+        password: 'nova-senha-segura',
+        confirmPassword: 'nova-senha-segura',
+      }).success,
+    ).toBe(true)
+  })
+
+  it('aponta a confirmação quando as senhas diferem', () => {
+    const result = updatePasswordSchema.safeParse({
+      password: 'nova-senha-segura',
+      confirmPassword: 'outra-senha-segura',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0]?.path).toEqual(['confirmPassword'])
+    }
+  })
+
+  it.each([7, 73])('rejeita uma nova senha com %i caracteres', (length) => {
+    const password = 'a'.repeat(length)
+    expect(updatePasswordSchema.safeParse({ password, confirmPassword: password }).success).toBe(
+      false,
+    )
   })
 })

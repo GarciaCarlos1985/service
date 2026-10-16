@@ -16,6 +16,7 @@ interface AuthContextValue {
   signIn: (input: { email: string; password: string }) => Promise<void>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
+  updatePassword: (password: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -56,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password: input.password,
       options: {
         data: { full_name: input.fullName, phone: input.phone },
+        emailRedirectTo: `${window.location.origin}/conta`,
       },
     })
     if (error) throw error
@@ -76,7 +78,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function resetPassword(email: string) {
     const supabase = getSupabase()
-    const { error } = await supabase.auth.resetPasswordForEmail(email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/recuperar-senha`,
+    })
+    if (error) throw error
+  }
+
+  async function updatePassword(password: string) {
+    const supabase = getSupabase()
+    const { error } = await supabase.auth.updateUser({ password })
     if (error) throw error
   }
 
@@ -90,6 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signOut,
         resetPassword,
+        updatePassword,
       }}
     >
       {children}

@@ -121,8 +121,9 @@ A fundação comercial foi **aplicada e validada no Supabase real** (ADR-050):
 de cadastro/login/perfil aprovados. O catálogo público funciona e está vazio,
 aguardando conteúdo real. Duas contas administrativas foram confirmadas pelo
 usuário, ativadas e auditadas; as permissões foram verificadas no banco real.
-A conferência das URLs de retorno do Auth ainda depende de acesso válido de
-gerenciamento ao projeto.
+As URLs de retorno do Auth apontam para o site publicado; a recuperação de senha
+foi completada e testada com conta temporária, sem enviar e-mails ou alterar
+senhas reais. A entrega de e-mail ainda precisa ser conferida pelo titular.
 `/previa` existe apenas em DEV. O legado M0–M8 permanece preservado e com os
 módulos financeiros/booking **parados, não deletados**. Ver
 `ATIVACAO-SUPABASE-2026-10-16.md`, `CLOUDFLARE-2026-10-16.md` e `ROADMAP.md`
