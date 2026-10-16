@@ -5,6 +5,8 @@ node_modules/
 dist/
 .output/
 .netlify/
+.wrangler/
+worker-configuration.d.ts
 
 # Vercel
 .vercel/
@@ -13,6 +15,7 @@ dist/
 .env
 .env.local
 .env.*.local
+.dev.vars*
 
 # Configuração local e pacote original de referência
 .codex/config.toml

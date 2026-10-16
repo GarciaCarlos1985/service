@@ -3,6 +3,18 @@
 Este arquivo é a porta de entrada para QUALQUER agente de IA (ou humano) que
 assumir este projeto. Leia-o antes de qualquer tarefa.
 
+## Repositório oficial
+
+Por orientação expressa do usuário em **16/10/2026**, o repositório deste
+projeto é **https://github.com/GarciaCarlos1985/service**.
+
+- `origin` deve apontar para `https://github.com/GarciaCarlos1985/service.git`
+  tanto para fetch quanto para push.
+- Todos os commits, branches, PRs e envios deste projeto usam esse repositório;
+  a branch principal é `main`.
+- Confira o destino configurado antes de cada envio. Qualquer troca de
+  repositório depende de uma nova instrução explícita do usuário.
+
 ## O que é o projeto
 
 **SERVICE GUIDE** — plataforma de **descoberta comercial local**, lançada
@@ -20,7 +32,7 @@ descobrir → conhecer → contatar → favoritar → avaliar**.
 | doc | conteúdo |
 | --- | --- |
 | `SERVICE-GUIDE-PROMPT-INICIO.md` | **spec-mãe atual** — fonte de verdade de produto |
-| `DECISIONS.md` | ADRs — antigos (001–040, modelo antigo) + **041–047 (virada)**; NÃO edite ADRs antigos |
+| `DECISIONS.md` | ADRs — antigos (001–040, modelo antigo) + **041–049 (produto e hospedagem)**; NÃO edite ADRs antigos |
 | `REUSE-MAP.md` | reaproveitar · parar de expandir · criar |
 | `PRODUCT.md` | contexto de produto (impeccable) |
 | `ROADMAP.md` | fases do Service Guide + legado M0–M8 |
@@ -43,7 +55,7 @@ descobrir → conhecer → contatar → favoritar → avaliar**.
    test → build, além de **testar SQL no banco real**.
 6. **Migrações compatíveis para frente** (ADR-010): nada de DROP/DELETE
    destrutivo em produção. Módulos do modelo antigo **não são deletados**.
-7. **Custo zero por princípio** (ADR-017): "Supabase ou Vercel já resolve?"
+7. **Custo zero por princípio** (ADR-017): "Supabase ou Cloudflare já resolve?"
    antes de qualquer serviço externo.
 8. **Não conectar pagamento** e **não construir funcionalidade futura por
    ansiedade** (spec §22/§28). Empresa e produto são entidades próprias
@@ -52,7 +64,7 @@ descobrir → conhecer → contatar → favoritar → avaliar**.
 ## Stack e arquitetura (resumo)
 
 - **TanStack Start** (React 19 + Vite + TS strict + Tailwind) — SSR indexável;
-  deploy **Vercel free** (ADR-036/037).
+  deploy **Cloudflare Workers** (ADR-049), sem contratação de plano pago.
 - **Supabase** = única fonte de verdade (PostgreSQL + Auth + RLS + Realtime).
 - Camadas: `src/routes/` · `src/modules/<dominio>/` · `src/modules/ui/`.
 - Busca em PostgreSQL (`tsvector` + `pg_trgm`) na Fase 1.
@@ -62,10 +74,12 @@ descobrir → conhecer → contatar → favoritar → avaliar**.
 
 ```bash
 npm run dev          # dev server (porta 3000)
-npm run typecheck    # tsc --noEmit
+npm run typecheck    # gera tipos do Worker + tsc --noEmit
 npm run lint         # eslint (strict type-checked)
 npm run test         # vitest (unitários)
-npm run build        # build de produção (Nitro/Vercel)
+npm run build        # build de produção (Cloudflare Workers + assets)
+npm run preview      # valida o build no runtime local do Worker
+npm run deploy       # build + publicação Cloudflare; requer autorização
 npx supabase db push # aplica migrations (requer CLI logado)
 ```
 
@@ -94,12 +108,16 @@ postgres antes de setup/cleanup**. Cleanup com `truncate ... cascade`.
 - `service_role`, tokens CLI — NUNCA em `VITE_*`, nunca no chat/repo.
 - **Sem chaves de pagamento**: não há gateway no MVP (ADR-044).
 
-## Estado atual (2026-10-06)
+## Estado atual (2026-10-16)
 
-**Virada Service Guide documentada** (spec + ADRs 041–047 + `REUSE-MAP` +
-`ROADMAP`). **Fase 1 (fundação) a iniciar.** O legado M0–M8 (marketplace de
-profissionais) segue no repo, reaproveitável em parte e com os módulos
-financeiros/booking **parados, não deletados**.
+**App publicado no Cloudflare Workers** (ADR-049), em
+`https://service-guide.helon280.workers.dev`. Código no repositório oficial.
+A interface Service Guide e a fundação comercial estão implementadas, mas a
+migração comercial segue **pendente no Supabase real** (ADR-048). O catálogo
+público mostra preparação até essa ativação e os respectivos testes reais.
+`/previa` existe apenas em DEV. O legado M0–M8 permanece preservado e com os
+módulos financeiros/booking **parados, não deletados**. Ver
+`CLOUDFLARE-2026-10-16.md` e `ROADMAP.md` para evidências e pendências.
 
 ## Como trabalhar aqui (fluxo recomendado)
 

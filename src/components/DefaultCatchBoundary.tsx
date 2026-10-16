@@ -36,9 +36,11 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
             )}
           </div>
         </div>
-        <pre className="mt-4 max-h-64 overflow-auto rounded-lg bg-slate-900 p-4 text-xs text-red-200">
-          {error.message}
-        </pre>
+        {import.meta.env.DEV && error instanceof Error && (
+          <pre className="mt-4 max-h-64 overflow-auto rounded-lg bg-slate-900 p-4 text-xs text-red-200">
+            {error.message}
+          </pre>
+        )}
       </div>
     </div>
   )

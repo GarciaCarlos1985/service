@@ -6,7 +6,7 @@
 > `DECISIONS.md` ADR-041+. Mapa do que fazer com o código existente:
 > `REUSE-MAP.md`.
 
-Status atual (2026-10-15): **envio do código à main autorizado pelo usuário;
+Status atual (2026-10-16): **envio do código à main autorizado pelo usuário;
 fundação comercial preparada, ainda não aplicada ao Supabase real.**
 
 ### Candidato local de 15/10/2026
@@ -17,9 +17,12 @@ avaliações, ajuda e administração estão implementados no candidato local.
 O legado permanece separado. Ver a proposta **ADR-048**, o relatório
 `ADAPTACAO-SERVICE-GUIDE-2026-10-15.md` e a prévia DEV `/previa`.
 
-O envio à `main` inclui a integração automática da Vercel, mas não executa
-migrações. O catálogo de produção permanece em preparação até a ativação
-e validação da fundação comercial no Supabase.
+O código está na `main` do repositório `GarciaCarlos1985/service`. Em 16/10,
+o usuário autorizou a hospedagem no Cloudflare Workers (ADR-049); o adaptador
+foi substituído e a evidência de validação/publicação está em
+`CLOUDFLARE-2026-10-16.md`. Isso não executa migrações. O catálogo de produção
+permanece em preparação até a ativação e validação da fundação comercial no
+Supabase. A integração antiga da Vercel não é o destino do novo build.
 
 Atualização visual solicitada em 15/10: nova logo horizontal, composição de
 maior escala e apresentação **Premium Guide** para destaques patrocinados,

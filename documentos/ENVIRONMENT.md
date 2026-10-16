@@ -1,70 +1,46 @@
-# ENVIRONMENT — Variáveis de ambiente do SERVICE
+# ENVIRONMENT — SERVICE GUIDE
 
-Tudo o que o projeto precisa de cada serviço e onde encontrar cada chave.
+## Variáveis públicas e segredos
 
-## Regra de segurança (não negociável)
+`VITE_*` entra no JavaScript público. Somente URL e chave anônima/publicável
+do Supabase pertencem a esse grupo. RLS e RPCs fazem a autorização no banco.
+Nunca use esse prefixo para service role, senha, token Cloudflare ou de CLI.
+`.env.local` e `.dev.vars*` são ignorados pelo Git.
 
-| prefixo                      | uso                            | pode ir para o navegador? |
-| ---------------------------- | ------------------------------ | ------------------------- |
-| `VITE_`                      | público — vai para o bundle JS | **sim, por design**       |
-| qualquer outro (sem `VITE_`) | servidor/backup                | **nunca**                 |
+| variável | finalidade | destino |
+| --- | --- | --- |
+| `VITE_SUPABASE_URL` | URL pública do projeto Supabase | build local/CI |
+| `VITE_SUPABASE_ANON_KEY` | chave pública do Supabase, protegida por RLS | build local/CI |
+| `CLOUDFLARE_API_TOKEN` | autenticação da ferramenta de publicação | processo Wrangler, nunca Worker/browser |
+| `CLOUDFLARE_ACCOUNT_ID` | conta Cloudflare de destino | processo Wrangler |
+| `DATABASE_URL` | runner SQL local, contém senha | somente `.env.local` / processo de teste autorizado |
+| `SUPABASE_SERVICE_ROLE_KEY` | operações privilegiadas autorizadas | somente backend/ferramentas, nunca bundle |
 
-- **NUNCA** coloque `service_role`, tokens de storage, senhas ou secrets em
-  variáveis `VITE_*` — elas aparecem no bundle público.
-- `.env.local` é ignorado pelo git. **Nunca** renomeie para `.env` e commite.
-- A chave anônima do Supabase é **pública por design** (o navegador precisa
-  dela). A segurança do acesso **não** depende dela: depende do **RLS** no
-  banco (./DECISIONS.md — ADR-002). Sem RLS correto, chave anônima =
-  dado exposto.
+Copie os nomes de `.env.example` e preencha localmente. A conta e o token de
+publicação devem ser verificados antes de enviar o app. O token precisa de
+**Workers Scripts Edit** na conta de destino; permissões de leitura permitem
+inventariar recursos, mas não publicar. Permissões adicionais devem ser pedidas
+somente se o comando retornar uma necessidade concreta.
 
-## Chaves de teste local (nunca para o bundle)
+## Cloudflare Workers (ADR-049)
 
-| chave | o que é | onde obter | nível |
-|---|---|---|---|
-| `DATABASE_URL` | conexão direta (porta 5432) do Postgres — usada apenas pelo runner de testes SQL (`node scripts/sql-tests.mjs`) | Supabase Dashboard → Project Settings → Database → Connection string | **secreto** |
+`npm run build` carrega somente as variáveis públicas através do mecanismo
+`VITE_*`. `npm run deploy` recompila e carrega `.env.local` no processo Wrangler
+via Node.js. Credenciais nunca são gravadas em `wrangler.jsonc`.
 
-`DATABASE_URL` contém a senha do banco: vive só no `.env.local` (gitignored),
-nunca é impressa pelo runner e nunca vai para a Vercel ou o repositório.
+O Worker atual não requer secrets de runtime: comunica-se com as APIs públicas
+do Supabase, respeitando RLS. `secrets.required: []` evita inferir segredos locais
+nos tipos e a configuração Vite desativa a carga automática de `.env` como
+bindings locais do Worker. `worker-configuration.d.ts` é gerado, não versionado.
 
-## Chaves ativas
+Em CI, injete apenas as duas variáveis públicas no build. Se no futuro houver
+publicação automática autorizada, o token e o account ID ficam em GitHub Secrets
+ou no ambiente protegido do provedor. Não versionar `.env.local` nem publicar
+esse arquivo como asset. Trocar a URL/chave pública exige recompilar e publicar.
 
-| chave                    | o que é                     | onde obter                                                      | nível                       |
-| ------------------------ | --------------------------- | --------------------------------------------------------------- | --------------------------- |
-| `VITE_SUPABASE_URL`      | URL do projeto Supabase     | Dashboard Supabase → **Project Settings → API** → `Project URL` | público                     |
-| `VITE_SUPABASE_ANON_KEY` | chave anônima (anon/public) | Dashboard Supabase → **Project Settings → API** → `anon public` | público (protegido por RLS) |
+## Serviços futuros
 
-Já preenchido em `.env.local`: `VITE_SUPABASE_URL=https://taabjnmsaaltsiehywbw.supabase.co`
-Falta preencher: `VITE_SUPABASE_ANON_KEY` (copiar do painel).
-
-## Onde configurar cada ambiente (deploy Vercel — ADR-036/037)
-
-| variável                 | dev local    | Vercel (produção)                          |
-| ------------------------ | ------------ | ------------------------------------------ |
-| `VITE_SUPABASE_URL`      | `.env.local` | Project → Settings → Environment Variables |
-| `VITE_SUPABASE_ANON_KEY` | `.env.local` | Project → Settings → Environment Variables |
-
-O `.env.local` serve só para desenvolvimento; produção configura as variáveis
-no painel da Vercel, nunca no repositório. Depois de alterar env vars na
-Vercel, é necessário **redeploy**.
-
-## Chaves futuras (quando o milestone chegar — NÃO usar agora)
-
-| chave                                                                       | o que é                                                       | onde obter                                                     | nível       | milestone                                       |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------- | ----------- | ----------------------------------------------- |
-| `SUPABASE_SERVICE_ROLE_KEY`                                                 | chave de servidor (bypass RLS) — **uso exclusivo backend/CI** | Dashboard → Project Settings → API → `service_role`            | **secreto** | M1+ (jobs, webhooks)                            |
-| `STRIPE_SECRET_KEY`                                                         | chave secreta Stripe                                          | Stripe Dashboard → Developers → API keys                       | **secreto** | M5                                              |
-| `STRIPE_WEBHOOK_SECRET`                                                     | assinatura de webhook Stripe                                  | Stripe Dashboard → Developers → Webhooks                       | **secreto** | M5                                              |
-| `R2_ACCOUNT_ID` / `R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_BUCKET` | Cloudflare R2 (mídia)                                         | Dashboard Cloudflare → R2 → Manage R2 API Tokens               | **secreto** | M11 (só quando o frontend sair do deploy atual) |
-| `CF_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`                                    | deploy Cloudflare Workers                                     | Dashboard Cloudflare → My Profile → API Tokens (escopo mínimo) | **secreto** | quando voltar para Cloudflare                   |
-
-Nenhuma dessas entra em `.env.local` com prefixo `VITE_`. Quando usadas no
-backend (TanStack Start server), ficam em variáveis de ambiente do servidor /
-GitHub Secrets.
-
-## Segurança adicional
-
-- Rotacione a chave anônima se ela vazar (é pública, mas evite dor de cabeça).
-- `service_role` **só** roda fora do navegador e **nunca** em CI de terceiros
-  sem segredo restrito.
-- Ver `SECURITY.md` e `./DECISIONS.md` (ADR-002, ADR-016) para a
-  postura completa.
+R2, D1, gateway de pagamento e novas automações não são necessários neste deploy.
+Não crie credenciais ou serviços antes da autorização e da necessidade concreta.
+Para novos secrets de runtime, use o armazenamento de secrets Cloudflare e gere
+novamente os tipos; nunca os declare em `vars` ou em variáveis `VITE_*`.

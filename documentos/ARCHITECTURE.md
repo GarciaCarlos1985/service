@@ -1,7 +1,8 @@
-# ARCHITECTURE — SERVICE
+# ARCHITECTURE — SERVICE GUIDE
 
-Marketplace brasileiro de serviços locais. Fonte de verdade de produto:
-`./SERVICE-PROMPT-INICIO.md`. Decisões técnicas: `./DECISIONS.md` (ADR-001+).
+Plataforma de descoberta comercial local. Fonte de verdade de produto:
+`./SERVICE-GUIDE-PROMPT-INICIO.md`. Decisões técnicas: `./DECISIONS.md`.
+Os módulos do marketplace legado permanecem separados, sem expansão financeira.
 
 ## Stack (spec §1)
 
@@ -12,8 +13,8 @@ Marketplace brasileiro de serviços locais. Fonte de verdade de produto:
 - **Zod** — validação de schemas (compartilhados entre cliente e servidor)
 - **React Hook Form** — formulários
 - **Supabase** — fonte de verdade: PostgreSQL, Auth, RLS, Realtime, Storage
-- **Cloudflare** — Workers (app), DNS/CDN/cache, R2 (mídia), Queues/Cron (automações)
-- **Stripe Connect** — pagamentos via abstração `PaymentProvider`
+- **Cloudflare** — Workers (SSR + assets); R2/Queues/Cron não são necessários neste deploy
+- **Stripe Connect** — abstração legada `PaymentProvider`, sem gateway no MVP
 
 ## Camadas (ADR-001)
 
@@ -52,16 +53,16 @@ supabase/
   migrations/      # SQL versionado (ADR-010)
 ```
 
-## Deploy (ADR-036/037 — Vercel free por enquanto; ADR-034 como plano de retorno)
+## Deploy (ADR-049 — Cloudflare Workers)
 
-- **Atual:** app (SSR + assets) na **Vercel (plano grátis)** via Nitro
-  (`nitro/vite`, preset `vercel`) — caminho oficial do TanStack Start para
-  Vercel; banco em Supabase. Decisão econômica enquanto o site não vende
-  (ADR-036/037).
-- **Plano de retorno:** Cloudflare Workers (`@cloudflare/vite-plugin` +
-  `wrangler deploy`, `nodejs_compat`) — validado no M0 (ADR-034), suporte
-  oficial (Official Partner). Uma conta Cloudflare por projeto (ADR-013).
-- Ambiente: development / staging / production (spec §43).
+- **App:** TanStack Start com `@cloudflare/vite-plugin`, runtime Workers,
+  `nodejs_compat` e assets estáticos. Publicação por Wrangler.
+- **Backend:** Supabase preservado; nenhuma cópia em D1 e nenhuma migração SQL
+  implícita no deploy. O domínio comercial ainda depende de ativação remota.
+- **Ambientes:** desenvolvimento e preview de produção locais; Worker
+  `service-guide` como destino publicado. Staging remoto não foi provisionado.
+- **Histórico:** Vercel/Nitro (ADR-037) substituído por autorização do usuário
+  em 16/10/2026. Uma conta Cloudflare por projeto (ADR-013).
 
 ## Economia (spec §5, §67, ADR-017)
 

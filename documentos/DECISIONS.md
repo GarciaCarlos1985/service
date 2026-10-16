@@ -923,6 +923,44 @@ revisão humana pendente antes da aplicação no banco e publicação.
 
 ---
 
+## ADR-049 — Hospedagem do Service Guide no Cloudflare Workers
+
+**Status:** Aceita (2026-10-16), por autorização expressa do usuário para
+publicar no Cloudflare se viável. Substitui a escolha de hospedagem da ADR-037
+e a saída Vercel da ADR-048; os contratos de banco da ADR-048 seguem pendentes.
+
+- **Contexto medido:** app em TanStack Start/React/Vite e backend Supabase.
+  A conta Cloudflare informada não tinha Workers nem projetos Pages. A
+  documentação oficial suporta TanStack Start no Workers com plugin Vite.
+  As versões instaladas do plugin e Wrangler suportam Vite 8 e Node 24.
+- **Decisão:** substituir `nitro({ preset: 'vercel' })` por
+  `@cloudflare/vite-plugin`, publicar o Worker `service-guide` com SSR e assets,
+  manter PostgreSQL/Auth/RLS/Storage do Supabase e o repositório
+  `GarciaCarlos1985/service`. Configuração em `wrangler.jsonc`, tipos gerados,
+  `nodejs_compat`, logs com amostragem de 10% e URL inicial `workers.dev`.
+- **Alternativas:** Vercel exigiria resolver o deploy anterior e contraria a
+  escolha atual do dono; exportação estática perde o contrato SSR; adotar
+  Workers/D1/Auth ChatGPT do ZIP substituiria o backend solicitado. Pages não
+  é necessário: o guia oficial atual atende SSR e assets no mesmo Worker.
+- **Motivo:** hospedar na conta já verificada, usando uma integração oficial
+  sem reescrever rotas, autenticação ou persistência.
+- **Consequências:** `npm run deploy` passa a compilar e publicar no Cloudflare;
+  exige token com escopo de escrita. O CI continua como gate de qualidade,
+  sem deploy automático novo. Integração antiga da Vercel não é desligada
+  implicitamente. Variáveis `VITE_SUPABASE_*` entram no build; credenciais de
+  administração nunca viram bindings nem assets. O Worker não exige secrets.
+  A atualização compatível de dependências corrige advisories existentes;
+  a boundary passa a tratar erros como `unknown` e expõe detalhes só em DEV.
+- **Custo e limite:** nenhum serviço/plano pago, D1 ou R2 contratado. Cotas
+  da conta continuam aplicáveis. Sem domínio personalizado ou staging remoto.
+  A migração comercial não é aplicada por esta decisão: catálogo real,
+  RLS/RPCs remotas e fluxos autenticados requerem ativação e testes próprios.
+- **Evidência:** resultado dos gates, preview e tentativa/publicação real
+  registrado em `CLOUDFLARE-2026-10-16.md`. Build local isolado não comprova
+  deploy nem ativação do backend comercial.
+
+---
+
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue
 > a mesma disciplina — Contexto medido ou declarado como hipótese, Decisão com
 > alternativas consideradas, Motivo, Consequências (incluindo custo aceito e

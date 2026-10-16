@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "SERVICE — marketplace brasileiro de serviços locais",
+  "description": "Service Guide — descoberta comercial local em Cacoal",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "npm run cf:typegen && tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "deploy": "vercel deploy --prod"
+    "cf:typegen": "wrangler types",
+    "deploy": "npm run build && node --env-file-if-exists=.env.local ./node_modules/wrangler/bin/wrangler.js deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.7.1",
@@ -37,6 +38,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.64.0",
     "@electric-sql/pglite": "0.5.10",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^22.19.0",
@@ -46,14 +48,13 @@
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.4",
-    "nitro": "^3.0.260610-beta",
     "pg": "^8.23.0",
     "prettier": "^3.9.6",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.67.0",
-    "vercel": "^58.10.0",
     "vite": "^8.2.1",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wrangler": "^4.151.1"
   }
 }

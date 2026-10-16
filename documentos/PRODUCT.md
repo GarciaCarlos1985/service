@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-TanStack Start (React + Vite + Tailwind CSS) + TypeScript strict + TanStack Query + Zod + React Hook Form. Supabase (PostgreSQL, Auth, RLS, Realtime, Storage) como fonte de verdade. Deploy atual Vercel free (ADR-036/037); Cloudflare/R2 como infraestrutura-alvo futura. Busca em PostgreSQL (`tsvector` + `pg_trgm`) na Fase 1, preparada para evoluir. Sem integração de pagamento no MVP.
+TanStack Start (React + Vite + Tailwind CSS) + TypeScript strict + TanStack Query + Zod + React Hook Form. Supabase (PostgreSQL, Auth, RLS, Realtime, Storage) como fonte de verdade. Hospedagem configurada no Cloudflare Workers (ADR-049); R2 continua futuro. Busca em PostgreSQL (`tsvector` + `pg_trgm`) na Fase 1, preparada para evoluir. Sem integração de pagamento no MVP.
 
 ## Users
 
