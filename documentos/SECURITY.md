@@ -4,9 +4,24 @@ Postura: segurança por construção, não por convenção. O frontend carrega a
 anônima do Supabase por design — toda fronteira real está no banco (RLS) e no
 backend.
 
+## Auditoria atual do Service Guide — 17/10/2026
+
+43/43 tabelas públicas com RLS ligadas; foram encontrados acessos excessivos
+em funções internas e na API do marketplace aposentado. O candidato do PR #2
+fecha essas entradas, exige GRANT explícito para objetos novos e valida
+banimento/confirmação/exclusão do Auth. Somente as 18 RPCs do guia ficam expostas
+aos papéis correspondentes; autorização continua no banco, inclusive sessão/MFA.
+
+Nove suítes SQL reais com rollback, Auth HTTP com TOTP e três ciclos de
+login/logout, testes negativos da API, 89 unitários e build aprovados. Isso é
+validação do candidato; nenhuma migration ou deploy desta auditoria foi aplicada
+em produção. MFA dos dois titulares, entrega de e-mail, CAPTCHA e proteção contra
+senhas vazadas têm limites/pendências explícitos. Ver
+`AUDITORIA-RLS-2026-10-17.md` e a evidência estruturada correspondente.
+
 ## Modelo de ameaça (spec §63)
 
-Testados explicitamente na suíte de segurança (CI):
+Modelo herdado, exercitado por suítes SQL reais separadas do CI de código:
 
 1. Cliente A acessando dados do Cliente B
 2. Profissional A acessando dados do Profissional B

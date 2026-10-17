@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, useRouter } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet, redirect, useRouter } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { Avatar, LoadingState } from '~/modules/ui'
@@ -8,6 +8,9 @@ import { getUnreadMessagesCount } from '~/modules/chat/chat-api'
 import { getUnreadNotificationsCount } from '~/modules/notifications/notifications-api'
 
 export const Route = createFileRoute('/painel')({
+  beforeLoad: () => {
+    redirect({ to: '/conta', replace: true, throw: true })
+  },
   component: PainelLayout,
 })
 

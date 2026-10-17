@@ -32,12 +32,12 @@ describe('signUpSchema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('rejeita senha curta (spec: mínimo 8)', () => {
+  it.each(['1234567', '12345678', '12345678901'])('rejeita senha curta: %s', (password) => {
     const result = signUpSchema.safeParse({
       fullName: 'Maria da Silva',
       phone: '(69) 99999-9999',
       email: 'maria@exemplo.com',
-      password: '1234567',
+      password,
     })
     expect(result.success).toBe(false)
   })

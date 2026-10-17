@@ -13,6 +13,11 @@ try {
   })
   await db.query('begin')
   await db.query("set local lock_timeout='5s'")
+  const boundaryAlreadyApplied = (
+    await db.query(
+      "select exists(select 1 from supabase_migrations.schema_migrations where version='20261017142019') as applied",
+    )
+  ).rows[0].applied
   const exists = await db.query(
     "select to_regprocedure('public.guide_admin_reorder(text,uuid[],uuid[],uuid)') is not null as applied",
   )
@@ -40,12 +45,20 @@ try {
     'chat-tests.sql',
     'reviews-tests.sql',
   ]) {
+    if (boundaryAlreadyApplied) {
+      console.log('API legada encerrada; contrato de recusa substitui o teste histórico: ' + file)
+      continue
+    }
     await db.query('savepoint legacy_suite')
     await db.query(fs.readFileSync('supabase/tests/' + file, 'utf8').replace(/^\uFEFF/, ''))
     if (failures.length) throw new Error(failures.join('\n'))
     await db.query('rollback to savepoint legacy_suite')
     console.log('OK: regressão legada ' + file)
   }
+  await db.query(
+    fs.readFileSync('supabase/migrations/20261017142019_guide_api_access_boundary.sql', 'utf8'),
+  )
+  await db.query(fs.readFileSync('supabase/tests/guide-api-access-boundary.sql', 'utf8'))
   await db.query(fs.readFileSync('supabase/tests/guide-commercial.sql', 'utf8'))
   if (fs.existsSync('supabase/tests/guide-admin-workspace.sql'))
     await db.query(fs.readFileSync('supabase/tests/guide-admin-workspace.sql', 'utf8'))

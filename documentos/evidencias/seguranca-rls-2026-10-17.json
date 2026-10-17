@@ -1,0 +1,92 @@
+{
+  "project": "taabjnmsaaltsiehywbw",
+  "measuredAt": "2026-10-17T14:31:07.072Z",
+  "productionChanged": false,
+  "current": {
+    "migrations": 12,
+    "companies": 0,
+    "admins": 2,
+    "admins_with_mfa": 0,
+    "temporary_security_accounts": 0,
+    "internal_rpc_still_public": true,
+    "current_gist_schema": "public",
+    "publicTables": 43,
+    "publicTablesWithRls": 43,
+    "policies": 32,
+    "anonymousDefiners": 50,
+    "authenticatedDefiners": 62
+  },
+  "candidate": {
+    "total_definers": 62,
+    "anonymous_definers": 7,
+    "authenticated_definers": 18,
+    "appliedPermanently": false,
+    "publicDirectTableOrColumnAccess": false,
+    "newObjectsPrivateByDefault": true,
+    "bannedUnconfirmedDeletedAccountsDenied": true,
+    "rollback": true
+  },
+  "realAuth": {
+    "workspaceMigrationActive": true,
+    "metadataEscalationDenied": true,
+    "loginLogoutReturnCycles": 3,
+    "revokedAdminTokenDenied": true,
+    "realTotpEnrollmentAndVerification": true,
+    "passwordLoginRequestsSecondFactor": true,
+    "noEmailsSent": true,
+    "temporaryAccountRemoved": true
+  },
+  "sqlSuites": 9,
+  "unitTests": 89,
+  "dependenciesProductionVulnerabilities": 0,
+  "http": {
+    "measuredAt": "2026-10-17T14:26:00.840Z",
+    "checks": [
+      {
+        "name": "private-schema",
+        "status": 406,
+        "code": "PGRST106",
+        "message": "Invalid schema: guide_private"
+      },
+      {
+        "name": "personal-data",
+        "status": 401,
+        "code": "42501"
+      },
+      {
+        "name": "audit-data",
+        "status": 401,
+        "code": "42501"
+      },
+      {
+        "name": "admin-rpc-anonymous",
+        "status": 401,
+        "code": "42501"
+      },
+      {
+        "name": "forged-admin-jwt",
+        "status": 401,
+        "code": "PGRST301"
+      },
+      {
+        "name": "public-search",
+        "status": 200,
+        "code": null,
+        "source": "supabase"
+      }
+    ]
+  },
+  "replay": {
+    "secondApplicationSafe": true,
+    "modernSuitesAfterBoundary": 5,
+    "rollback": true,
+    "notices": 30
+  },
+  "formCompatibility": {
+    "formThenSecurity": true,
+    "securityThenForm": true,
+    "logoHoursRegression": true,
+    "boundaryRegression": true,
+    "rollback": true
+  }
+}

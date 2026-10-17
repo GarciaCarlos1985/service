@@ -5,7 +5,8 @@ create role service_role bypassrls;
 create schema auth;
 create table auth.users(
  id uuid primary key,email text,email_confirmed_at timestamptz default now(),
- raw_user_meta_data jsonb default '{}',raw_app_meta_data jsonb default '{}',created_at timestamptz default now()
+ raw_user_meta_data jsonb default '{}',raw_app_meta_data jsonb default '{}',created_at timestamptz default now(),
+ banned_until timestamptz,deleted_at timestamptz
 );
 create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id) on delete cascade,not_after timestamptz,created_at timestamptz default now(),updated_at timestamptz default now());
 create table auth.mfa_factors(id uuid primary key,user_id uuid references auth.users(id) on delete cascade,status text,factor_type text,friendly_name text,secret text,created_at timestamptz default now(),updated_at timestamptz default now());

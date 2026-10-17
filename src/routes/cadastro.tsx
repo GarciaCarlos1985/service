@@ -96,8 +96,8 @@ function SignUpPage() {
               label="Senha"
               type="password"
               autoComplete="new-password"
-              placeholder="Mínimo de 8 caracteres"
-              hint="Use pelo menos 8 caracteres."
+              placeholder="Mínimo de 12 caracteres"
+              hint="Use pelo menos 12 caracteres."
               error={errors.password?.message}
               {...register('password')}
             />
