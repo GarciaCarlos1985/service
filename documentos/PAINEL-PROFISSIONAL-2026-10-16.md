@@ -93,6 +93,12 @@ escopo. A barra móvel passou a ser fixa acima da navegação; a prévia pode se
 expandida quando necessário. A paleta clara de ensaio foi desfeita sem publicação.
 O registro final está em `site-customization/finish-review.md`.
 
+O envio do PR também revelou a integração Git antiga da Vercel: ela concluiu
+uma prévia automática do primeiro candidato. `vercel.json` bloqueia novos
+deploys automáticos para manter a liberação no Cloudflare conforme ADR-049.
+A criação dessa prévia não comprova as novas RPCs ou o Storage em produção;
+o Supabase continua com as dez migrações anteriores.
+
 ### Limites das evidências
 
 - O laboratório de navegador roda SQL das migrações em PGlite. Os endpoints
