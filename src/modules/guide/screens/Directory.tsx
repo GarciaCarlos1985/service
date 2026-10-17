@@ -25,7 +25,7 @@ import {
 import CompanyDetail from './CompanyDetail'
 import Account from './Account'
 import { PremiumSpotlight } from '../components/Premium'
-import { defaultPresentation } from '../presentation'
+import { useSitePresentation } from '../site-presentation-context'
 type Filters = {
   q: string
   category: string
@@ -156,7 +156,7 @@ export default function Directory({
   const previewParams = paramsFor(f)
   if (itemId) previewParams.set('itemId', itemId)
   const catalog = previewSearch ? previewSearch(previewParams) : (resultQuery.data ?? null)
-  const presentation = catalog?.presentation ?? defaultPresentation
+  const presentation = useSitePresentation()
   const suggestions = [
     ...new Set([
       ...(catalog?.categories.map((entry) => entry.name) ?? []),
@@ -332,14 +332,14 @@ export default function Directory({
                     <div>
                       <h1>
                         {favoritesOnly
-                          ? 'Seus favoritos, por perto.'
+                          ? presentation.favoritesTitle
                           : item
                             ? item.name
                             : presentation.heroTitle}
                       </h1>
                       <p>
                         {favoritesOnly
-                          ? 'Um lugar para guardar quem resolve o que você precisa.'
+                          ? presentation.favoritesDescription
                           : item
                             ? item.description
                             : presentation.heroDescription}
@@ -393,7 +393,7 @@ export default function Directory({
                           </button>
                         )}
                         <button className="btn primary" data-track="search_submit">
-                          Buscar
+                          {presentation.searchButtonLabel}
                         </button>
                       </form>
                       {presentation.showSuggestions && (
@@ -454,7 +454,7 @@ export default function Directory({
                           ? 'Resultados para “' + f.q + '”'
                           : f.category
                             ? catalog?.categories.find((c) => c.id === f.category)?.name
-                            : 'Descubra por perto'}
+                            : presentation.resultsTitle}
                   </h2>
                   <p aria-live="polite" className="results-status">
                     {loading ? (
@@ -671,14 +671,12 @@ export default function Directory({
                       <Empty className="empty-state">
                         <Search size={30} />
                         <EmptyTitle>
-                          {favoritesOnly
-                            ? 'Sua lista está começando.'
-                            : 'Nenhum resultado com estes filtros.'}
+                          {favoritesOnly ? 'Sua lista está começando.' : presentation.emptyTitle}
                         </EmptyTitle>
                         <EmptyDescription>
                           {favoritesOnly
                             ? 'Explore o guia e toque no coração para guardar uma empresa.'
-                            : 'Experimente um termo mais amplo, como “pintura”, ou remova um filtro.'}
+                            : presentation.emptyDescription}
                         </EmptyDescription>
                         {favoritesOnly ? (
                           <a className="btn primary" href="/">
@@ -761,11 +759,11 @@ export default function Directory({
             <div className="wrap local-close">
               <MapPin size={28} />
               <div>
-                <strong>Seu negócio também pode estar aqui.</strong>
-                <p>Converse com o dono do guia para combinar sua inclusão.</p>
+                <strong>{presentation.businessTitle}</strong>
+                <p>{presentation.businessDescription}</p>
               </div>
               <a className="btn outline" href="/ajuda?tipo=business#contato">
-                Solicitar inclusão
+                {presentation.businessButtonLabel}
               </a>
             </div>
           </>

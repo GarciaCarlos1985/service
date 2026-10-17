@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-16T21:00:53.757351+00:00",
+  "generatedAt": "2026-10-17T01:33:45.442539+00:00",
   "title": "Design System: Service Guide",
   "extensions": {
     "colorMeta": {
@@ -339,6 +339,30 @@
           "oklch(84% 0.09239 247.44)",
           "oklch(95% 0.09239 247.44)"
         ]
+      },
+      "site-primary": {
+        "role": "primary",
+        "displayName": "Ações públicas"
+      },
+      "site-navy": {
+        "role": "primary",
+        "displayName": "Marinho público"
+      },
+      "site-accent": {
+        "role": "secondary",
+        "displayName": "Destaque da busca"
+      },
+      "site-background": {
+        "role": "neutral",
+        "displayName": "Fundo público"
+      },
+      "site-surface": {
+        "role": "neutral",
+        "displayName": "Apoio público"
+      },
+      "site-badge": {
+        "role": "tertiary",
+        "displayName": "Patrocínio público"
       }
     },
     "typographyMeta": {
@@ -471,7 +495,10 @@
       "src/modules/guide/admin/CatalogEditor.tsx",
       "src/modules/guide/admin/OrderBoard.tsx",
       "src/modules/guide/admin/PresentationSettings.tsx",
-      "src/modules/guide/admin/SecurityPanel.tsx"
+      "src/modules/guide/admin/SecurityPanel.tsx",
+      "src/modules/guide/admin/SpotlightEditor.tsx",
+      "src/modules/guide/presentation.ts",
+      "src/modules/guide/site-presentation.tsx"
     ],
     "assets": {
       "logo": {
@@ -551,14 +578,62 @@
       "savebar": {
         "dialog": "position: sticky; bottom: -32px; até 600px bottom: -22px",
         "settingsDesktop": "position: sticky; bottom: 0",
-        "settingsMobile": "até 800px bottom: calc(76px + env(safe-area-inset-bottom))",
-        "settingsFormReserve": "até 800px padding-bottom: calc(104px + env(safe-area-inset-bottom))"
+        "settingsMobile": "até 800px position: fixed; left/right: clamp(16px, 4vw, 32px); bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 35",
+        "settingsFormReserve": "até 800px padding-bottom: calc(208px + env(safe-area-inset-bottom))"
       },
       "notCanonized": [
         "Variável --admin-ink sem aplicação.",
         "Tons e medidas isolados não viram tokens globais.",
-        "Barra de configurações anteriormente encoberta, corrigida; não herdar o defeito."
-      ]
+        "Barra de configurações anteriormente encoberta, corrigida; não herdar o defeito.",
+        "Reserva móvel de 104px e prévia móvel obrigatória, superadas.",
+        "Overflow intrínseco, abas comprimidas, checkbox empilhado e tintas ilegíveis no marinho personalizado, corrigidos."
+      ],
+      "customization": {
+        "palette": "Seis papéis públicos, apenas HEX de seis dígitos validado; defaults no frontmatter site-*. Workspace administrativo neutro.",
+        "ink": "Tintas calculadas para cada fundo; título e sugestões seguem navy-ink. Vitrine fotográfica mantém tintas claras próprias sobre camada escura. Sem certificação WCAG global.",
+        "preview": "Lateral no desktop; recolhida por padrão até 1100px, com botão de expansão. Selecionar qualquer chamada manual só muda a prévia.",
+        "publication": "Salvar configurações publica. Prévia e seleção de chamada não publicam.",
+        "controls": "Três abas com altura automática; gatilhos móveis de no mínimo 72px. Fieldsets e seletores com min-width:0; controles limitados a 100%; checkbox e rótulo em linha.",
+        "spotlights": "Automático ou até 12 chamadas manuais, sem autoplay; ordenação por arraste e alternativa por botão/teclado. Elegibilidade pública preservada e vitrine independente dos filtros."
+      },
+      "customizationReview": {
+        "source": "Revisão independente e gates comunicados pelo agente principal; não reexecutados pelo documenter.",
+        "path": ".impeccable/review/site-customization/evidence.md",
+        "initialDisposition": "fix",
+        "initialFindings": 5,
+        "postFixVerdict": "pass",
+        "resolvedFindings": 5,
+        "postFixDisposition": "ship",
+        "scope": "Somente correções da extensão no candidato local codex/painel-profissional. Sem certificação de produção, WCAG global ou segurança absoluta.",
+        "captureDirectory": ".impeccable/review/site-customization/",
+        "captures": [
+          "colors-desktop.jpg",
+          "colors-mobile-initial.jpg",
+          "colors-mobile.jpg",
+          "copy-desktop.jpg",
+          "mobile.jpg",
+          "preview-mobile.jpg",
+          "preview-second-mobile.jpg",
+          "public-desktop.jpg",
+          "public-mobile.jpg",
+          "public-spotlight-mobile.jpg",
+          "spotlight-fields-desktop.jpg",
+          "spotlights-desktop.jpg",
+          "spotlights-mobile.jpg",
+          "user-1280.jpg"
+        ],
+        "reportedValidation": {
+          "unitTests": 87,
+          "typecheck": "PASS",
+          "lint": "0 erros / 37 avisos herdados",
+          "format": "PASS",
+          "buildLab": "PASS",
+          "buildProduction": "PASS",
+          "sql": "7 testes com rollback comprovado",
+          "migration11And12Applied": false,
+          "deployApplied": false
+        }
+      }
     }
   },
   "components": [
@@ -661,7 +736,7 @@
   ],
   "narrative": {
     "northStar": "Guia comercial local",
-    "overview": "Branco, marinho, azul e verde apresentam o comércio de Cacoal com busca direta, Manrope ampla e fotografias comerciais. A evolução Premium Master autorizada em 15/10/2026 amplia a identidade escolhida: títulos grandes, maior respiro e superfícies marinho distinguem exposição patrocinada, mantendo a descoberta legível no celular.\n\nEm 15/10/2026, por solicitação do usuário, o selo passou a “PREMIUM GUIDE” em dourado champanhe, mantendo “Destaque patrocinado” e a elegibilidade por `plan.featured`; contraste informado entre fundo e texto: 8.43:1.\n\nEste registro mescla as decisões confirmadas do sistema anterior com o código final em `src/styles/guide.css` e seus overrides prioritários em `src/styles/guide-premium.css`. A logo horizontal fornecida pelo usuário (`public/service-guide.png`, original 1672 × 941) aparece sem edição, com proporção preservada por `object-fit: contain`; sua procedência está em `public/service-guide.png.json`. Fotografias demonstrativas mantêm rótulos e procedência. A composição específica da primeira tela permanece em `.impeccable/surfaces/directory.md`.\n\nA revisão `.impeccable/review/premium/finish-review.md` preserva o parecer inicial `fix` e registra adendo `ship` para as duas correções visuais: autenticação e categorias abaixo dos nomes. A pendência documental desse parecer é atendida por este registro e pelo sidecar. As oito capturas em `.impeccable/review/premium/` são recortes de viewport ou estados após rolagem: desktop de 1440 reduzido nativamente a 600, mobile de 390 × 640 e `user-614` de 614 × 672; nenhuma captura é de página inteira. O adendo não certifica independentemente medições computadas de hover/foco, CRUD autenticado, banco remoto ou produção. Gates e procedência comunicados pelo agente principal constam no sidecar; esta documentação não abre nova auditoria.\n\nA extensão administrativa de 16/10/2026 foi registrada a partir de `src/styles/guide-admin.css`, `src/modules/guide/screens/Admin.tsx` e `src/modules/guide/admin/`. É uma evolução Operate da identidade existente, com prioridade em cadastrar empresas, produtos e serviços. Seu contrato e medidas de superfície ficam em `.impeccable/surfaces/admin-workspace.md`. O painel documentado é candidato local na branch `codex/painel-profissional`; este registro não declara aplicação de migração nem publicação em produção.",
+    "overview": "Branco, marinho, azul e verde apresentam o comércio de Cacoal com busca direta, Manrope ampla e fotografias comerciais. A evolução Premium Master autorizada em 15/10/2026 amplia a identidade escolhida: títulos grandes, maior respiro e superfícies marinho distinguem exposição patrocinada, mantendo a descoberta legível no celular.\n\nEm 15/10/2026, por solicitação do usuário, o selo passou a “PREMIUM GUIDE” em dourado champanhe, mantendo “Destaque patrocinado” e a elegibilidade por `plan.featured`; contraste informado entre fundo e texto: 8.43:1.\n\nEste registro mescla as decisões confirmadas do sistema anterior com o código final em `src/styles/guide.css` e seus overrides prioritários em `src/styles/guide-premium.css`. A logo horizontal fornecida pelo usuário (`public/service-guide.png`, original 1672 × 941) aparece sem edição, com proporção preservada por `object-fit: contain`; sua procedência está em `public/service-guide.png.json`. Fotografias demonstrativas mantêm rótulos e procedência. A composição específica da primeira tela permanece em `.impeccable/surfaces/directory.md`.\n\nA revisão `.impeccable/review/premium/finish-review.md` preserva o parecer inicial `fix` e registra adendo `ship` para as duas correções visuais: autenticação e categorias abaixo dos nomes. A pendência documental desse parecer é atendida por este registro e pelo sidecar. As oito capturas em `.impeccable/review/premium/` são recortes de viewport ou estados após rolagem: desktop de 1440 reduzido nativamente a 600, mobile de 390 × 640 e `user-614` de 614 × 672; nenhuma captura é de página inteira. O adendo não certifica independentemente medições computadas de hover/foco, CRUD autenticado, banco remoto ou produção. Gates e procedência comunicados pelo agente principal constam no sidecar; esta documentação não abre nova auditoria.\n\nA extensão administrativa e sua personalização final de 16/10/2026 foram registradas a partir de `src/styles/guide-admin.css`, `src/modules/guide/screens/Admin.tsx` e `src/modules/guide/admin/`. É uma evolução Operate da identidade existente, com prioridade em cadastrar empresas, produtos e serviços. Seu contrato e medidas de superfície ficam em `.impeccable/surfaces/admin-workspace.md`. O painel documentado é candidato local na branch `codex/painel-profissional`; este registro não declara aplicação de migração nem publicação em produção.",
     "keyCharacteristics": [
       "Logo azul/verde original e Manrope local mantêm continuidade.",
       "Marinho profundo, campo branco e verde claro organizam ações e exposição paga.",
@@ -682,7 +757,7 @@
       },
       {
         "name": "The Ação ao Alcance Rule",
-        "body": "Barras de diálogo e de configurações têm contextos próprios de posicionamento. Nas configurações, a barra adere à base (`bottom: 0`) no desktop; até 800px fica acima da navegação inferior (`76px` mais área segura), com reserva no formulário (`104px` mais área segura). Os offsets negativos dos diálogos não se aplicam ao formulário da página.",
+        "body": "Barras de diálogo e de configurações têm contextos próprios de posicionamento. Nas configurações, a barra é aderente (`position: sticky`, `bottom: 0`) no desktop; até 800px é fixa (`position: fixed`), acima da navegação inferior (`bottom: calc(76px + env(safe-area-inset-bottom))`), com laterais (`clamp(16px, 4vw, 32px)`) e camada (`z-index: 35`). O formulário reserva (`calc(208px + env(safe-area-inset-bottom))`) para as ações. Os offsets negativos dos diálogos não se aplicam ao formulário da página.",
         "section": "components"
       }
     ],

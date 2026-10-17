@@ -63,7 +63,7 @@ begin
  result:=public.guide_admin_list('settings');revision:=(result->'rows'->0->>'revision')::integer;
  settings:='{"heroTitle":"Cacoal, perto de você.","heroDescription":"Descrição de teste transacional para apresentação.","searchPlaceholder":"Pesquise produtos e serviços","quickSearches":["Tinta","Eletricista"],"showSuggestions":true,"showSpotlight":false}'::jsonb;
  perform public.guide_admin_save('settings',jsonb_build_object('value',settings,'revision',revision));
- assert public.guide_presentation()=settings,'Apresentação pública não corresponde à configuração';
+ assert public.guide_presentation() @> settings,'Apresentação pública não corresponde à configuração';
  begin perform public.guide_admin_save('settings',jsonb_build_object('value',settings,'revision',revision));raise exception 'Versão antiga sobrescreveu configuração';exception when raise_exception then if sqlerrm='Versão antiga sobrescreveu configuração' then raise;end if;end;
  begin perform public.guide_admin_save('settings',jsonb_build_object('value',settings||'{"secret":"not-allowed"}','revision',revision+1));raise exception 'Configuração privada aceita';exception when raise_exception then if sqlerrm='Configuração privada aceita' then raise;end if;end;
  begin perform public.guide_admin_save('settings',jsonb_build_object('value',settings||'{"heroTitle":""}','revision',revision+1));raise exception 'Título vazio aceito';exception when raise_exception then if sqlerrm='Título vazio aceito' then raise;end if;end;
@@ -117,7 +117,7 @@ begin
  set local role anon;
  perform set_config('request.jwt.claim.sub','',true);
  perform set_config('request.jwt.claims','{"role":"anon"}',true);
- assert public.guide_presentation()=settings,'Apresentação não pode ser lida anonimamente';
+ assert public.guide_presentation() @> settings,'Apresentação não pode ser lida anonimamente';
  begin perform public.guide_admin_order('categories');raise exception 'Anônimo leu lista administrativa';exception when insufficient_privilege then null;end;
  begin perform public.guide_admin_company(company_a);raise exception 'Anônimo leu rascunho';exception when insufficient_privilege then null;end;
  assert not exists(select 1 from jsonb_array_elements(public.guide_search()->'companies') c where c->>'id'=company_a::text),'Rascunho publicado durante o teste';

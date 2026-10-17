@@ -2,6 +2,7 @@
 
 Pedido: priorizar cadastro de empresas, produtos e serviços; ampliar configurações,
 conforto, ordenação, navegação e segurança, preservando Supabase e Cloudflare.
+Ampliação confirmada: editar vitrines, cores, textos e títulos também.
 
 ## Impacto
 
@@ -15,6 +16,10 @@ conforto, ordenação, navegação e segurança, preservando Supabase e Cloudfla
   permanecem preservadas; nenhuma senha real será definida ou solicitada.
 - A mudança de autorização precisa ser testada contra sessões reais e revogadas,
   pois login bem-sucedido sozinho não prova que logout revoga operações.
+- A apresentação passa pelo shell público, rodapé, diretório e vitrine. A gravação
+  mantém as operações comerciais existentes e amplia somente a configuração,
+  com validação de campos, cores HEX e imagens HTTPS no banco. Leitores antigos
+  continuam aceitos; campos novos recebem valores padrão no frontend.
 
 ## Matriz de aceitação
 
@@ -41,16 +46,19 @@ não introduzem escassez fictícia, contagens falsas ou recompensas enganosas.
 ## Resultado medido no candidato local
 
 Branch: `codex/painel-profissional`, a partir de `8a7cb7d`.
-O site online permanece na versão publicada anteriormente. A migração
-`20261016194717_guide_admin_workspace.sql` foi ensaiada com rollback e ainda
-precisa da revisão humana antes da aplicação e publicação.
+O site online permanece na versão publicada anteriormente. As migrações
+`20261016194717_guide_admin_workspace.sql` e
+`20261017005400_guide_site_customization.sql` foram ensaiadas com rollback e
+aguardam validação humana antes da aplicação e publicação. O nome da segunda
+usa o dia 17 em UTC; esta execução começou no dia 16 no fuso de São Paulo.
 
 | Verificação | Evidência |
 | --- | --- |
-| Tipagem, lint, unitários e builds | Aprovados nos modos de laboratório e produção; 80 testes em 13 arquivos; lint sem erros e 37 avisos herdados |
+| Tipagem, lint e unitários | 87 testes em 14 arquivos; lint sem erros e 37 avisos herdados |
+| Builds | Laboratório e produção aprovados após o lote final de correções |
 | Formatação | `prettier --check src scripts package.json wrangler.jsonc` aprovado |
 | Dependências | `npm audit`: zero vulnerabilidades conhecidas na consulta |
-| Banco real, transação com rollback | Suítes comercial e administrativa aprovadas; nenhuma fixture persistiu |
+| Banco real, transação com rollback | Suítes comercial, administrativa e personalização aprovadas; nenhuma fixture persistiu |
 | Regressões legadas no banco real | RLS, ledger, chat e reviews aprovados, cada uma isolada por savepoint |
 | Cadastro na interface | Empresa publicada no laboratório; categoria e bairro criados dentro do editor; produto com preço e serviço sem preço salvos |
 | Ordenação | Arraste, botões, teclado, confirmação de cancelamento e salvamento verificados; conflito e isolamento testados no SQL |
@@ -59,6 +67,8 @@ precisa da revisão humana antes da aplicação e publicação.
 | Conexão | Falha de rede simulada no navegador; formulário preservado; reconexão, nova tentativa e recarga aprovadas |
 | Sessão na interface | Três ciclos completos de entrar/sair/retornar; consumidor sem controles administrativos |
 | Navegação pública | Busca com e sem resultados, foco no resultado, Voltar/Avançar e favorito persistido |
+| Personalização | Treze textos/títulos, seis cores, restauração da identidade e chamadas manuais com texto/imagem editáveis; prévia local e salvamento conferidos |
+| Vitrines públicas | Duas chamadas ordenadas, navegação manual, perfil correto, ocultação global e independência dos filtros da busca; privacidade e concorrência cobertas no SQL |
 | Áreas do painel | 15 áreas acessíveis; seções de catálogo, operação, configurações e segurança |
 | HTTP no runtime do Worker local | CSP com nonce consistente nos scripts SSR; `no-store` nas páginas privadas; cookies e streaming preservados |
 | Responsividade | 1440×1000, 1280×720 (janela atual) e 390×844; editor de 920 px no desktop; celular sem rolagem horizontal |
@@ -66,13 +76,22 @@ precisa da revisão humana antes da aplicação e publicação.
 | Pacote de produção | 228 arquivos textuais examinados por streaming; valores privados do ambiente ausentes; backend correto; sem endpoint/banner do laboratório; nenhum arquivo .env/.rar/.zip |
 | Runtime local do pacote de produção | Home, admin e recuperação retornaram 200 com CSP; páginas privadas sem cache; nonce externo substituído; `/previa` retornou 404 |
 
-Capturas: `.impeccable/review/admin-profissional/`. A revisão independente
+Capturas da primeira etapa: `.impeccable/review/admin-profissional/`. A revisão independente
 encontrou um defeito material: a barra inferior móvel encobria o salvamento
 das configurações. O ajuste separou o posicionamento da página e dos diálogos,
 reservando navegação e área segura. A captura final mostra ambos os botões e
 o teste de clique confirmou o salvamento. O veredito pontuou a correção como
 **resolvida**, com disposição `ship` no escopo do achado. O sistema construído
 foi registrado em `DESIGN.md`, `.impeccable/design.json` e no contrato da superfície.
+
+Capturas da personalização: `.impeccable/review/site-customization/`. A revisão
+independente encontrou cinco ajustes materiais: largura de vitrines no celular,
+seleção de qualquer chamada na prévia, tinta do título/sugestões em cores claras,
+altura das abas e alinhamento das opções de exibição. Os cinco foram corrigidos
+em lote e pontuados como **resolvidos**, com disposição `ship` somente nesse
+escopo. A barra móvel passou a ser fixa acima da navegação; a prévia pode ser
+expandida quando necessário. A paleta clara de ensaio foi desfeita sem publicação.
+O registro final está em `site-customization/finish-review.md`.
 
 ### Limites das evidências
 
@@ -100,7 +119,7 @@ foi registrado em `DESIGN.md`, `.impeccable/design.json` e no contrato da superf
 1. Responsável revisa o painel no laboratório local: `http://127.0.0.1:3002/admin`.
    A sessão de teste já está aberta no navegador. Dados descartáveis são
    identificados em amarelo e nunca devem ser usados como catálogo real.
-2. Após validação humana, aplicar somente a nova migração no projeto correto e
+2. Após validação humana, aplicar somente as duas migrações novas no projeto correto e
    repetir as suítes SQL e `npm run test:auth:security`.
 3. Executar o build normal de produção, conferir ausência de segredos e do modo
    e2e, enviar o código ao repositório oficial e publicar o Worker existente.

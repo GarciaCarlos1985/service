@@ -231,6 +231,7 @@ const rpcArguments = {
     ['p_admin', 'boolean'],
   ],
   guide_presentation: [],
+  guide_showcase: [],
   guide_update_profile: [['payload', 'jsonb']],
   guide_toggle_favorite: [['payload', 'jsonb']],
   guide_review: [['payload', 'jsonb']],

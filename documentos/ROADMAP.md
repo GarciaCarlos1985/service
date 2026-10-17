@@ -11,10 +11,11 @@ aplicada e testada no Supabase real, com legado preservado.** Catálogo vazio,
 aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 
 Evolução administrativa em revisão local: `codex/painel-profissional`, com
-cadastro completo de empresas/produtos/serviços, imagens e ordenação, apresentação
-editável, proteção contra perda de edição e reforço de sessão/MFA. Gate local,
-80 unitários e seis suítes SQL no banco real aprovados; **a migração e o novo
-Worker ainda não foram publicados**. Evidências e validação humana pendente em
+cadastro completo de empresas/produtos/serviços, imagens e ordenação, edição de
+textos/títulos, seis cores e até doze vitrines com prévia, proteção contra perda
+de edição e reforço de sessão/MFA. 87 unitários e sete suítes SQL no banco real
+aprovados; **as duas migrações candidatas e o novo Worker ainda não foram
+publicados**. Evidências e validação humana pendente em
 `PAINEL-PROFISSIONAL-2026-10-16.md`.
 
 ### Candidato local de 15/10/2026

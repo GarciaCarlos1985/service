@@ -915,3 +915,115 @@
     font-weight: 700;
   }
 }
+@layer components {
+  .guide-root[data-site-theme] {
+    --primary: var(--site-link);
+    --ink: var(--site-background-ink);
+    --muted: color-mix(in srgb, var(--site-background-ink) 78%, var(--site-background));
+    --premium-ink: var(--site-navy);
+    --premium-green: var(--site-accent);
+    background: var(--site-background);
+    color: var(--site-background-ink);
+  }
+  .guide-root[data-site-theme] .site-header,
+  .guide-root[data-site-theme] .mobile-nav,
+  .guide-root[data-site-theme] .company-card:not(.company-card-master),
+  .guide-root[data-site-theme] .company-card:not(.company-card-master) .card-body {
+    background: var(--site-background);
+    color: var(--site-background-ink);
+  }
+  .guide-root[data-site-theme] .site-header nav a:not(.account-link),
+  .guide-root[data-site-theme] .site-footer,
+  .guide-root[data-site-theme] .company-card:not(.company-card-master) h3 {
+    color: var(--site-background-ink);
+  }
+  .guide-root[data-site-theme] .btn.primary {
+    background: var(--site-primary);
+    color: var(--site-primary-ink);
+  }
+  .guide-root[data-site-theme] .btn.primary:hover {
+    filter: brightness(0.94);
+  }
+  .guide-root[data-site-theme] .premium-hero,
+  .guide-root[data-site-theme] .company-card-master,
+  .guide-root[data-site-theme] .company-card-master .card-body,
+  .guide-root[data-site-theme] .master-profile-hero,
+  .guide-root[data-site-theme] .account-link {
+    background: var(--site-navy);
+    color: var(--site-navy-ink);
+  }
+  .guide-root[data-site-theme] .premium-hero h1,
+  .guide-root[data-site-theme] .premium-hero .search-intro p,
+  .guide-root[data-site-theme] .premium-hero .city-label,
+  .guide-root[data-site-theme] .premium-hero .suggestions button,
+  .guide-root[data-site-theme] .company-card-master h3,
+  .guide-root[data-site-theme] .company-card-master .card-desc,
+  .guide-root[data-site-theme] .company-card-master .card-description,
+  .guide-root[data-site-theme] .company-card-master .card-tags,
+  .guide-root[data-site-theme] .company-card-master .secondary,
+  .guide-root[data-site-theme] .company-card-master .view-link,
+  .guide-root[data-site-theme] .company-card-master .card-category,
+  .guide-root[data-site-theme] .company-card-master .location,
+  .guide-root[data-site-theme] .company-card-master .rating-line {
+    color: var(--site-navy-ink);
+  }
+  .guide-root[data-site-theme] .premium-hero .search-box .btn,
+  .guide-root[data-site-theme] .company-card-master .card-actions .btn.primary {
+    background: var(--site-accent);
+    color: var(--site-accent-ink);
+  }
+  .guide-root[data-site-theme] .master-badge {
+    background: var(--site-badge);
+    color: var(--site-badge-ink);
+    border-color: color-mix(in srgb, var(--site-badge-ink) 15%, var(--site-badge));
+  }
+  .guide-root[data-site-theme] .business-invitation,
+  .guide-root[data-site-theme] .filters,
+  .guide-root[data-site-theme] .category.active {
+    background: var(--site-surface);
+    color: var(--site-surface-ink);
+  }
+  .guide-root[data-site-theme] .business-invitation :is(strong, p),
+  .guide-root[data-site-theme] .filters label,
+  .guide-root[data-site-theme] .results-toolbar h2,
+  .guide-root[data-site-theme] .site-footer :is(a, p, span) {
+    color: inherit;
+  }
+  .guide-root[data-site-theme] .company-master :is(.company-heading, .contact-panel),
+  .guide-root[data-site-theme]
+    .company-master
+    .company-heading
+    :is(h1, .location, .detail-tags > span),
+  .guide-root[data-site-theme] .company-master .contact-panel :is(p, small),
+  .guide-root[data-site-theme] .company-master .heading-actions .btn,
+  .guide-root[data-site-theme] .company-master .contact-panel .btn.outline {
+    color: var(--site-navy-ink);
+  }
+  .guide-root[data-site-theme] .company-master .contact-panel .btn.whatsapp {
+    background: var(--site-accent);
+    color: var(--site-accent-ink);
+  }
+  .guide-root[data-site-theme] .btn.outline {
+    background: var(--site-background);
+    color: var(--site-background-ink);
+  }
+  .guide-root[data-site-theme] .company-master :is(.heading-actions, .contact-panel) .btn.outline {
+    background: transparent;
+    color: var(--site-navy-ink);
+  }
+  .guide-root[data-site-theme] .professional-admin {
+    background: #fff;
+    color: #102f4d;
+  }
+  .guide-root[data-site-theme] .professional-admin .btn.outline {
+    background: #fff;
+    color: #102f4d;
+  }
+  .guide-root[data-site-theme] .guide-auth {
+    color: #18334f;
+  }
+  .guide-root[data-site-theme] .professional-admin .btn.primary {
+    background: #0b2948;
+    color: #fff;
+  }
+}
