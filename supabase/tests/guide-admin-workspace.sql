@@ -90,7 +90,9 @@ begin
  insert into auth.mfa_factors(id,user_id,friendly_name,factor_type,status,secret,created_at,updated_at) values(factor_id,admin_id,'Fixture temporária','totp','verified','temporary-test-secret',now(),now());
  set local role authenticated;
  begin perform public.guide_admin_list();raise exception 'Administração sem segundo fator permitida';exception when insufficient_privilege then null;end;
+ reset role;
  assert not public._is_admin(),'Predicado legado ignorou segundo fator';
+ set local role authenticated;
  perform set_config('request.jwt.claims',(claims||'{"aal":"aal2"}')::text,true);
  perform public.guide_admin_list();
  set local role postgres;
@@ -98,7 +100,9 @@ begin
  delete from auth.sessions where id=admin_id;
  set local role authenticated;
  begin perform public.guide_admin_list();raise exception 'Sessão encerrada ainda administra';exception when insufficient_privilege then null;end;
+ reset role;
  assert not public._is_admin(),'Predicado legado aceitou sessão encerrada';
+ set local role authenticated;
  assert public.guide_me() is null,'Sessão encerrada ainda tem perfil';
  set local role postgres;
  insert into auth.sessions(id,user_id,created_at,updated_at,not_after) values(admin_id,admin_id,now(),now(),now()-interval '1 minute');

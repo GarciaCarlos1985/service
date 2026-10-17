@@ -38,11 +38,12 @@ colunas ou dados. Semana estrita, tamanho limitado, validação de períodos e d
 conflitos entre dias, inclusive domingo/segunda. Logo exige objeto previamente
 enviado no caminho da empresa, além de formato e HTTPS em produção.
 
-O PR #2 (`codex/restringir-rpcs-internas`) continua separado, com a migration
-`20261017130133_guide_internal_rpc_permissions.sql`. O candidato de cadastro foi
-construído sobre essa branch para preservar a ordem de publicação. Nenhuma das
-duas migrations foi aplicada permanentemente; ambas foram ensaiadas na conexão
-transacional ao PostgreSQL real e revertidas ao final.
+O PR #2 (`codex/restringir-rpcs-internas`) continua separado, com as migrations
+`20261017130133_guide_internal_rpc_permissions.sql` e
+`20261017142019_guide_api_access_boundary.sql`. O candidato de cadastro foi
+sincronizado com essa branch para preservar a ordem de publicação. Nenhuma das
+três migrations candidatas foi aplicada permanentemente; todas foram ensaiadas
+na conexão transacional ao PostgreSQL real e revertidas ao final.
 
 ## Validação
 
@@ -78,6 +79,16 @@ também a abertura automatizada de `chrome://extensions`, pois permite somente
 HTTP/HTTPS. O responsável recebeu instruções manuais; nenhuma tentativa de
 contornar a política foi realizada. Não há pass global do candidato.
 O detector estático não encontrou ocorrências na única execução desta extensão.
+
+### Integração com a auditoria de segurança
+
+Após sincronizar o PR #2, o candidato integrado passou novamente em typecheck,
+lint (0 erros, 37 avisos herdados), 106 testes unitários em 16 arquivos, build
+normal e dez suítes SQL no PostgreSQL real com rollback. A verificação por
+streaming dos 228 arquivos do pacote não encontrou credenciais privadas nem
+modo laboratório. A migração de cadastro foi ensaiada antes e depois da
+fronteira de API; os dois cenários passaram. Essa integração não altera o
+parecer visual nem conclui o teste pendente do seletor de arquivos.
 
 ## Publicação
 

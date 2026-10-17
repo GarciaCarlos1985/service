@@ -1,5 +1,11 @@
 # Restrição de execução das RPCs internas — candidato de 17/10/2026
 
+Ampliação posterior: o responsável solicitou auditoria geral de RLS e acesso.
+O PR #2 passou a incluir `20261017142019_guide_api_access_boundary.sql`, limites
+de exposição da API, sessão/Auth e novas senhas. Este relatório descreve a
+primeira correção; o estado completo e o impacto estão em
+`AUDITORIA-RLS-2026-10-17.md`. Ambas continuam sem aplicação definitiva.
+
 ## Problema confirmado
 
 A revisão posterior à publicação do painel confirmou no PostgreSQL real que

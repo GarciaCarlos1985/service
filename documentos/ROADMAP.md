@@ -32,6 +32,18 @@ Não altera o estado publicado acima: a migração de identidade/horários e o P
 de permissões internas dependem de aprovação. Evidências e limites em
 `CADASTRO-EMPRESAS-2026-10-17.md`.
 
+### Auditoria de segurança em revisão — 17/10/2026
+
+O PR #2 foi ampliado: fechamento da API antiga, grants diretos e padrões de
+exposição; sessão também verifica banimento, e-mail confirmado e exclusão lógica.
+43 tabelas públicas tinham RLS ligada. Seis helpers perigosos continuam expostos
+em produção até a liberação das migrations de segurança. O candidato passou em
+nove suítes SQL com rollback, 89 unitários, gate de código e Auth HTTP/TOTP real.
+Novas senhas passam a ter mínimo de 12 caracteres no candidato e no plano Auth.
+Produção ainda tem 12 migrations; nenhum deploy/aplicação foi feito pela auditoria.
+MFA dos titulares, confirmação de e-mail e proteção contra bots têm pendências
+registradas em `AUDITORIA-RLS-2026-10-17.md`; não tratar a auditoria como encerrada.
+
 ### Candidato local de 15/10/2026
 
 A interface do pacote foi adaptada ao TanStack Start existente, com Supabase

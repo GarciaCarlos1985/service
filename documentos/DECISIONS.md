@@ -997,6 +997,39 @@ da ADR-048, sem converter dados do marketplace nem ampliar seu recorte funcional
 
 ---
 
+## ADR-051 — Fronteira explícita da API do Service Guide
+
+**Status:** Proposta, implementada e validada em transações com rollback
+(17/10/2026); aguarda revisão e aplicação, conforme o pedido de auditoria RLS.
+
+- **Contexto medido:** 43 tabelas públicas com RLS ligada, seis helpers internos
+  privilegiados acessíveis a anônimos, API legada ainda executável e concessões
+  padrão que expõem objetos novos. Sessões do guia já verificam encerramento,
+  mas ainda não examinavam banimento/exclusão/confirmação do Auth.
+- **Decisão proposta:** publicar somente as 18 assinaturas RPC do guia para os
+  papéis correspondentes; retirar acesso direto a tabelas/colunas/sequências e
+  execução das demais rotinas de aplicação por clientes. Preservar proprietário,
+  backend, RLS, políticas e dados. Novos objetos de `postgres` exigem concessão
+  explícita. Completar a validação de sessão e retirar `btree_gist` de `public`.
+  As rotas antigas retornam ao produto atual; novas senhas têm mínimo de 12.
+- **Alternativas:** confiar apenas na tela não protege a API; apenas revogar
+  PUBLIC mantém grants diretos; desativar funções/dados por exclusão contraria
+  a preservação do legado. Não trocar a arquitetura atual por uma API nova nem
+  reescrever as rotinas financeiras para um produto aposentado.
+- **Motivo:** reduzir a superfície ao contrato realmente utilizado e impedir
+  reabertura silenciosa de permissões em migrations futuras. A lista de RPCs
+  continua validada por assinatura e por testes de autorização no banco real.
+- **Consequências:** clientes antigos de `/painel` não operam mais o marketplace;
+  reativação exige revisão específica. `service_role` fica restrita ao backend.
+  Limite de senha não muda senhas atuais. Sem custo/plano/serviço adicional.
+  MFA dos titulares, e-mail confiável e desafio anti-bot exigem etapa operacional
+  própria, documentada; não são considerados resolvidos por esta migração.
+- **Evidência:** `AUDITORIA-RLS-2026-10-17.md` e
+  `evidencias/seguranca-rls-2026-10-17.json`; nove suítes SQL e dois sentidos de
+  integração com a extensão de logotipo/semana, sempre com rollback.
+
+---
+
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue
 > a mesma disciplina — Contexto medido ou declarado como hipótese, Decisão com
 > alternativas consideradas, Motivo, Consequências (incluindo custo aceito e

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import { createFileRoute, Link, notFound, redirect } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { ErrorState } from '~/modules/ui'
@@ -25,6 +25,9 @@ import {
 } from '~/modules/reviews/reviews-api'
 
 export const Route = createFileRoute('/profissionais/$citySlug/$profileSlug')({
+  beforeLoad: () => {
+    redirect({ to: '/', replace: true, throw: true })
+  },
   loader: async ({ params }) => {
     let professional: PublicProfessionalProfile | null = null
     try {
