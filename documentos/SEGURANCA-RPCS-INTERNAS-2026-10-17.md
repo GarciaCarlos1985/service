@@ -4,7 +4,9 @@ Ampliação posterior: o responsável solicitou auditoria geral de RLS e acesso.
 O PR #2 passou a incluir `20261017142019_guide_api_access_boundary.sql`, limites
 de exposição da API, sessão/Auth e novas senhas. Este relatório descreve a
 primeira correção; o estado completo e o impacto estão em
-`AUDITORIA-RLS-2026-10-17.md`. Ambas continuam sem aplicação definitiva.
+`AUDITORIA-RLS-2026-10-17.md`. As duas correções foram aplicadas em produção;
+o resultado está em `PUBLICACAO-SEGURANCA-2026-10-17.md`. As seções abaixo
+preservam o ensaio anterior à liberação.
 
 ## Problema confirmado
 
