@@ -112,22 +112,28 @@ da transação protegida pelo runner.
 - `service_role`, tokens CLI — NUNCA em `VITE_*`, nunca no chat/repo.
 - **Sem chaves de pagamento**: não há gateway no MVP (ADR-044).
 
-## Estado atual (2026-10-16)
+## Estado atual (2026-10-17)
 
 **App publicado no Cloudflare Workers** (ADR-049), em
 `https://service-guide.helon280.workers.dev`. Código no repositório oficial.
 A fundação comercial foi **aplicada e validada no Supabase real** (ADR-050):
-10 migrações, dados legados preservados, suíte SQL transacional e teste real
-de cadastro/login/perfil aprovados. O catálogo público funciona e está vazio,
+12 migrações, dados legados preservados, sete suítes SQL transacionais e testes
+reais de Auth e Storage aprovados. O painel profissional e a personalização de
+textos, cores e vitrines foram aprovados pelo responsável, mesclados na `main`
+e publicados no Worker. O catálogo público funciona e está vazio,
 aguardando conteúdo real. Duas contas administrativas foram confirmadas pelo
 usuário, ativadas e auditadas; as permissões foram verificadas no banco real.
-As URLs de retorno do Auth apontam para o site publicado; a recuperação de senha
+O acesso usa a senha do Service Guide; uma sessão do Gmail não autentica no guia.
+A prévia normal na porta 3002 usa o Supabase real; o laboratório é um modo separado.
+As URLs de retorno do Auth incluem o site publicado e a prévia local; a recuperação de senha
 foi completada e testada com conta temporária, sem enviar e-mails ou alterar
 senhas reais. A entrega de e-mail ainda precisa ser conferida pelo titular.
 `/previa` existe apenas em DEV. O legado M0–M8 permanece preservado e com os
 módulos financeiros/booking **parados, não deletados**. Ver
-`ATIVACAO-SUPABASE-2026-10-16.md`, `CLOUDFLARE-2026-10-16.md` e `ROADMAP.md`
-para evidências e pendências.
+`PUBLICACAO-PAINEL-2026-10-17.md`, `ATIVACAO-SUPABASE-2026-10-16.md` e
+`ROADMAP.md` para evidências e pendências. A revisão dos advisors confirmou
+permissões excessivas em seis helpers internos legados; a correção dessas
+permissões exige uma migração adicional, separada da publicação aprovada.
 
 ## Como trabalhar aqui (fluxo recomendado)
 

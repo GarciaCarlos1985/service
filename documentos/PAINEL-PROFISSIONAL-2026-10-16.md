@@ -1,5 +1,10 @@
 # Painel profissional — análise e critérios de aceitação
 
+> Registro do candidato antes da aprovação. Em 17/10/2026, o responsável
+> aprovou o PR #1, as duas migrações e a publicação. A entrega online, os testes
+> posteriores e as pendências atuais estão em `PUBLICACAO-PAINEL-2026-10-17.md`.
+> As referências abaixo a dez migrações e publicação pendente são históricas.
+
 Pedido: priorizar cadastro de empresas, produtos e serviços; ampliar configurações,
 conforto, ordenação, navegação e segurança, preservando Supabase e Cloudflare.
 Ampliação confirmada: editar vitrines, cores, textos e títulos também.

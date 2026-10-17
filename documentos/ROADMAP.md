@@ -6,17 +6,20 @@
 > `DECISIONS.md` ADR-041+. Mapa do que fazer com o código existente:
 > `REUSE-MAP.md`.
 
-Status atual (2026-10-16): **site publicado no Cloudflare; fundação comercial
-aplicada e testada no Supabase real, com legado preservado.** Catálogo vazio,
+Status atual (2026-10-17): **painel profissional publicado no Cloudflare;
+12 migrações aplicadas e testadas no Supabase real, com legado preservado.** Catálogo vazio,
 aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 
-Evolução administrativa em revisão local: `codex/painel-profissional`, com
+Evolução administrativa aprovada e publicada pelo PR #1, mesclado na `main`, com
 cadastro completo de empresas/produtos/serviços, imagens e ordenação, edição de
 textos/títulos, seis cores e até doze vitrines com prévia, proteção contra perda
 de edição e reforço de sessão/MFA. 87 unitários e sete suítes SQL no banco real
-aprovados; **as duas migrações candidatas e o novo Worker ainda não foram
-publicados**. Evidências e validação humana pendente em
-`PAINEL-PROFISSIONAL-2026-10-16.md`.
+aprovados; Auth real com sessão revogada/TOTP, Storage HTTP e login online/local
+também conferidos. A prévia normal na porta 3002 usa o backend real. Evidências
+e versões em `PUBLICACAO-PAINEL-2026-10-17.md`; ensaio anterior em
+`PAINEL-PROFISSIONAL-2026-10-16.md`. A revisão final constatou permissões
+excessivas em seis helpers internos do legado, segregadas para correção por
+migração adicional. Isso impede tratar a auditoria de segurança como encerrada.
 
 ### Candidato local de 15/10/2026
 

@@ -6,12 +6,15 @@ O destino de publicação é **Cloudflare Workers**, autorizado pelo usuário.
 A aplicação continua em **TanStack Start** e o backend continua no **Supabase**.
 O adaptador Nitro/Vercel foi substituído pela integração oficial Cloudflare/Vite.
 O resultado medido da publicação está em `CLOUDFLARE-2026-10-16.md`.
+A atualização aprovada do painel e da aparência está online desde 17/10/2026:
+fonte `02fa5b2`, Worker `b5129bd3-46ec-4d5a-a97c-d43e61f3b5a5`, com 100% do
+tráfego. Ver `PUBLICACAO-PAINEL-2026-10-17.md`.
 
 | camada | destino |
 | --- | --- |
 | App SSR + assets | Worker `service-guide` no Cloudflare |
 | Banco, Auth, RLS, Realtime | Supabase `taabjnmsaaltsiehywbw`, preservado |
-| Mídia | Assets do projeto / URLs HTTPS existentes; nenhum R2 provisionado |
+| Mídia | Assets / URLs HTTPS e Supabase Storage `guide-media` (até 5 MiB por imagem); nenhum R2 provisionado |
 | Código | `https://github.com/GarciaCarlos1985/service`, `main` |
 
 Nenhum plano pago foi contratado. O serviço continua sujeito às cotas da conta.

@@ -1,6 +1,6 @@
 # ADMIN — SERVICE
 
-## Operação atual do Service Guide (16/10/2026)
+## Operação atual do Service Guide (17/10/2026)
 
 O painel comercial está em `/admin`. A entrada pode ser feita em
 `/entrar?redirect=%2Fadmin`, com a senha já cadastrada no Supabase Auth.
@@ -9,6 +9,10 @@ No site publicado, a entrada direta é
 `https://service-guide.helon280.workers.dev/entrar?redirect=%2Fadmin`.
 Em caso de esquecimento, use `/recuperar-senha`: o link recebido retorna ao site
 publicado e permite definir a nova senha. As senhas reais foram preservadas.
+Use a senha cadastrada no Service Guide para esse e-mail. Estar conectado ao
+Gmail ou ao Chrome não autentica no guia; o provedor Google OAuth está desativado.
+A prévia normal `http://127.0.0.1:3002` usa o mesmo Supabase real. O laboratório
+anterior tinha contas fictícias e não aceitava as credenciais dos titulares.
 As ações comerciais verificam `profiles.is_admin` no banco por `_is_admin()` e
 `guide_private.require_user(true)`; metadados editáveis do usuário não concedem
 acesso. Ver `ATIVACAO-SUPABASE-2026-10-16.md` para a validação.
@@ -17,9 +21,9 @@ O catálogo real ainda precisa de categorias, bairros e empresas. O painel
 permite essa configuração e a gestão manual dos planos/destaques. Os módulos
 financeiros descritos no histórico abaixo continuam fora do MVP comercial.
 
-## Painel profissional — candidato em revisão
+## Painel profissional — publicado
 
-A evolução na branch `codex/painel-profissional` prioriza cadastrar empresas,
+A evolução aprovada no PR #1, mesclada na `main`, prioriza cadastrar empresas,
 produtos e serviços. Acrescenta editor com prévia e Salvar/Voltar persistentes,
 cadastro auxiliar de categoria/bairro, duplicação como rascunho, busca de
 empresa, upload de imagens, ocultação e ordenação por arraste ou botões.
@@ -34,11 +38,14 @@ Também inclui
 segurança TOTP opcional pelo titular e gestão auditada de acesso, com confirmação
 recente de senha ou autenticador e impedimento de autorremoção.
 
-As duas migrações candidatas reforçam sessão ativa e MFA quando configurado,
+As duas migrações aplicadas reforçam sessão ativa e MFA quando configurado,
 inclusive no predicado administrativo legado, e acrescentam validação da
 personalização. As vitrines públicas não expõem rascunhos, chamadas desativadas
-ou empresas sem elegibilidade. **Esse candidato ainda não foi publicado.**
-Ver `PAINEL-PROFISSIONAL-2026-10-16.md` para resultados, limitações e liberação.
+ou empresas sem elegibilidade. O novo Worker está publicado e o acesso foi
+conferido no navegador online e local com conta temporária, removida ao concluir.
+Ver `PUBLICACAO-PAINEL-2026-10-17.md` para resultados e limitações, inclusive
+permissões excessivas em helpers internos legados que exigem correção adicional.
+O ensaio de interface anterior está em `PAINEL-PROFISSIONAL-2026-10-16.md`.
 
 ## Referência histórica do marketplace
 
