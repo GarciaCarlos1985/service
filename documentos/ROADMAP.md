@@ -21,6 +21,17 @@ e versões em `PUBLICACAO-PAINEL-2026-10-17.md`; ensaio anterior em
 excessivas em seis helpers internos do legado, segregadas para correção por
 migração adicional. Isso impede tratar a auditoria de segurança como encerrada.
 
+### Extensão em revisão — cadastro de empresas (17/10/2026)
+
+Logotipo, semana de funcionamento por dia, intervalos, 24 horas, validação de
+conflitos e apresentação pública foram adicionados ao candidato local. O editor
+mantém as ações de salvar/voltar fora da rolagem e elimina a criação duplicada
+na visão geral. 104 testes unitários e nove suítes SQL transacionais no banco
+real passaram; builds de laboratório/produção e verificação de segredos também.
+Não altera o estado publicado acima: a migração de identidade/horários e o PR #2
+de permissões internas dependem de aprovação. Evidências e limites em
+`CADASTRO-EMPRESAS-2026-10-17.md`.
+
 ### Auditoria de segurança em revisão — 17/10/2026
 
 O PR #2 foi ampliado: fechamento da API antiga, grants diretos e padrões de

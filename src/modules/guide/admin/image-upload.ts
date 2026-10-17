@@ -19,24 +19,39 @@ export function imageExtension(header: Uint8Array): 'jpg' | 'png' | 'webp' | 'av
   if (text.slice(4, 8) === 'ftyp' && ['avif', 'avis'].includes(text.slice(8, 12))) return 'avif'
   return null
 }
-export async function uploadCompanyImage(file: File, companyId: string, companyName: string) {
+export async function validateCompanyImage(file: File) {
   if (file.size < 12 || file.size > 5 * 1024 * 1024)
     throw new Error('Cada imagem precisa ter até 5 MB.')
   const extension = imageExtension(new Uint8Array(await file.slice(0, 16).arrayBuffer()))
   if (!extension)
     throw new Error('Use uma imagem JPG, PNG, WebP ou AVIF. SVG e outros arquivos não são aceitos.')
+  return extension
+}
+export async function uploadCompanyAsset(file: File, companyId: string, mediaId: string) {
+  const extension = await validateCompanyImage(file)
   const mime = extension === 'jpg' ? 'image/jpeg' : 'image/' + extension
   const storage = getSupabase().storage.from('guide-media')
-  const mediaId = crypto.randomUUID()
   const name = `${companyId}/${mediaId}.${extension}`
   const uploaded = await storage.upload(name, file, {
     contentType: mime,
     upsert: false,
     cacheControl: '31536000',
   })
-  if (uploaded.error)
+  const alreadyUploaded =
+    uploaded.error &&
+    (uploaded.error.statusCode === '409' ||
+      (uploaded.error.statusCode === '400' &&
+        uploaded.error.message.toLowerCase().includes('already exists')))
+  // O UUID pertence ao arquivo selecionado; repetir um envio incerto não substitui outra imagem.
+  if (uploaded.error && !alreadyUploaded)
     throw new Error('Não foi possível enviar a imagem. Confira a conexão e tente novamente.')
   const url = storage.getPublicUrl(name).data.publicUrl
+  return { url, name }
+}
+export async function uploadCompanyImage(file: File, companyId: string, companyName: string) {
+  const mediaId = crypto.randomUUID()
+  const { url, name } = await uploadCompanyAsset(file, companyId, mediaId)
+  const storage = getSupabase().storage.from('guide-media')
   const alt = file.name
     .replace(/\.[^.]+$/, '')
     .replace(/[_-]/g, ' ')

@@ -47,6 +47,21 @@ Ver `PUBLICACAO-PAINEL-2026-10-17.md` para resultados e limitações, inclusive
 permissões excessivas em helpers internos legados que exigem correção adicional.
 O ensaio de interface anterior está em `PAINEL-PROFISSIONAL-2026-10-16.md`.
 
+## Cadastro de empresas — candidato para revisão
+
+A extensão local de 17/10 acrescenta logotipo próprio no cadastro, separado da
+galeria, e semana de funcionamento com dias abertos/fechados, até três intervalos,
+pausa, 24 horas e atendimento que termina no dia seguinte. Mantém texto de
+horário antigo e campos opcionais sem inventar rotina. A RPC valida a semana e
+a origem do arquivo antes de gravar. O público apresenta a marca e os horários.
+O editor mantém uma única ação global “Nova empresa”, navegação por seções e
+Salvar/Voltar fora da área rolável dos campos.
+
+Essa extensão depende da migração
+`20261017132355_guide_company_identity_hours.sql`, ainda sem aplicação em produção.
+O PR #2 de permissões internas também permanece separado, aguardando aprovação.
+Ver `CADASTRO-EMPRESAS-2026-10-17.md` para validação e limites do candidato.
+
 ## Referência histórica do marketplace
 
 Painel administrativo: central operacional, não CRUD (spec §35). Poder não
