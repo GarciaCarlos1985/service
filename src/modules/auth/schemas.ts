@@ -8,7 +8,7 @@ export const emailSchema = z
 
 export const passwordSchema = z
   .string()
-  .min(8, 'A senha precisa de pelo menos 8 caracteres.')
+  .min(12, 'A senha precisa de pelo menos 12 caracteres.')
   .max(72, 'A senha pode ter no máximo 72 caracteres.')
 
 export const signUpSchema = z.object({
