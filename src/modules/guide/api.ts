@@ -19,11 +19,17 @@ export async function guideRpc(
   signal?: AbortSignal,
 ): Promise<unknown> {
   const request = getSupabase().rpc(name, args)
-  const result: { data: unknown; error: { message: string; code: string } | null } = await (signal
-    ? request.abortSignal(signal)
-    : request)
+  const result: { data: unknown; error: { message: string; code: string; hint?: string } | null } =
+    await (signal ? request.abortSignal(signal) : request)
   if (result.error) {
     const { code, message } = result.error
+    if (result.error.hint === 'MFA_REQUIRED')
+      throw new GuideError('Confirme o código do autenticador para continuar.', 'MFA_REQUIRED')
+    if (result.error.hint === 'REAUTH_REQUIRED')
+      throw new GuideError(
+        'Confirme sua senha ou autenticador novamente para alterar acessos.',
+        'REAUTH_REQUIRED',
+      )
     if (code === 'PGRST202' || code === '42883')
       throw new GuideError(
         'O guia está sendo preparado. Tente novamente em breve.',
@@ -32,6 +38,21 @@ export async function guideRpc(
     if (code === '42501')
       throw new GuideError('Entre com uma conta autorizada para continuar.', 'FORBIDDEN')
     if (code === 'P0001') throw new GuideError(message, 'VALIDATION')
+    if (code === '23505')
+      throw new GuideError(
+        'Já existe um cadastro com esse nome ou endereço na URL. Revise o campo e tente novamente.',
+        'DUPLICATE',
+      )
+    if (code === '23514' || code === '23502' || code === '22P02')
+      throw new GuideError(
+        'Revise os campos obrigatórios, o formato dos dados e os limites do cadastro.',
+        'VALIDATION',
+      )
+    if (code === '23503')
+      throw new GuideError(
+        'Um cadastro relacionado mudou. Atualize as opções e tente novamente.',
+        'VALIDATION',
+      )
     throw new GuideError('Não foi possível concluir. Tente novamente.', code)
   }
   return result.data

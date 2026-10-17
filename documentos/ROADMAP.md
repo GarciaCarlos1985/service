@@ -10,6 +10,14 @@ Status atual (2026-10-16): **site publicado no Cloudflare; fundação comercial
 aplicada e testada no Supabase real, com legado preservado.** Catálogo vazio,
 aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 
+Evolução administrativa em revisão local: `codex/painel-profissional`, com
+cadastro completo de empresas/produtos/serviços, imagens e ordenação, edição de
+textos/títulos, seis cores e até doze vitrines com prévia, proteção contra perda
+de edição e reforço de sessão/MFA. 87 unitários e sete suítes SQL no banco real
+aprovados; **as duas migrações candidatas e o novo Worker ainda não foram
+publicados**. Evidências e validação humana pendente em
+`PAINEL-PROFISSIONAL-2026-10-16.md`.
+
 ### Candidato local de 15/10/2026
 
 A interface do pacote foi adaptada ao TanStack Start existente, com Supabase

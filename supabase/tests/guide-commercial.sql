@@ -45,11 +45,12 @@ begin
   assert (select count(*)=3 from public.profiles where id=any(array[admin_id,consumer_id,other_id])), 'Trigger de perfil falhou';
   assert not exists(select 1 from public.profiles where id=any(array[admin_id,consumer_id,other_id]) and is_admin), 'Metadados concederam privilégio administrativo';
   assert (select phone='5569999990000' from public.profiles where id=consumer_id), 'Telefone não preservado pelo trigger';
+  insert into auth.sessions(id,user_id,created_at,updated_at) select id,id,now(),now() from unnest(array[admin_id,consumer_id,other_id]) id;
   update public.profiles set is_admin=true where id=admin_id;
   raise notice 'OK: trigger real de Auth preserva telefone e rejeita elevação por metadados';
 
   perform set_config('request.jwt.claim.sub',admin_id::text,true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',admin_id,'role','authenticated','email',admin_id::text||'@example.test')::text,true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',admin_id,'session_id',admin_id,'role','authenticated','email',admin_id::text||'@example.test')::text,true);
   set local role authenticated;
   perform public.guide_admin_save('category',jsonb_build_object('id',category_id,'name','Categoria transacional','slug','teste-'||category_id,'icon','House'));
   perform public.guide_admin_save('neighborhood',jsonb_build_object('id',neighborhood_id,'name','Bairro transacional '||neighborhood_id,'city_id',city_id));
@@ -82,20 +83,20 @@ begin
   raise notice 'OK: negação de leitura direta, helpers, administração e escrita anônima';
 
   perform set_config('request.jwt.claim.sub',consumer_id::text,true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',consumer_id,'role','authenticated')::text,true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',consumer_id,'session_id',consumer_id,'role','authenticated')::text,true);
   set local role authenticated;
   begin perform public.guide_admin_save('category','{}'); raise exception 'Consumidor administrou'; exception when insufficient_privilege then null; end;
   perform public.guide_toggle_favorite(jsonb_build_object('company_id',company_id,'user_id',other_id));
   result:=public.guide_me();
   assert result->'favorites' @> jsonb_build_array(company_id), 'Favorito do consumidor ausente';
   perform set_config('request.jwt.claim.sub',other_id::text,true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',other_id,'role','authenticated')::text,true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',other_id,'session_id',other_id,'role','authenticated')::text,true);
   result:=public.guide_me();
   assert not (result->'favorites' @> jsonb_build_array(company_id)), 'Favorito transferido para outro usuário';
   raise notice 'OK: consumidor não administra e favoritos respeitam o usuário verificado';
 
   perform set_config('request.jwt.claim.sub',consumer_id::text,true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',consumer_id,'role','authenticated')::text,true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',consumer_id,'session_id',consumer_id,'role','authenticated')::text,true);
   perform public.guide_review(jsonb_build_object('company_id',company_id,'rating',5,'comment','Avaliação transacional que será revertida.'));
   result:=public.guide_search(jsonb_build_object('companyId',company_id));
   assert jsonb_array_length(result->'reviews')=0, 'Avaliação sem moderação publicada';
@@ -107,7 +108,7 @@ begin
   update public.company_subscriptions s set starts_at=starts_at-interval '1 second' where s.company_id=guide_test.company_id and s.ends_at is null;
 
   perform set_config('request.jwt.claim.sub',admin_id::text,true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',admin_id,'role','authenticated')::text,true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',admin_id,'session_id',admin_id,'role','authenticated')::text,true);
   set local role authenticated;
   perform public.guide_admin_save('review',jsonb_build_object('id',review_id,'status','published'));
   perform public.guide_admin_save('company',company_payload||jsonb_build_object('plan_id',premium_plan));
@@ -122,7 +123,7 @@ begin
 
   perform public.guide_admin_save('user',jsonb_build_object('id',consumer_id,'status','blocked'));
   perform set_config('request.jwt.claim.sub',consumer_id::text,true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',consumer_id,'role','authenticated')::text,true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',consumer_id,'session_id',consumer_id,'role','authenticated')::text,true);
   begin perform public.guide_contact(jsonb_build_object('company_id',company_id,'message','Não deve ser aceita.')); raise exception 'Usuário bloqueado escreveu'; exception when insufficient_privilege then null; end;
   assert public.guide_me() is null, 'Sessão bloqueada continua autorizada';
   raise notice 'OK: bloqueio de usuário impede novas ações';

@@ -22,6 +22,16 @@ colors:
   master-ink: "#3a2a11"
   premium-muted: "#c5d7e7"
   destructive: "#b42318"
+  admin-muted: "#52677d"
+  admin-field-border: "#b7c7d8"
+  admin-field-ink: "#16324c"
+  admin-button-hover: "#174d79"
+  site-primary: "#005cc5"
+  site-navy: "#0b2948"
+  site-accent: "#a2e579"
+  site-background: "#ffffff"
+  site-surface: "#f1f6fa"
+  site-badge: "#e9cc7a"
 typography:
   display:
     fontFamily: "Manrope, Arial, sans-serif"
@@ -129,6 +139,20 @@ components:
   navigation:
     textColor: "{colors.foreground}"
     typography: "{typography.label}"
+  admin-button-primary:
+    backgroundColor: "{colors.premium-ink}"
+    textColor: "{colors.background}"
+    typography: "{typography.label}"
+    rounded: "{rounded.control}"
+    height: "48px"
+  admin-button-primary-hover:
+    backgroundColor: "{colors.admin-button-hover}"
+  admin-input:
+    backgroundColor: "{colors.background}"
+    textColor: "{colors.admin-field-ink}"
+    rounded: "{rounded.field}"
+    padding: "11px 12px"
+    height: "48px"
 ---
 
 # Design System: Service Guide
@@ -145,6 +169,8 @@ Este registro mescla as decisões confirmadas do sistema anterior com o código 
 
 A revisão `.impeccable/review/premium/finish-review.md` preserva o parecer inicial `fix` e registra adendo `ship` para as duas correções visuais: autenticação e categorias abaixo dos nomes. A pendência documental desse parecer é atendida por este registro e pelo sidecar. As oito capturas em `.impeccable/review/premium/` são recortes de viewport ou estados após rolagem: desktop de 1440 reduzido nativamente a 600, mobile de 390 × 640 e `user-614` de 614 × 672; nenhuma captura é de página inteira. O adendo não certifica independentemente medições computadas de hover/foco, CRUD autenticado, banco remoto ou produção. Gates e procedência comunicados pelo agente principal constam no sidecar; esta documentação não abre nova auditoria.
 
+A extensão administrativa e sua personalização final de 16/10/2026 foram registradas a partir de `src/styles/guide-admin.css`, `src/modules/guide/screens/Admin.tsx` e `src/modules/guide/admin/`. É uma evolução Operate da identidade existente, com prioridade em cadastrar empresas, produtos e serviços. Seu contrato e medidas de superfície ficam em `.impeccable/surfaces/admin-workspace.md`. O painel documentado é candidato local na branch `codex/painel-profissional`; este registro não declara aplicação de migração nem publicação em produção.
+
 **Key Characteristics:**
 
 - Logo azul/verde original e Manrope local mantêm continuidade.
@@ -152,6 +178,7 @@ A revisão `.impeccable/review/premium/finish-review.md` preserva o parecer inic
 - Fotografias grandes e cartões com variantes comum e Premium Guide.
 - Categoria como informação de apoio abaixo do nome da empresa.
 - Refluxo móvel, navegação inferior, movimento reduzido e estados explícitos.
+
 
 ## Colors
 
@@ -176,6 +203,10 @@ Azul orienta ações gerais; marinho profundo sustenta a expressão premium; ver
 - **Texto premium suave** (`premium-muted`): metadados e descrição sobre cartões marinho.
 - **Linhas** (`border`, `card-border`): campos e cartões, respectivamente.
 - **Superfícies claras** (`surface-soft`, `field-soft`, `brand-soft`): painéis, autenticação e filtros. O erro usa `destructive` com mensagem textual.
+- **Leitura administrativa** (`admin-muted`, `admin-field-ink`, `admin-field-border`): ajuda, texto e contorno dos campos do editor, configurações e segurança. A ação administrativa reutiliza marinho premium e recebe hover próprio (`admin-button-hover`). A lateral marinho é estrutura de navegação; não indica patrocínio. Champanhe continua reservado ao selo patrocinado.
+
+
+**Paleta pública configurável.** O tema público configurável tem seis papéis normativos (`site-primary`, `site-navy`, `site-accent`, `site-background`, `site-surface`, `site-badge`); seus valores iniciais vêm de `defaultTheme`, aplicados pelos overrides de tema sobre a base premium preservada. Aceita apenas hexadecimal de seis dígitos. As tintas de texto e link são derivadas por contraste; título e sugestões acompanham a tinta calculada do marinho, inclusive quando esse fundo é branco. Vitrines fotográficas conservam texto claro próprio sobre sua camada escura. A personalização pública não recolore o espaço operacional administrativo.
 
 **The Cor com Função Rule.** Patrocínio e reputação têm evidências separadas: dourado e marinho acompanham o selo textual, nunca substituem avaliações.
 
@@ -197,13 +228,17 @@ Azul orienta ações gerais; marinho profundo sustenta a expressão premium; ver
 
 **The Leitura Antes da Densidade Rule.** Reduza colunas e reorganize controles ao adaptar, preservando nomes, rótulos e ações visíveis.
 
+Na administração, a mesma Manrope usa título principal (`2rem`, altura `1.2`), reduzido a (`1.75rem`) até 1100px e (`1.5rem`) até 600px. Títulos de seção usam (`1.5rem`), móvel (`1.25rem`); legendas de grupos usam (`1.0625rem`, peso `800`). Campos de edição usam (`15px`, peso `400`), rótulos (`14px`, peso `700`) e ajuda (`12px`, altura `1.6`). Essa escala operacional não herda o display da busca pública.
+
 ## Layout
 
 O contêiner amplo usa `min(1344px, calc(100% - 96px))`, até 1180px mantém (`32px`) laterais e até 640px (`20px`). O cabeçalho mede (`116px`) no desktop e (`94px`) no celular. A logo ocupa caixa (`224 × 112px`) e móvel (`172 × 90px`), sem distorção; no rodapé (`180 × 102px`), móvel (`170 × 96px`).
 
 A busca premium organiza texto e vitrine em duas colunas quando há fotografia de empresa destacada; até 720px empilha. A vitrine é omitida quando não há empresa elegível com imagem. Categorias preservam rolagem horizontal nas faixas estreitas. A grade comercial conserva três colunas, duas até 950px e uma até 640px; seus intervalos finais são (`28px`), até 1180px (`22px`) e móvel (`24px`). Capas comuns usam altura (`222px`) e proporção móvel (`16/9`); capas Premium Guide usam (`258px`) e móvel (`242px`).
 
-No perfil, contato lateral aderente no desktop passa ao fluxo vertical no celular. Ajuda passa a uma coluna até 800px. Administração preserva lateral (`210px`) e intervalo (`32px`), tornando-se horizontal rolável até 1050px; tabelas e diálogos longos conservam rolagem própria. Não promover a composição de vitrine da descoberta a exigência de todas as telas.
+No perfil, contato lateral aderente no desktop passa ao fluxo vertical no celular. Ajuda passa a uma coluna até 800px. Não promover a composição de vitrine da descoberta a exigência de todas as telas.
+
+O painel administrativo usa contêiner `min(1440px, calc(100% - 64px))`, lateral (`230px`) e intervalo (`32px`). Até 1100px reduz a lateral a (`200px`) e o intervalo a (`22px`); até 850px troca a lateral por seletor de áreas e converte tabelas em registros verticais, preservando nome, situação e ações. Até 600px mantém margens laterais de (`16px`). Formulários organizam campos em duas colunas com intervalo (`20px`), passando a uma até 600px. Espaçamento entre grupos, linhas e painéis usa os passos existentes, sobretudo (`8px`, `12px`, `20px`, `24px`).
 
 **Área segura.** Navegação inferior fixa e consentimento reservam espaço com `env(safe-area-inset-bottom)`; o rodapé móvel premium usa base (`108px`) mais área segura. O consentimento permanece acima da navegação.
 
@@ -235,6 +270,7 @@ Ações legíveis com texto, ícone SVG auxiliar e estados explícitos.
 - **WhatsApp:** usa cor convencional fora do contato premium; painel Premium Guide usa verde claro e tinta escura.
 - **Auth:** login, cadastro e recuperação compartilham `GuideAuthLayout`. Submit sólido marinho com texto branco e hover marinho mais claro, mantendo altura herdada (`44px`), texto (`14px`) e raio (`12px`); regras scoped fora de layers removem o gradiente legado e vencem utilities sem alterar handlers. Contrastes informados pelo agente principal: normal (`14.74:1`), hover (`8.86:1`), placeholders sobre branco (`5.98:1`).
 - **Focus / Disabled:** contorno do guia (`3px`), afastamento (`3px`), azul (`#2078d3`) em fundos claros; verde claro (`#c8f2a9`) na busca, cartão e cabeçalho premium. Primitivos Radix/Tailwind podem conservar seu anel próprio. Desabilitado usa opacidade e cursor apropriados.
+- **Admin:** ação principal marinho, mínimo (`48px`) e cantos de controle; foco de botão azul (`#2376cb`, `3px`, afastamento `3px`). Botões de mover no celular conservam altura mínima (`44px`).
 
 ### Chips
 
@@ -250,9 +286,23 @@ Favorito circular (`44px`) inclui nome da empresa no nome acessível e `aria-pre
 
 Campos nomeados, brancos e contornados, com leitura (`16px`) e `min-width: 0`; readonly suave, erro textual e textarea redimensionável. Busca é exceção compacta (`15px` desktop, `14px` móvel), preserva nome acessível e ação de limpar nomeada. Placeholders de autenticação usam a tinta `muted` com opacidade (`1`), não o tom tênue legado.
 
+Editores, configurações e TOTP administrativos usam os tokens `admin-input`, altura mínima em vez de altura fixa e foco azul (`#297bc8`, `2px`, afastamento `2px`). Textareas crescem verticalmente. Erros aparecem em texto com anúncio acessível; o contorno de erro acompanha `aria-invalid` no editor. Seletores de empresa mantêm pesquisa e contexto explícito.
+
 ### Navigation
 
 Cabeçalho com marca original, links textuais e conta sólida marinho; página atual por `aria-current` e atalho para conteúdo. Até 1180px o convite comercial sai do cabeçalho; no celular links auxiliares cedem lugar à barra inferior de quatro itens com ícone SVG e texto. Cada item móvel conserva mínimo (`48px`) de altura e (`64px`) de largura. Ajuda vira Painel para administrador; a navegação administrativa preserva seleção azul suave.
+
+Na lateral administrativa marinho, a seleção usa fundo azul muito claro e texto azul escuro; ícones SVG acompanham rótulos. O seletor móvel nomeia a área atual, sem depender de rolagem horizontal para descobrir seções.
+
+### Administrative editing and ordering
+
+Editores amplos agrupam campos por assunto, com descrições e prévia textual; diálogos usam largura máxima (`920px`) para cadastro e (`760px`) para ordenação, rolagem vertical própria e limites baseados em `100dvh`. Salvar e Voltar permanecem na barra aderente do diálogo. Alterações não salvas pedem decisão ao sair; erros mantêm o contexto de edição e o estado de salvamento fica explícito.
+
+**The Ação ao Alcance Rule.** Barras de diálogo e de configurações têm contextos próprios de posicionamento. Nas configurações, a barra é aderente (`position: sticky`, `bottom: 0`) no desktop; até 800px é fixa (`position: fixed`), acima da navegação inferior (`bottom: calc(76px + env(safe-area-inset-bottom))`), com laterais (`clamp(16px, 4vw, 32px)`) e camada (`z-index: 35`). O formulário reserva (`calc(208px + env(safe-area-inset-bottom))`) para as ações. Os offsets negativos dos diálogos não se aplicam ao formulário da página.
+
+Ordenação combina alça de arraste, posição numérica e botões nomeados para mover acima/abaixo por toque ou teclado. O feedback de destino transita fundo em (`160ms ease-out`), removido com movimento reduzido. Mudança local anuncia a ordem pendente; Salvar aplica a ordem, Voltar preserva a decisão sobre alterações não salvas.
+
+A apresentação do site organiza Textos, Cores e Vitrines em três abas; a faixa tem altura automática, e os gatilhos móveis têm mínimo de (`72px`). Campos, seletores e fieldsets podem encolher (`min-width: 0`); controles respeitam a largura disponível (`max-width: 100%`). Checkbox e seu rótulo ficam em linha. No desktop, os campos ficam à esquerda e a prévia à direita. Até 1100px, a prévia começa recolhida; um botão com estado expandido a abre no fluxo. Com múltiplas chamadas manuais, o seletor da prévia permite inspecionar qualquer uma, inclusive desativada. Abrir a prévia ou trocar essa seleção não publica alterações. Salvar configurações publica; a gravação transporta a revisão atual para detectar conflito. Os treze textos têm limites explícitos, sugestões de busca têm edição própria e as seis cores oferecem seletor, HEX e restauração. Vitrines mantêm modo automático ou até doze chamadas manuais, imagem da galeria/HTTPS, ativação individual, ordenação por arraste e botões/teclado, sem autoplay. Sua exibição pública independe dos filtros de busca e depende da elegibilidade da empresa. Segurança apresenta a conta do titular, configuração TOTP e mensagens distintas de confirmação/erro; não usa aparência de conta protegida como substituto da confirmação do autenticador.
 
 ### Premium Guide and evidence states
 
@@ -269,6 +319,7 @@ Exemplos DEV são rotulados no catálogo, vitrine e perfil; contatos e avaliaç�
 - **Do** apresentar categoria abaixo do nome e patrocínio explicitamente rotulado.
 - **Do** manter foco visível, controles nomeados, movimento reduzido e área segura.
 - **Do** distinguir dados comerciais reais, exemplos e ausência de dados.
+- **Do** preservar contexto da empresa, alternativa de teclado à ordenação e ações de salvamento acessíveis acima da navegação móvel.
 
 ### Don't:
 
@@ -277,5 +328,8 @@ Exemplos DEV são rotulados no catálogo, vitrine e perfil; contatos e avaliaç�
 - **Don't** restaurar gradiente de autenticação, placeholders tênues ou categorias como kickers acima do título.
 - **Don't** adicionar autoplay à vitrine ou reutilizar medidas superadas ignorando a cascata final.
 - **Don't** tratar aprovação visual local como validação de CRUD autenticado, banco remoto ou produção.
+- **Don't** compartilhar offsets de diálogos com barras de formulários de página nem usar champanhe para estados administrativos comuns.
 
 Não canonizado: a declaração de tinta premium (`#18334f`) superada pela regra sem layer, valores isolados e variáveis sem aplicação, padrões do legado fora do guia e as antigas categorias como eyebrows e controles de autenticação de baixo contraste, corrigidos no lote final; defeitos de craft não constituem linguagem a herdar. Os backups completos do sistema anterior estão em `documentos/referencias/DESIGN-antes-premium-2026-10-15.md` e `design-antes-premium-2026-10-15.json`.
+
+Na extensão administrativa, não canonizados: variáveis sem uso como `--admin-ink`, tons isolados como novos tokens e a antiga barra de configurações encoberta pela navegação inferior, corrigida no lote final. Também não canonizados: overflow intrínseco de seletores/fieldsets, abas de altura insuficiente, checkbox empilhado, prévia móvel longa obrigatória ou tintas ilegíveis ao personalizar o marinho. São defeitos corrigidos, não linguagem visual a herdar. O cálculo localizado de contraste e o parecer visual não certificam conformidade WCAG global ou produção.

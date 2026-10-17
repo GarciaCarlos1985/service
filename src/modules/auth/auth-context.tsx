@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { getSupabase } from '~/lib/supabase'
@@ -22,6 +23,8 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient()
+  const previousUser = useRef<string | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -35,7 +38,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+    } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      const currentUser = currentSession?.user.id ?? null
+      if (
+        event === 'SIGNED_OUT' ||
+        (previousUser.current && previousUser.current !== currentUser)
+      ) {
+        queryClient.removeQueries({
+          predicate: (query) =>
+            typeof query.queryKey[0] === 'string' && query.queryKey[0].startsWith('guide-'),
+        })
+      }
+      if (event === 'MFA_CHALLENGE_VERIFIED' || event === 'TOKEN_REFRESHED') {
+        void queryClient.invalidateQueries({ queryKey: ['guide-assurance'] })
+      }
+      previousUser.current = currentUser
       setSession(currentSession)
       setIsLoading(false)
     })
@@ -43,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, [queryClient])
 
   async function signUp(input: {
     fullName: string

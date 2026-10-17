@@ -22,6 +22,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react'
 import { PremiumBadge } from './Premium'
+import { useSitePresentation } from '../site-presentation-context'
 import {
   Select,
   SelectContent,
@@ -140,6 +141,7 @@ export function Header({ viewer }: { viewer?: Viewer | null }) {
   )
 }
 export function Footer() {
+  const presentation = useSitePresentation()
   return (
     <footer className="site-footer wrap">
       <div>
@@ -152,7 +154,7 @@ export function Footer() {
             loading="lazy"
           />
         </a>
-        <p>O comércio local, mais perto de você.</p>
+        <p>{presentation.footerTagline}</p>
       </div>
       <div className="footer-links">
         <a href="/ajuda">Ajuda e contato</a>
@@ -336,6 +338,7 @@ export function useCatalog(initial?: Catalog | null, companyId?: string, fetchCa
     enabled: !preview && !isLoading && !!user,
     retry: false,
     staleTime: 0,
+    refetchOnWindowFocus: true,
   })
   const catalogQuery = useQuery({
     queryKey: ['guide-catalog', companyId, preview],

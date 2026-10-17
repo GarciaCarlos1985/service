@@ -43,7 +43,7 @@ function Home() {
     ]),
   )
   return (
-    <GuideShell>
+    <GuideShell presentation={data?.presentation}>
       <Directory initialData={data} initialQuery={query} />
     </GuideShell>
   )

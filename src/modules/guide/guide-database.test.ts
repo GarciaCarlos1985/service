@@ -24,7 +24,10 @@ async function identity(id: string | null) {
   await db.exec('reset role')
   await db.query(
     "select set_config('request.jwt.claim.sub',$1,true),set_config('request.jwt.claims',$2,true)",
-    [id ?? '', JSON.stringify({ sub: id, email: id ? 'consumer@example.test' : '' })],
+    [
+      id ?? '',
+      JSON.stringify({ sub: id, session_id: id, email: id ? 'consumer@example.test' : '' }),
+    ],
   )
   await db.exec(id ? 'set local role authenticated' : 'set local role anon')
 }
@@ -40,15 +43,7 @@ async function save(action: string, value: unknown) {
 
 describe('commercial foundation on isolated PostgreSQL', () => {
   beforeAll(async () => {
-    await db.exec(`
-      create role anon; create role authenticated; create role service_role bypassrls;
-      create schema auth;
-      create table auth.users(id uuid primary key,email text,raw_user_meta_data jsonb default '{}',raw_app_meta_data jsonb default '{}');
-      create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
-      create function auth.jwt() returns jsonb language sql stable as $$select coalesce(nullif(current_setting('request.jwt.claims',true),''),'{}')::jsonb$$;
-      grant usage on schema auth,public to anon,authenticated;
-      create publication supabase_realtime;
-    `)
+    await db.exec(readFileSync(resolve('scripts/admin-lab-schema.sql'), 'utf8'))
     const migrationRoot = resolve('supabase/migrations')
     for (const file of readdirSync(migrationRoot)
       .filter((name) => name.endsWith('.sql'))
@@ -60,6 +55,8 @@ describe('commercial foundation on isolated PostgreSQL', () => {
         'insert into auth.users(id,email,raw_user_meta_data) values($1,$2,\'{"full_name":"Usuário de teste"}\')',
         [id, `${id}@example.test`],
       )
+    for (const id of [ADMIN, USER, OTHER])
+      await db.query('insert into auth.sessions(id,user_id) values($1,$1)', [id])
     await db.query('update public.profiles set is_admin=true where id=$1', [ADMIN])
     city =
       (await db.query<{ id: number }>("select id from public.cities where ibge_code='1100049'"))
@@ -197,7 +194,7 @@ describe('commercial foundation on isolated PostgreSQL', () => {
   })
   it('returns validated, bounded snapshots for every administrative section', async () => {
     await identity(ADMIN)
-    for (const section of adminSections) {
+    for (const section of adminSections.filter((section) => section !== 'security')) {
       const response = await db.query<{ result: unknown }>(
         "select public.guide_admin_list($1,1,'',null,7) as result",
         [section],

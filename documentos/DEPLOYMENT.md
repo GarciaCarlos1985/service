@@ -17,6 +17,14 @@ O resultado medido da publicação está em `CLOUDFLARE-2026-10-16.md`.
 Nenhum plano pago foi contratado. O serviço continua sujeito às cotas da conta.
 Staging remoto e integração automática Workers Builds não foram provisionados.
 
+O PR do painel identificou uma integração Git legada da Vercel ainda ativa:
+ela criou uma prévia automática ao receber o candidato. O arquivo `vercel.json`
+passa a definir `git.deploymentEnabled: false`, bloqueando novas publicações
+automáticas por esse provedor. O efeito segue a configuração por commit/branch;
+a integração instalada e os endereços antigos continuam existentes. O Worker
+oficial mantém a liberação manual após validação humana. Referência:
+[Git Configuration da Vercel](https://vercel.com/docs/project-configuration/git-configuration).
+
 ## Preparar e validar
 
 Requisito: Node.js 24 ou superior. Em um checkout limpo:
