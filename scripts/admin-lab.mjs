@@ -27,6 +27,13 @@ try {
     await db.query(
       fs.readFileSync('supabase/migrations/20261017005400_guide_site_customization.sql', 'utf8'),
     )
+  await db.query(
+    fs.readFileSync(
+      'supabase/migrations/20261017130133_guide_internal_rpc_permissions.sql',
+      'utf8',
+    ),
+  )
+  await db.query(fs.readFileSync('supabase/tests/guide-internal-permissions.sql', 'utf8'))
   for (const file of [
     'rls-security.sql',
     'ledger-tests.sql',
