@@ -115,7 +115,7 @@ export function UpdatePasswordForm() {
       <div className="text-center">
         <h1 className="text-2xl font-bold text-slate-900">Definir nova senha</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Escolha uma senha com pelo menos 8 caracteres.
+          Escolha uma senha com pelo menos 12 caracteres.
         </p>
       </div>
 
