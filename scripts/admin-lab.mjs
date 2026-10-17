@@ -34,6 +34,9 @@ try {
     ),
   )
   await db.query(fs.readFileSync('supabase/tests/guide-internal-permissions.sql', 'utf8'))
+  await db.query(
+    fs.readFileSync('supabase/migrations/20261017132355_guide_company_identity_hours.sql', 'utf8'),
+  )
   for (const file of [
     'rls-security.sql',
     'ledger-tests.sql',
@@ -50,6 +53,7 @@ try {
   if (fs.existsSync('supabase/tests/guide-admin-workspace.sql'))
     await db.query(fs.readFileSync('supabase/tests/guide-admin-workspace.sql', 'utf8'))
   await db.query(fs.readFileSync('supabase/tests/guide-site-customization.sql', 'utf8'))
+  await db.query(fs.readFileSync('supabase/tests/guide-company-identity-hours.sql', 'utf8'))
   console.log('Ensaio aprovado. Alterações e fixtures revertidas por rollback.')
 } catch (error) {
   console.error(redact(error))

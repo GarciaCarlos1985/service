@@ -1,4 +1,301 @@
 @layer components {
+  .company-form-intro {
+    color: var(--admin-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .company-form-navigation {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+  .company-form-navigation .btn {
+    padding: 10px 8px;
+    white-space: normal;
+    min-height: 48px;
+    line-height: 1.35;
+  }
+  .admin-editor-group {
+    scroll-margin-top: 24px;
+  }
+  .company-logo-editor {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+    border: 1px dashed var(--admin-field-border, #b7c7d8);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 4px 0 24px;
+  }
+  .company-logo-editor.dragging {
+    background: #eaf3ff;
+    border-color: #1264ce;
+  }
+  .company-logo-preview {
+    width: 96px;
+    height: 96px;
+    display: grid;
+    place-items: center;
+    color: #52677d;
+    background: white;
+    border: 1px solid #d8e2ed;
+    border-radius: 8px;
+  }
+  .company-logo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 5px;
+    border-radius: inherit;
+  }
+  .company-logo-content {
+    min-width: 0;
+  }
+  .company-logo-content strong {
+    font-size: 15px;
+  }
+  .company-logo-content p,
+  .company-logo-content small {
+    color: var(--admin-muted);
+    line-height: 1.6;
+    margin: 6px 0;
+  }
+  .company-logo-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 0;
+  }
+  .company-logo-actions .text-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 48px;
+  }
+  .company-hours-editor > p,
+  .company-hours-legacy > p {
+    color: var(--admin-muted);
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 4px 0 18px;
+  }
+  .company-hours-enable {
+    min-height: 48px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .company-hours-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    padding-bottom: 12px;
+    font-size: 13px;
+    color: var(--admin-muted);
+  }
+  .company-hours-tools .text-button {
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 48px;
+  }
+  .company-week-days {
+    border-top: 1px solid #d8e2ed;
+    margin-bottom: 22px;
+  }
+  .company-hours-day {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 12px 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid #d8e2ed;
+  }
+  .company-hours-day-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 2px;
+  }
+  .company-hours-day-heading .guide-checkbox {
+    min-height: 48px;
+    font-weight: 700;
+  }
+  .company-day-status {
+    font-size: 12px;
+    color: #52677d;
+    margin-left: 28px;
+  }
+  .company-hours-day.closed {
+    align-items: center;
+  }
+  .company-hours-editor .guide-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+  }
+  .company-hours-editor .guide-checkbox input {
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+    accent-color: #1264ce;
+  }
+  .company-all-day {
+    min-height: 48px;
+  }
+  .company-hours-period {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 48px;
+    gap: 8px 12px;
+    align-items: end;
+    margin: 8px 0 12px;
+  }
+  .company-hours-period > div {
+    min-width: 0;
+  }
+  .company-hours-period label,
+  .company-hours-editor > label,
+  .company-hours-legacy > label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 7px;
+  }
+  .company-hours-period input,
+  .company-hours-editor textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid #b7c7d8;
+    border-radius: 8px;
+    background: #fff;
+    color: #16324c;
+    font: inherit;
+    font-size: 14px;
+    caret-color: #1264ce;
+  }
+  .company-hours-period input {
+    font-variant-numeric: tabular-nums;
+  }
+  .company-remove-period {
+    width: 48px;
+    padding: 8px;
+  }
+  .company-next-day {
+    grid-column: 1 / -1;
+    color: var(--admin-muted);
+    font-size: 12px;
+  }
+  .company-add-period {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 48px;
+  }
+  .company-hours-day > .field-error {
+    grid-column: 1 / -1;
+  }
+  .company-hours-summary {
+    margin-top: 16px;
+    color: #16324c;
+  }
+  .company-hours-summary summary {
+    cursor: pointer;
+    min-height: 48px;
+    padding: 10px 0;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .company-hours-summary dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px solid #e1e8ef;
+  }
+  .company-hours-summary dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .company-hours-period input:focus-visible,
+  .company-hours-editor textarea:focus-visible {
+    outline: 2px solid #1264ce;
+    outline-offset: 3px;
+  }
+  @media (max-width: 600px) {
+    .company-form-navigation {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .company-form-navigation .btn {
+      font-size: 13px;
+      padding: 8px;
+    }
+    .company-logo-editor {
+      grid-template-columns: 64px minmax(0, 1fr);
+      padding: 12px;
+      gap: 10px 12px;
+    }
+    .company-logo-preview {
+      width: 64px;
+      height: 64px;
+    }
+    .company-logo-content p {
+      display: none;
+    }
+    .company-logo-content small {
+      display: block;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .company-logo-actions {
+      gap: 8px;
+    }
+    .company-logo-actions .btn {
+      font-size: 13px;
+      padding-inline: 10px;
+    }
+    .company-logo-actions .text-button {
+      justify-content: center;
+    }
+    .company-hours-day {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .company-hours-day-heading {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .company-day-status {
+      margin: 0;
+    }
+    .company-hours-period {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 48px;
+      gap: 8px;
+    }
+    .company-hours-period input {
+      padding: 10px 7px;
+    }
+    .company-remove-period {
+      width: 48px;
+    }
+    .company-hours-summary dl > div {
+      display: block;
+    }
+    .company-hours-summary dd {
+      text-align: left;
+      margin-top: 4px;
+    }
+  }
   .guide-root .professional-admin.wrap {
     width: min(1440px, calc(100% - 64px));
     padding-top: 34px;
@@ -360,10 +657,12 @@
     color: #52677d;
   }
   .admin-catalog-editor {
+    display: flex !important;
+    flex-direction: column;
     width: min(920px, calc(100vw - 32px));
     max-width: 920px;
     max-height: calc(100dvh - 36px);
-    overflow-y: auto;
+    overflow: clip;
     padding: 32px;
     color: #18334f;
   }
@@ -379,8 +678,34 @@
     color: #52677d;
   }
   .admin-catalog-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    flex: 1;
+    gap: 16px;
+  }
+  .admin-catalog-fields {
     display: grid;
     gap: 26px;
+    min-height: 0;
+    flex: 1;
+    align-content: start;
+    overflow-y: auto;
+    padding: 4px 5px 8px;
+    scrollbar-gutter: stable;
+    scrollbar-color: #b7c7d8 #f4f7fa;
+    scrollbar-width: thin;
+  }
+  .admin-catalog-form > .admin-savebar {
+    position: static;
+    flex-shrink: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+  .admin-catalog-form > .admin-savebar .btn {
+    padding-inline: 12px;
+    font-size: 14px;
   }
   .admin-editor-group {
     padding: 24px 0 0;

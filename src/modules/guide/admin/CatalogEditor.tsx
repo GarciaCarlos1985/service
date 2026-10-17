@@ -14,6 +14,11 @@ import { CompanyPicker } from './CompanyPicker'
 import { editorPayload, slugFor } from './editor-model'
 import { useUnsavedChanges } from './use-unsaved'
 import { UnsavedNavigation } from './UnsavedNavigation'
+import { CompanyLogo } from './CompanyLogo'
+import type { LogoSelection } from './CompanyLogo'
+import { WeeklyHoursEditor } from './WeeklyHoursEditor'
+import type { WeeklyHours } from '../hours'
+import { uploadCompanyAsset } from './image-upload'
 
 type Field = {
   key: string
@@ -42,7 +47,7 @@ export function Editor({
   row,
   data,
   company,
-  busy,
+  busy: parentBusy,
   onClose,
   onSave,
   onRefresh,
@@ -74,6 +79,8 @@ export function Editor({
       whatsapp: '',
       website: '',
       hours: '',
+      logo_url: '',
+      weekly_hours: null,
       icon: 'Store',
       is_active: true,
       type: 'product',
@@ -102,6 +109,11 @@ export function Editor({
     return initial
   })
   const [form, setForm] = useState(initial)
+  const [logo, setLogo] = useState<LogoSelection | null>(null)
+  const [logoBusy, setLogoBusy] = useState(false)
+  const [draftSaved, setDraftSaved] = useState(false)
+  const companyExists = useRef(!!text(row ?? {}, 'id'))
+  const busy = parentBusy || logoBusy
   const [formCompany, setFormCompany] = useState(company)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [error, setError] = useState('')
@@ -112,7 +124,24 @@ export function Editor({
   const [quickError, setQuickError] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
   const fieldPrefix = useId()
-  const dirty = JSON.stringify(form) !== JSON.stringify(initial)
+  const revealField = (target: HTMLElement | null, animate = false) => {
+    if (!target) return
+    target.focus({ preventScroll: true })
+    const fields = formRef.current?.querySelector<HTMLElement>('.admin-catalog-fields')
+    if (fields)
+      fields.scrollTo({
+        top:
+          fields.scrollTop +
+          target.getBoundingClientRect().top -
+          fields.getBoundingClientRect().top -
+          8,
+        behavior:
+          animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? 'smooth'
+            : 'instant',
+      })
+  }
+  const dirty = !!logo || JSON.stringify(form) !== JSON.stringify(initial)
   useUnsavedChanges(dirty)
   const close = () => {
     if (busy || quickBusy) return
@@ -180,6 +209,7 @@ export function Editor({
               { key: 'website', label: 'Site (https://)', kind: 'url' },
             ],
           },
+          { title: 'Dias e horários', fields: [] },
           {
             title: 'Publicação e plano',
             fields: [
@@ -200,7 +230,6 @@ export function Editor({
                   { id: 'blocked', name: 'Bloqueada — não aparece no site' },
                 ],
               },
-              { key: 'hours', label: 'Horários de atendimento', kind: 'textarea' },
             ],
           },
         ]
@@ -338,17 +367,40 @@ export function Editor({
     setErrors({})
     if (!formRef.current?.reportValidity()) return
     try {
-      await onSave(editorPayload(action, form))
+      let payload = editorPayload(action, form)
+      if (action === 'company' && logo) {
+        setLogoBusy(true)
+        if (!companyExists.current) {
+          await adminSave('company', { ...payload, status: 'inactive', logo_url: '' })
+          companyExists.current = true
+          setDraftSaved(true)
+        }
+        const uploaded = await uploadCompanyAsset(logo.file, String(payload.id), logo.id)
+        payload = { ...payload, logo_url: uploaded.url }
+        setForm((previous) => ({ ...previous, logo_url: uploaded.url }))
+        setLogo(null)
+      }
+      await onSave(payload)
     } catch (failure) {
       if (failure instanceof z.ZodError) {
         setErrors(
-          Object.fromEntries(failure.issues.map((issue) => [String(issue.path[0]), issue.message])),
+          Object.fromEntries(failure.issues.map((issue) => [issue.path.join('.'), issue.message])),
         )
         setError('Revise os campos destacados antes de salvar.')
         requestAnimationFrame(() => {
-          formRef.current?.querySelector<HTMLInputElement>('[aria-invalid="true"]')?.focus()
+          revealField(formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]') ?? null)
         })
-      } else setError(message(failure))
+      } else {
+        setError(
+          message(failure) +
+            (action === 'company' && companyExists.current && !text(row ?? {}, 'id')
+              ? ' O rascunho da empresa foi preservado. Confira a conexão e salve novamente para concluir.'
+              : ''),
+        )
+        if (action === 'company' && companyExists.current) await onRefresh().catch(() => undefined)
+      }
+    } finally {
+      setLogoBusy(false)
     }
   }
   return (
@@ -366,7 +418,7 @@ export function Editor({
           </DialogTitle>
           <DialogDescription>
             {action === 'company'
-              ? 'Preencha no seu ritmo. Salve como rascunho ou publique quando o perfil estiver pronto.'
+              ? 'Salve como rascunho ou publique quando o perfil estiver pronto.'
               : company && ['item', 'media'].includes(action)
                 ? `Catálogo de ${company.name}.`
                 : 'Revise os dados e salve. Toda alteração fica na auditoria.'}
@@ -378,181 +430,260 @@ export function Editor({
             }}
             className="admin-catalog-form"
           >
-            {action === 'item' && !text(row ?? {}, 'id') && (
-              <div className="admin-editor-company">
-                <CompanyPicker
-                  company={formCompany}
-                  disabled={busy}
-                  onChange={(selected) => {
-                    setFormCompany(selected)
-                    update('company_id', selected?.id ?? '')
-                    if (selected) update('category_id', selected.category_id)
-                  }}
-                />
-                {errors.company_id && (
-                  <p className="field-error" role="alert">
-                    {errors.company_id}
-                  </p>
-                )}
-              </div>
+            {action === 'company' && (
+              <nav className="company-form-navigation" aria-label="Seções do cadastro de empresa">
+                {groups.map((group, index) => (
+                  <button
+                    type="button"
+                    className="btn outline"
+                    key={group.title}
+                    onClick={() => {
+                      const target = document.getElementById(fieldPrefix + 'group-' + String(index))
+                      revealField(target, true)
+                    }}
+                  >
+                    {group.title === 'Perfil da empresa'
+                      ? 'Perfil'
+                      : group.title === 'Endereço e contato'
+                        ? 'Localização e contato'
+                        : group.title === 'Dias e horários'
+                          ? 'Funcionamento'
+                          : 'Publicação'}
+                  </button>
+                ))}
+              </nav>
             )}
-            {groups.map((group) => (
-              <fieldset className="admin-editor-group" key={group.title}>
-                <legend>{group.title}</legend>
-                <div className="admin-form">
-                  {group.fields.map((field) =>
-                    field.kind === 'checkbox' ? (
-                      <label key={field.key} className="guide-checkbox full">
-                        <input
-                          type="checkbox"
-                          checked={Boolean(form[field.key])}
-                          disabled={busy}
-                          onChange={(event) => {
-                            update(field.key, event.target.checked)
-                          }}
-                        />
-                        {field.label}
-                      </label>
-                    ) : (
-                      <div
-                        key={field.key}
-                        className={
-                          'admin-editor-field ' + (field.kind === 'textarea' ? 'full' : '')
-                        }
-                      >
-                        <label htmlFor={fieldPrefix + field.key}>
-                          <span>
-                            {field.label}
-                            {field.required && (
-                              <span className="required-mark" aria-hidden="true">
-                                {' '}
-                                *
-                              </span>
-                            )}
-                          </span>
-                        </label>
-                        {field.kind === 'textarea' ? (
-                          <textarea
-                            id={fieldPrefix + field.key}
-                            aria-describedby={
-                              errors[field.key] ? fieldPrefix + field.key + '-error' : undefined
-                            }
-                            rows={4}
-                            value={text(form, field.key)}
-                            required={field.required}
-                            disabled={busy}
-                            aria-invalid={!!errors[field.key]}
-                            maxLength={2000}
-                            onChange={(event) => {
-                              update(field.key, event.target.value)
-                            }}
-                          />
-                        ) : field.kind === 'select' ? (
-                          <select
-                            id={fieldPrefix + field.key}
-                            aria-describedby={
-                              errors[field.key] ? fieldPrefix + field.key + '-error' : undefined
-                            }
-                            value={text(form, field.key)}
-                            required={field.required}
-                            disabled={field.disabled || busy}
-                            aria-invalid={!!errors[field.key]}
-                            onChange={(event) => {
-                              update(field.key, event.target.value)
-                            }}
-                          >
-                            <option value="">Selecione</option>
-                            {field.options?.map((option) => (
-                              <option key={option.id} value={option.id}>
-                                {option.name}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input
-                            id={fieldPrefix + field.key}
-                            aria-describedby={
-                              errors[field.key] ? fieldPrefix + field.key + '-error' : undefined
-                            }
-                            type={
-                              field.kind === 'number'
-                                ? 'number'
-                                : field.kind === 'url'
-                                  ? 'url'
-                                  : 'text'
-                            }
-                            value={text(form, field.key)}
-                            required={field.required}
-                            disabled={busy}
-                            aria-invalid={!!errors[field.key]}
-                            min={field.min}
-                            max={field.max}
-                            step={1}
-                            maxLength={field.kind === 'url' ? 2048 : 150}
-                            inputMode={
-                              ['phone', 'whatsapp', 'postal_code'].includes(field.key)
-                                ? 'tel'
-                                : field.key === 'price'
-                                  ? 'decimal'
-                                  : undefined
-                            }
-                            onChange={(event) => {
-                              update(field.key, event.target.value)
-                            }}
-                          />
-                        )}
-                        {errors[field.key] && (
-                          <small
-                            id={fieldPrefix + field.key + '-error'}
-                            className="field-error"
-                            role="alert"
-                          >
-                            {errors[field.key]}
-                          </small>
-                        )}
-                        {['category_id', 'neighborhood_id'].includes(field.key) && (
-                          <button
-                            type="button"
-                            className="text-button admin-inline-create"
-                            onClick={() => {
-                              setQuick(field.key === 'category_id' ? 'category' : 'neighborhood')
-                              setQuickName('')
-                              setQuickError('')
-                            }}
-                          >
-                            + Cadastrar {field.key === 'category_id' ? 'categoria' : 'bairro'} aqui
-                          </button>
-                        )}
-                        {field.key === 'slug' && (
-                          <small>Gerado pelo nome. Você pode ajustar antes de salvar.</small>
-                        )}
-                        {field.key === 'price' && (
-                          <small>Ex.: 45,50. Deixe vazio para “Valor a consultar”.</small>
-                        )}
-                      </div>
-                    ),
+            <div className="admin-catalog-fields">
+              {action === 'company' && (
+                <p className="company-form-intro">
+                  Campos com <span aria-hidden="true">*</span>
+                  <span className="sr-only">asterisco</span> são obrigatórios.
+                </p>
+              )}
+              {action === 'item' && !text(row ?? {}, 'id') && (
+                <div className="admin-editor-company">
+                  <CompanyPicker
+                    company={formCompany}
+                    disabled={busy}
+                    onChange={(selected) => {
+                      setFormCompany(selected)
+                      update('company_id', selected?.id ?? '')
+                      if (selected) update('category_id', selected.category_id)
+                    }}
+                  />
+                  {errors.company_id && (
+                    <p className="field-error" role="alert">
+                      {errors.company_id}
+                    </p>
                   )}
                 </div>
-              </fieldset>
-            ))}
-            {action === 'company' && (
-              <div className="admin-editor-preview">
-                <strong>{text(form, 'name') || 'Nome da empresa'}</strong>
-                <p>{text(form, 'description') || 'A descrição do negócio aparecerá aqui.'}</p>
-                <span>
-                  {form.status === 'active'
-                    ? 'Será publicada após salvar'
-                    : form.status === 'blocked'
-                      ? 'Permanecerá bloqueada'
-                      : 'Será salva como rascunho'}
-                </span>
-              </div>
-            )}
-            {error && (
-              <p className="field-error" role="alert">
-                {error}
-              </p>
-            )}
+              )}
+              {groups.map((group, groupIndex) => (
+                <fieldset
+                  className="admin-editor-group"
+                  key={group.title}
+                  id={fieldPrefix + 'group-' + String(groupIndex)}
+                  tabIndex={-1}
+                >
+                  <legend>{group.title}</legend>
+                  {action === 'company' && group.title === 'Perfil da empresa' && (
+                    <CompanyLogo
+                      value={text(form, 'logo_url')}
+                      selection={logo}
+                      name={text(form, 'name')}
+                      disabled={busy}
+                      onChange={(url, selection) => {
+                        update('logo_url', url)
+                        setLogo(selection)
+                      }}
+                    />
+                  )}
+                  {action === 'company' && group.title === 'Dias e horários' && (
+                    <WeeklyHoursEditor
+                      value={(form.weekly_hours as WeeklyHours | null) ?? null}
+                      legacy={text(form, 'hours')}
+                      disabled={busy}
+                      errors={errors}
+                      prefix={fieldPrefix}
+                      onChange={(week) => {
+                        update('weekly_hours', week)
+                      }}
+                      onLegacyChange={(value) => {
+                        update('hours', value)
+                      }}
+                    />
+                  )}
+                  <div className="admin-form">
+                    {group.fields.map((field) =>
+                      field.kind === 'checkbox' ? (
+                        <label key={field.key} className="guide-checkbox full">
+                          <input
+                            type="checkbox"
+                            checked={Boolean(form[field.key])}
+                            disabled={busy}
+                            onChange={(event) => {
+                              update(field.key, event.target.checked)
+                            }}
+                          />
+                          {field.label}
+                        </label>
+                      ) : (
+                        <div
+                          key={field.key}
+                          className={
+                            'admin-editor-field ' + (field.kind === 'textarea' ? 'full' : '')
+                          }
+                        >
+                          <label htmlFor={fieldPrefix + field.key}>
+                            <span>
+                              {field.label}
+                              {field.required && (
+                                <span className="required-mark" aria-hidden="true">
+                                  {' '}
+                                  *
+                                </span>
+                              )}
+                            </span>
+                          </label>
+                          {field.kind === 'textarea' ? (
+                            <textarea
+                              id={fieldPrefix + field.key}
+                              aria-describedby={
+                                errors[field.key] ? fieldPrefix + field.key + '-error' : undefined
+                              }
+                              rows={4}
+                              value={text(form, field.key)}
+                              required={field.required}
+                              disabled={busy}
+                              aria-invalid={!!errors[field.key]}
+                              maxLength={2000}
+                              onChange={(event) => {
+                                update(field.key, event.target.value)
+                              }}
+                            />
+                          ) : field.kind === 'select' ? (
+                            <select
+                              id={fieldPrefix + field.key}
+                              aria-describedby={
+                                errors[field.key] ? fieldPrefix + field.key + '-error' : undefined
+                              }
+                              value={text(form, field.key)}
+                              required={field.required}
+                              disabled={field.disabled || busy}
+                              aria-invalid={!!errors[field.key]}
+                              onChange={(event) => {
+                                update(field.key, event.target.value)
+                              }}
+                            >
+                              <option value="">Selecione</option>
+                              {field.options?.map((option) => (
+                                <option key={option.id} value={option.id}>
+                                  {option.name}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              id={fieldPrefix + field.key}
+                              aria-describedby={
+                                errors[field.key] ? fieldPrefix + field.key + '-error' : undefined
+                              }
+                              type={
+                                field.kind === 'number'
+                                  ? 'number'
+                                  : field.kind === 'url'
+                                    ? 'url'
+                                    : 'text'
+                              }
+                              value={text(form, field.key)}
+                              required={field.required}
+                              disabled={busy}
+                              aria-invalid={!!errors[field.key]}
+                              min={field.min}
+                              max={field.max}
+                              step={1}
+                              maxLength={field.kind === 'url' ? 2048 : 150}
+                              inputMode={
+                                ['phone', 'whatsapp', 'postal_code'].includes(field.key)
+                                  ? 'tel'
+                                  : field.key === 'price'
+                                    ? 'decimal'
+                                    : undefined
+                              }
+                              onChange={(event) => {
+                                update(field.key, event.target.value)
+                              }}
+                            />
+                          )}
+                          {errors[field.key] && (
+                            <small
+                              id={fieldPrefix + field.key + '-error'}
+                              className="field-error"
+                              role="alert"
+                            >
+                              {errors[field.key]}
+                            </small>
+                          )}
+                          {['category_id', 'neighborhood_id'].includes(field.key) && (
+                            <button
+                              type="button"
+                              className="text-button admin-inline-create"
+                              onClick={() => {
+                                setQuick(field.key === 'category_id' ? 'category' : 'neighborhood')
+                                setQuickName('')
+                                setQuickError('')
+                              }}
+                            >
+                              + Cadastrar {field.key === 'category_id' ? 'categoria' : 'bairro'}{' '}
+                              aqui
+                            </button>
+                          )}
+                          {field.key === 'slug' && (
+                            <small>Gerado pelo nome. Você pode ajustar antes de salvar.</small>
+                          )}
+                          {field.key === 'price' && (
+                            <small>Ex.: 45,50. Deixe vazio para “Valor a consultar”.</small>
+                          )}
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </fieldset>
+              ))}
+              {action === 'company' && (
+                <div className="admin-editor-preview">
+                  {(logo?.preview || text(form, 'logo_url')) && (
+                    <img
+                      className="company-logo"
+                      src={logo?.preview || text(form, 'logo_url')}
+                      alt="Prévia do logotipo da empresa"
+                      width="56"
+                      height="56"
+                    />
+                  )}
+                  <strong>{text(form, 'name') || 'Nome da empresa'}</strong>
+                  <p>{text(form, 'description') || 'A descrição do negócio aparecerá aqui.'}</p>
+                  <span>
+                    {form.status === 'active'
+                      ? 'Será publicada após salvar'
+                      : form.status === 'blocked'
+                        ? 'Permanecerá bloqueada'
+                        : 'Será salva como rascunho'}
+                  </span>
+                </div>
+              )}
+              {error && (
+                <p className="field-error" role="alert">
+                  {error}
+                </p>
+              )}
+              {draftSaved && (
+                <p className="admin-success-note" role="status">
+                  Um rascunho foi preparado para receber o logotipo. Conclua o salvamento para
+                  aplicar a imagem e a situação escolhida.
+                </p>
+              )}
+            </div>
             <div className="admin-savebar">
               <span role="status">
                 {busy

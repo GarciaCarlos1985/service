@@ -37,6 +37,9 @@ for (const file of fs
 await db.exec(
   "alter table public.company_media drop constraint company_media_url_check; alter table public.company_media add constraint company_media_url_check check (url ~ '^https://' or url like 'http://127.0.0.1:3004/storage/v1/object/public/guide-media/%')",
 )
+await db.exec(
+  "alter table public.companies drop constraint companies_logo_url_check; alter table public.companies add constraint companies_logo_url_check check (logo_url='' or logo_url ~ '^https://' or logo_url like 'http://127.0.0.1:3004/storage/v1/object/public/guide-media/%')",
+)
 for (const [kind, name, admin] of [
   ['admin', 'Admin do laboratório', true],
   ['consumer', 'Consumidor de laboratório', false],
@@ -252,7 +255,15 @@ async function body(request, limit = 65536) {
 async function handle(request, response) {
   counters.requests++
   const origin = request.headers.origin
-  if (origin && !['http://localhost:3002', 'http://127.0.0.1:3002'].includes(origin)) {
+  if (
+    origin &&
+    ![
+      'http://localhost:3002',
+      'http://127.0.0.1:3002',
+      'http://localhost:3005',
+      'http://127.0.0.1:3005',
+    ].includes(origin)
+  ) {
     response.writeHead(403)
     response.end()
     return

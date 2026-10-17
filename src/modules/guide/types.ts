@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { publicPresentationSchema } from './presentation'
+import { weeklyHoursSchema } from './hours'
 
 export const categorySchema = z.object({
   id: z.string(),
@@ -26,6 +27,8 @@ export const companySchema = z.object({
   whatsapp: z.string(),
   website: z.string(),
   hours: z.string(),
+  logo_url: z.string().default(''),
+  weekly_hours: weeklyHoursSchema.nullable().default(null),
   plan_id: z.string(),
   status: z.string(),
   image: z.string(),

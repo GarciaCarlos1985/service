@@ -1,4 +1,73 @@
 @custom-variant dark (&:is(.dark *));
+@layer components {
+  .company-logo {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    padding: 4px;
+    border: 1px solid #d8e2ed;
+    border-radius: 8px;
+    object-fit: contain;
+    background: white;
+  }
+  .company-identity {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    min-width: 0;
+  }
+  .company-identity > div {
+    min-width: 0;
+  }
+  .company-identity > .company-logo {
+    width: 80px;
+    height: 80px;
+  }
+  .company-card-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .company-card-heading > div {
+    min-width: 0;
+  }
+  .company-card-heading .company-logo {
+    width: 48px;
+    height: 48px;
+  }
+  .company-public-hours {
+    margin: 14px 0 0;
+    min-width: 0;
+    font-size: 14px;
+  }
+  .company-public-hours > div {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    gap: 8px 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid #d8e2ed;
+  }
+  .company-public-hours dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .company-hours-note {
+    white-space: pre-line;
+  }
+  @media (max-width: 600px) {
+    .company-identity {
+      gap: 14px;
+    }
+    .company-identity > .company-logo {
+      width: 56px;
+      height: 56px;
+    }
+    .company-public-hours > div {
+      grid-template-columns: 1fr;
+      gap: 3px;
+    }
+  }
+}
 @font-face {
   font-family: Manrope;
   src: url('/guide/fonts/manrope-regular.ttf') format('truetype');
