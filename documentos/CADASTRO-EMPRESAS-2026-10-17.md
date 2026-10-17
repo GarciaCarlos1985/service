@@ -38,14 +38,16 @@ colunas ou dados. Semana estrita, tamanho limitado, validação de períodos e d
 conflitos entre dias, inclusive domingo/segunda. Logo exige objeto previamente
 enviado no caminho da empresa, além de formato e HTTPS em produção.
 
-O PR #2 (`codex/restringir-rpcs-internas`) continua separado, com as migrations
+O PR #2 foi mesclado na main e publicado, com as migrations
 `20261017130133_guide_internal_rpc_permissions.sql` e
 `20261017142019_guide_api_access_boundary.sql`. O candidato de cadastro foi
-sincronizado com essa branch para preservar a ordem de publicação. Nenhuma das
-três migrations candidatas foi aplicada permanentemente; todas foram ensaiadas
-na conexão transacional ao PostgreSQL real e revertidas ao final.
+sincronizado com a main, sem incorporar a extensão ao site publicado. Somente
+a migration `20261017132355` deste formulário continua sem aplicação definitiva.
+Ela foi ensaiada na conexão transacional ao PostgreSQL real, com rollback.
+Sua publicação futura exige dry-run com `--include-all`, pois sua versão é
+anterior à última migration de segurança; nunca simular aplicação pelo histórico.
 
-## Validação
+## Validação original do formulário
 
 | Verificação | Resultado |
 | --- | --- |
@@ -90,13 +92,18 @@ modo laboratório. A migração de cadastro foi ensaiada antes e depois da
 fronteira de API; os dois cenários passaram. Essa integração não altera o
 parecer visual nem conclui o teste pendente do seletor de arquivos.
 
+Após a publicação do PR #2, a main foi incorporada com alterações somente de
+documentação. As seis suítes SQL atuais do candidato também passaram contra
+essa base aplicada, com rollback. O formulário e suas colunas continuam fora
+da produção.
+
 ## Publicação
 
-Produção permanece no painel aprovado do PR #1, com 12 migrations. Esta extensão
-e a correção de permissões do PR #2 exigem revisão humana antes de merge,
+Produção tem o painel do PR #1 e as correções de segurança do PR #2, com
+14 migrations. Esta extensão no PR #3 exige revisão humana antes de merge,
 aplicação das migrations e deploy, conforme o `AGENTS.md` do projeto. Uma versão
 de laboratório nunca deve ser enviada ao Cloudflare.
 
-Conferência posterior no banco real: 12 migrations, nenhuma empresa, duas
+Conferência posterior no banco real: 14 migrations, nenhuma empresa, duas
 contas administradoras e nenhuma conta técnica; a fixture local não existe em
 produção e a coluna candidata ainda não foi aplicada. O rollback foi preservado.

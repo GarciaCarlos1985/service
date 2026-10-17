@@ -1,5 +1,11 @@
 # Auditoria de RLS e acesso — 17/10/2026
 
+> **Atualização após revisão:** PR #2 mesclado e correções publicadas em
+> 17/10/2026, às 19:23 de Brasília. Produção tem 14 migrations e mínimo Auth de
+> 12 caracteres. Resultado e pendências em `PUBLICACAO-SEGURANCA-2026-10-17.md`
+> e `evidencias/publicacao-seguranca-2026-10-17.json`. As seções abaixo preservam
+> o inventário e os ensaios anteriores à liberação.
+
 Projeto verificado: `taabjnmsaaltsiehywbw`, Service Guide, repositório
 `GarciaCarlos1985/service`. Estado medido: produção com 12 migrations, duas
 contas administrativas, nenhuma empresa e nenhuma conta técnica remanescente.
@@ -108,7 +114,7 @@ Evidência estruturada, sem segredos ou credenciais:
    Nenhum plano pago foi contratado. O mínimo de 12 não substitui senhas únicas
    e segundo fator.
 
-Os 114 avisos atuais dos advisors incluem 112 alertas de funções privilegiadas,
+Os 114 avisos dos advisors antes da publicação incluem 112 alertas de funções privilegiadas,
 um de extensão e um de senha vazada. Muitos alertas de RPCs do guia são esperados
 pelo modelo explícito de autorização interna; o aviso não é, isoladamente,
 prova de falha. O candidato reduz a superfície medida acima. Não foi declarado

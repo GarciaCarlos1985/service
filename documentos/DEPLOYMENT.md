@@ -6,9 +6,11 @@ O destino de publicação é **Cloudflare Workers**, autorizado pelo usuário.
 A aplicação continua em **TanStack Start** e o backend continua no **Supabase**.
 O adaptador Nitro/Vercel foi substituído pela integração oficial Cloudflare/Vite.
 O resultado medido da publicação está em `CLOUDFLARE-2026-10-16.md`.
-A atualização aprovada do painel e da aparência está online desde 17/10/2026:
-fonte `02fa5b2`, Worker `b5129bd3-46ec-4d5a-a97c-d43e61f3b5a5`, com 100% do
-tráfego. Ver `PUBLICACAO-PAINEL-2026-10-17.md`.
+A publicação do painel e da aparência em 17/10/2026 está registrada em
+`PUBLICACAO-PAINEL-2026-10-17.md`. A liberação de segurança
+posterior publicou a fonte `91999f4`, Worker
+`f22fa7b6-0046-4a44-b44d-5582ea4f22d4`, com 100% do tráfego, 14 migrations e
+mínimo de novas senhas de 12. Ver `PUBLICACAO-SEGURANCA-2026-10-17.md`.
 
 | camada | destino |
 | --- | --- |

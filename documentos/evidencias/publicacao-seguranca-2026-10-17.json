@@ -1,0 +1,276 @@
+{
+  "project": "taabjnmsaaltsiehywbw",
+  "measuredAt": "2026-10-17T22:24:19.788Z",
+  "sourceCommit": "91999f44be363ef2bc682c2f4b85b6646c630a97",
+  "securityPr": 2,
+  "companyFormPrPublished": false,
+  "migrations": [
+    {
+      "version": "20260812120000",
+      "name": "init"
+    },
+    {
+      "version": "20260812120010",
+      "name": "seed_catalog"
+    },
+    {
+      "version": "20260812130000",
+      "name": "choose_user_type"
+    },
+    {
+      "version": "20260812140000",
+      "name": "public_profiles_favorites"
+    },
+    {
+      "version": "20260812150000",
+      "name": "bookings_availability"
+    },
+    {
+      "version": "20260812160000",
+      "name": "payments_foundation"
+    },
+    {
+      "version": "20260813100000",
+      "name": "ledger_commission"
+    },
+    {
+      "version": "20260813110000",
+      "name": "chat_notifications"
+    },
+    {
+      "version": "20260813120000",
+      "name": "reviews_disputes"
+    },
+    {
+      "version": "20261015032437",
+      "name": "guide_commercial_foundation"
+    },
+    {
+      "version": "20261016194717",
+      "name": "guide_admin_workspace"
+    },
+    {
+      "version": "20261017005400",
+      "name": "guide_site_customization"
+    },
+    {
+      "version": "20261017130133",
+      "name": "guide_internal_rpc_permissions"
+    },
+    {
+      "version": "20261017142019",
+      "name": "guide_api_access_boundary"
+    }
+  ],
+  "tables": {
+    "total": 43,
+    "protected": 43
+  },
+  "definers": {
+    "total": 62,
+    "anonymous": 7,
+    "authenticated": 18
+  },
+  "internalHelpers": [
+    {
+      "signature": "_get_or_create_wallet(uuid)",
+      "anonymous": false,
+      "authenticated": false,
+      "backend": true
+    },
+    {
+      "signature": "_get_platform_wallet()",
+      "anonymous": false,
+      "authenticated": false,
+      "backend": true
+    },
+    {
+      "signature": "_ledger_credit(uuid,text,integer,text,text,uuid,text)",
+      "anonymous": false,
+      "authenticated": false,
+      "backend": true
+    },
+    {
+      "signature": "_notify(uuid,text,text,text,jsonb)",
+      "anonymous": false,
+      "authenticated": false,
+      "backend": true
+    },
+    {
+      "signature": "_resolve_cashback(uuid,integer)",
+      "anonymous": false,
+      "authenticated": false,
+      "backend": true
+    },
+    {
+      "signature": "process_booking_financials(uuid)",
+      "anonymous": false,
+      "authenticated": false,
+      "backend": true
+    }
+  ],
+  "directPublicAccess": [
+    {
+      "role": "anon",
+      "accessible_relations": 0
+    },
+    {
+      "role": "authenticated",
+      "accessible_relations": 0
+    }
+  ],
+  "gistSchema": "extensions",
+  "state": {
+    "companies": 0,
+    "admins": 2,
+    "admins_with_mfa": 0,
+    "technical_accounts": 0
+  },
+  "auth": {
+    "passwordMinimum": 12,
+    "siteUrl": "https://service-guide.helon280.workers.dev",
+    "mailerAutoConfirm": true,
+    "customSmtpConfigured": false,
+    "captchaEnabled": false,
+    "leakedPasswordProtection": false,
+    "ownerPasswordsReset": false
+  },
+  "authTests": {
+    "workspaceMigrationActive": true,
+    "metadataEscalationDenied": true,
+    "loginLogoutReturnCycles": 3,
+    "revokedAdminTokenDenied": true,
+    "realTotpEnrollmentAndVerification": true,
+    "passwordLoginRequestsSecondFactor": true,
+    "noEmailsSent": true,
+    "temporaryAccountRemoved": true
+  },
+  "unitTests": 89,
+  "sqlSuitesBefore": 9,
+  "sqlSuitesAfter": 5,
+  "worker": {
+    "id": "18949f1d-a3c8-48d1-9008-33aad51faa33",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "annotations": {
+      "workers/message": "Seguranca RLS e Auth; main 91999f4; PR 2",
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "f22fa7b6-0046-4a44-b44d-5582ea4f22d4",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-17T22:23:09.909791Z"
+  },
+  "http": {
+    "measuredAt": "2026-10-17T22:23:08.156Z",
+    "checks": [
+      {
+        "name": "private-schema",
+        "status": 406,
+        "code": "PGRST106",
+        "message": "Invalid schema: guide_private"
+      },
+      {
+        "name": "personal-data",
+        "status": 401,
+        "code": "42501"
+      },
+      {
+        "name": "audit-data",
+        "status": 401,
+        "code": "42501"
+      },
+      {
+        "name": "admin-rpc-anonymous",
+        "status": 401,
+        "code": "42501"
+      },
+      {
+        "name": "forged-admin-jwt",
+        "status": 401,
+        "code": "PGRST301"
+      },
+      {
+        "name": "public-search",
+        "status": 200,
+        "code": null,
+        "source": "supabase"
+      }
+    ]
+  },
+  "runtime": [
+    {
+      "path": "/painel",
+      "status": 307,
+      "destination": "/conta"
+    },
+    {
+      "path": "/painel/carteira",
+      "status": 307,
+      "destination": "/conta"
+    },
+    {
+      "path": "/painel/agenda",
+      "status": 307,
+      "destination": "/conta"
+    },
+    {
+      "path": "/profissionais/cacoal-ro/perfil-de-teste",
+      "status": 307,
+      "destination": "/"
+    },
+    {
+      "path": "/cadastro",
+      "status": 200,
+      "newPasswordMinimum": 12
+    }
+  ],
+  "package": {
+    "baseUrl": "https://service-guide.helon280.workers.dev",
+    "productionBuild": true,
+    "filesScanned": 228,
+    "privateValuesAbsent": true,
+    "labAbsent": true,
+    "correctBackend": true,
+    "http": [
+      {
+        "route": "/",
+        "status": 200,
+        "csp": true,
+        "privateNoStore": false
+      },
+      {
+        "route": "/admin",
+        "status": 200,
+        "csp": true,
+        "privateNoStore": true
+      },
+      {
+        "route": "/recuperar-senha",
+        "status": 200,
+        "csp": true,
+        "privateNoStore": true
+      },
+      {
+        "route": "/previa",
+        "status": 404,
+        "csp": true,
+        "privateNoStore": false
+      }
+    ]
+  },
+  "advisors": {
+    "measuredAt": "2026-10-17T22:24:15.614Z",
+    "levels": {
+      "WARN": 26
+    },
+    "names": {
+      "anon_security_definer_function_executable": 7,
+      "authenticated_security_definer_function_executable": 18,
+      "auth_leaked_password_protection": 1
+    }
+  }
+}

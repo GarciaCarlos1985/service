@@ -7,7 +7,7 @@
 > `REUSE-MAP.md`.
 
 Status atual (2026-10-17): **painel profissional publicado no Cloudflare;
-12 migrações aplicadas e testadas no Supabase real, com legado preservado.** Catálogo vazio,
+14 migrações aplicadas e testadas no Supabase real, com legado preservado.** Catálogo vazio,
 aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 
 Evolução administrativa aprovada e publicada pelo PR #1, mesclado na `main`, com
@@ -18,29 +18,32 @@ aprovados; Auth real com sessão revogada/TOTP, Storage HTTP e login online/loca
 também conferidos. A prévia normal na porta 3002 usa o backend real. Evidências
 e versões em `PUBLICACAO-PAINEL-2026-10-17.md`; ensaio anterior em
 `PAINEL-PROFISSIONAL-2026-10-16.md`. A revisão final constatou permissões
-excessivas em seis helpers internos do legado, segregadas para correção por
-migração adicional. Isso impede tratar a auditoria de segurança como encerrada.
+excessivas em seis helpers internos do legado, posteriormente fechadas pelo
+PR #2. As pendências operacionais de segurança continuam explícitas abaixo.
 
 ### Extensão em revisão — cadastro de empresas (17/10/2026)
 
 Logotipo, semana de funcionamento por dia, intervalos, 24 horas, validação de
 conflitos e apresentação pública foram adicionados ao candidato local. O editor
 mantém as ações de salvar/voltar fora da rolagem e elimina a criação duplicada
-na visão geral. 104 testes unitários e nove suítes SQL transacionais no banco
-real passaram; builds de laboratório/produção e verificação de segredos também.
-Não altera o estado publicado acima: a migração de identidade/horários e o PR #2
-de permissões internas dependem de aprovação. Evidências e limites em
+na visão geral. Na integração com a segurança passaram 106 testes unitários e
+dez suítes SQL transacionais no banco real; builds de laboratório/produção e
+verificação de segredos também. Não altera o estado publicado acima: o PR #3
+e sua migração de identidade/horários seguem separados, com o teste do seletor
+de arquivos pendente. O PR #2 já foi publicado. Evidências e limites em
 `CADASTRO-EMPRESAS-2026-10-17.md`.
 
-### Auditoria de segurança em revisão — 17/10/2026
+### Correções de segurança publicadas — 17/10/2026
 
-O PR #2 foi ampliado: fechamento da API antiga, grants diretos e padrões de
+O PR #2 foi mesclado e publicado: fechamento da API antiga, grants diretos e padrões de
 exposição; sessão também verifica banimento, e-mail confirmado e exclusão lógica.
-43 tabelas públicas tinham RLS ligada. Seis helpers perigosos continuam expostos
-em produção até a liberação das migrations de segurança. O candidato passou em
-nove suítes SQL com rollback, 89 unitários, gate de código e Auth HTTP/TOTP real.
-Novas senhas passam a ter mínimo de 12 caracteres no candidato e no plano Auth.
-Produção ainda tem 12 migrations; nenhum deploy/aplicação foi feito pela auditoria.
+43 tabelas públicas continuam com RLS ligada e os seis helpers perderam acesso
+externo. Nove suítes SQL antes e cinco atuais após aplicação passaram, com
+rollback, além de 89 unitários, gate de código e Auth HTTP/TOTP real.
+Novas senhas exigem 12 caracteres no formulário e no Auth; senhas atuais preservadas.
+Produção tem 14 migrations e Worker `f22fa7b6-0046-4a44-b44d-5582ea4f22d4`,
+fonte `91999f4`, com 100% do tráfego. Evidências em
+`PUBLICACAO-SEGURANCA-2026-10-17.md`. O PR #3 não foi publicado.
 MFA dos titulares, confirmação de e-mail e proteção contra bots têm pendências
 registradas em `AUDITORIA-RLS-2026-10-17.md`; não tratar a auditoria como encerrada.
 

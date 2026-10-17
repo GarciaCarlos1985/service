@@ -32,7 +32,7 @@ descobrir → conhecer → contatar → favoritar → avaliar**.
 | doc | conteúdo |
 | --- | --- |
 | `SERVICE-GUIDE-PROMPT-INICIO.md` | **spec-mãe atual** — fonte de verdade de produto |
-| `DECISIONS.md` | ADRs — antigos (001–040, modelo antigo) + **041–050 (produto e hospedagem)**; NÃO edite ADRs antigos |
+| `DECISIONS.md` | ADRs — antigos (001–040, modelo antigo) + **041–051 (produto, hospedagem e API)**; NÃO edite ADRs antigos |
 | `REUSE-MAP.md` | reaproveitar · parar de expandir · criar |
 | `PRODUCT.md` | contexto de produto (impeccable) |
 | `ROADMAP.md` | fases do Service Guide + legado M0–M8 |
@@ -117,23 +117,29 @@ da transação protegida pelo runner.
 **App publicado no Cloudflare Workers** (ADR-049), em
 `https://service-guide.helon280.workers.dev`. Código no repositório oficial.
 A fundação comercial foi **aplicada e validada no Supabase real** (ADR-050):
-12 migrações, dados legados preservados, sete suítes SQL transacionais e testes
+14 migrações, dados legados preservados, suítes SQL transacionais e testes
 reais de Auth e Storage aprovados. O painel profissional e a personalização de
 textos, cores e vitrines foram aprovados pelo responsável, mesclados na `main`
 e publicados no Worker. O catálogo público funciona e está vazio,
 aguardando conteúdo real. Duas contas administrativas foram confirmadas pelo
 usuário, ativadas e auditadas; as permissões foram verificadas no banco real.
 O acesso usa a senha do Service Guide; uma sessão do Gmail não autentica no guia.
-A prévia normal na porta 3002 usa o Supabase real; o laboratório é um modo separado.
+Builds normais usam o Supabase real; o laboratório é um modo separado.
 As URLs de retorno do Auth incluem o site publicado e a prévia local; a recuperação de senha
 foi completada e testada com conta temporária, sem enviar e-mails ou alterar
 senhas reais. A entrega de e-mail ainda precisa ser conferida pelo titular.
 `/previa` existe apenas em DEV. O legado M0–M8 permanece preservado e com os
 módulos financeiros/booking **parados, não deletados**. Ver
 `PUBLICACAO-PAINEL-2026-10-17.md`, `ATIVACAO-SUPABASE-2026-10-16.md` e
-`ROADMAP.md` para evidências e pendências. A revisão dos advisors confirmou
-permissões excessivas em seis helpers internos legados; a correção dessas
-permissões exige uma migração adicional, separada da publicação aprovada.
+`ROADMAP.md` para evidências e pendências. O PR #2 foi mesclado e publicado após
+revisão: os seis helpers internos e a API legada perderam acesso externo; apenas
+as 18 assinaturas RPC atuais mantêm grants para os papéis correspondentes.
+Novos objetos exigem GRANT explícito. Sessões banidas/excluídas/não confirmadas
+são recusadas e novas senhas exigem 12 caracteres; senhas atuais preservadas.
+Depois da aplicação passaram cinco suítes SQL atuais, Auth real/TOTP e negativos
+HTTP. As duas contas administrativas ainda precisam ativar MFA; e-mail/CAPTCHA
+têm pendências. O PR #3 de logotipo/horários permanece separado e não publicado.
+Ver `PUBLICACAO-SEGURANCA-2026-10-17.md`.
 
 ## Como trabalhar aqui (fluxo recomendado)
 

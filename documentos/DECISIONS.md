@@ -1028,6 +1028,15 @@ da ADR-048, sem converter dados do marketplace nem ampliar seu recorte funcional
   `evidencias/seguranca-rls-2026-10-17.json`; nove suítes SQL e dois sentidos de
   integração com a extensão de logotipo/semana, sempre com rollback.
 
+**Atualização de execução — 17/10/2026:** após apresentação da proposta para
+revisão e pedido de continuação pelo responsável, o PR #2 foi mesclado na main
+(`91999f4`), as duas migrations de segurança foram aplicadas e o Worker
+`f22fa7b6-0046-4a44-b44d-5582ea4f22d4` recebeu 100% do tráfego. Mínimo Auth
+elevado para 12, com credenciais atuais preservadas. Cinco suítes SQL atuais,
+Auth/TOTP real e HTTP passaram após aplicação. A proposta acima registra o
+estado anterior; a decisão foi executada sem incorporar o PR #3. Ver
+`PUBLICACAO-SEGURANCA-2026-10-17.md` e a evidência estruturada da publicação.
+
 ---
 
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue
