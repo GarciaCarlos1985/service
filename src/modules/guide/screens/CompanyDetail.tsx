@@ -26,6 +26,7 @@ import { money } from '~/modules/guide/types'
 import { api, track } from '~/modules/guide/api'
 import { Picker } from '../components/shared'
 import { PremiumBadge } from '../components/Premium'
+import { dayHoursText, weekDays } from '../hours'
 export default function CompanyDetail({
   id,
   data,
@@ -56,6 +57,7 @@ export default function CompanyDetail({
         </a>
       </div>
     )
+  const weeklyHours = c.weekly_hours
   const signIn = () => {
     window.location.href = '/entrar?redirect=' + encodeURIComponent('/empresa/' + id)
   }
@@ -105,16 +107,27 @@ export default function CompanyDetail({
         Explorar / {category?.name}
       </a>
       <div className="company-heading">
-        <div>
-          <h1>{c.name}</h1>
-          <div className="detail-tags">
-            <span>{category?.name}</span>
-            {plan?.featured ? <PremiumBadge /> : null}
+        <div className="company-identity">
+          {c.logo_url && (
+            <img
+              className="company-logo"
+              src={c.logo_url}
+              alt={'Logotipo de ' + c.name}
+              width="80"
+              height="80"
+            />
+          )}
+          <div>
+            <h1>{c.name}</h1>
+            <div className="detail-tags">
+              <span>{category?.name}</span>
+              {plan?.featured ? <PremiumBadge /> : null}
+            </div>
+            <p className="location">
+              <MapPin size={17} />
+              {c.neighborhood} · {c.city}, RO
+            </p>
           </div>
-          <p className="location">
-            <MapPin size={17} />
-            {c.neighborhood} · {c.city}, RO
-          </p>
         </div>
         <div className="heading-actions">
           <button
@@ -204,7 +217,23 @@ export default function CompanyDetail({
                 <Clock />
                 <div>
                   <strong>Horários informados</strong>
-                  <p>{c.hours || 'Consulte a empresa.'}</p>
+                  {weeklyHours ? (
+                    <>
+                      <dl className="company-public-hours">
+                        {weekDays.map(({ id: day, name }) => (
+                          <div key={day}>
+                            <dt>{name}</dt>
+                            <dd>{dayHoursText(weeklyHours.days[day])}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                      {weeklyHours.notes && (
+                        <p className="company-hours-note">{weeklyHours.notes}</p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="company-hours-note">{c.hours || 'Consulte a empresa.'}</p>
+                  )}
                 </div>
               </div>
             </TabsContent>

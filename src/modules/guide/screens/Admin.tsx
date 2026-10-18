@@ -504,15 +504,6 @@ export default function Admin() {
                         procuram.
                       </p>
                     </div>
-                    <button
-                      className="btn primary"
-                      onClick={() => {
-                        void openEditor('company')
-                      }}
-                    >
-                      <Plus size={18} />
-                      Cadastrar empresa
-                    </button>
                   </div>
                   <ol className="admin-onboarding">
                     {[
@@ -793,7 +784,7 @@ export default function Admin() {
                                             name: text(row, 'name') + ' (cópia)',
                                             slug: text(row, 'slug') + '-copia',
                                             ...(section === 'companies'
-                                              ? { status: 'inactive' }
+                                              ? { status: 'inactive', logo_url: '' }
                                               : {}),
                                           })
                                       }}
