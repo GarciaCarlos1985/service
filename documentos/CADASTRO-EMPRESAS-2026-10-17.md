@@ -1,5 +1,25 @@
 # Cadastro de empresas — candidato de 17/10/2026
 
+## Revalidação e liberação autorizada em 18/10/2026
+
+Após conferir a prévia local, o responsável autorizou salvar tudo na `main`
+e publicar para o Helon cadastrar a primeira empresa. O candidato foi integrado
+à autenticação do PR #4, preservando confirmação de e-mail e CAPTCHA.
+
+O fluxo de seleção do arquivo foi concluído no navegador interno: selecionar
+PNG, exibir a marca, salvar e reabrir a empresa com o logotipo persistido.
+Somente uma empresa fictícia identificada no laboratório foi alterada. Isso
+conclui a lacuna funcional antes bloqueada pela permissão do Chrome; não altera
+retroativamente o parecer independente anterior. Captura:
+`.impeccable/review/company-registration/logo-selecionado-salvo-reaberto-2026-10-18.png`.
+
+A suíte SQL passou a verificar também troca de nome/logo/endereço/telefones,
+desativação com ausência na busca pública, reativação com os novos dados e
+auditoria, além das recusas de anônimo e consumidor. O ensaio no Postgres real
+passou em transação com rollback, sem persistir empresas de teste.
+O resultado definitivo da publicação será registrado em
+`PUBLICACAO-CADASTRO-2026-10-18.md`.
+
 O responsável solicitou logotipo e caixas para definir os dias e horários de
 funcionamento no formulário de empresas. O candidato preserva o painel e o
 backend existentes, acrescentando essas informações ao cadastro e ao perfil

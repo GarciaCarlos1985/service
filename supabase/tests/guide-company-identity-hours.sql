@@ -5,7 +5,7 @@ declare
   admin_id uuid:=gen_random_uuid(); consumer_id uuid:=gen_random_uuid();
   company_id uuid:=gen_random_uuid(); category_id uuid:=gen_random_uuid(); neighborhood_id uuid:=gen_random_uuid();
   asset_id uuid:=gen_random_uuid(); city_id bigint; plan_id uuid; claims jsonb;
-  payload jsonb; week jsonb; bad_week jsonb; result jsonb; saved jsonb; logo text; object_path text;
+  payload jsonb; week jsonb; bad_week jsonb; result jsonb; saved jsonb; logo text; object_path text; replacement_logo text;
 begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
   select id,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',id::text||'@example.test',extensions.crypt(gen_random_uuid()::text,extensions.gen_salt('bf')),now(),'{"provider":"email"}','{"full_name":"Cadastro de empresa — teste com rollback"}',now(),now() from unnest(array[admin_id,consumer_id]) id;
@@ -88,6 +88,40 @@ begin
   assert saved->>'logo_url'=logo and saved->'weekly_hours'=week, 'Perfil público perdeu os novos campos';
   begin perform public.guide_admin_save('company',payload);raise exception 'Anônimo alterou empresa';exception when insufficient_privilege then null;end;
   reset role;
+  -- Alterar a empresa mantém sua identidade, seus horários e o histórico; retirar do site é reversível.
+  object_path:=company_id::text||'/'||gen_random_uuid()::text||'.png';
+  replacement_logo:='https://taabjnmsaaltsiehywbw.supabase.co/storage/v1/object/public/guide-media/'||object_path;
+  insert into storage.objects(bucket_id,name,owner_id,metadata) values('guide-media',object_path,admin_id::text,'{"mimetype":"image/png","size":200}');
+  perform set_config('request.jwt.claim.sub',admin_id::text,true);
+  perform set_config('request.jwt.claims',claims::text,true);
+  set local role authenticated;
+  payload:=payload||jsonb_build_object('name','Empresa com nova marca','logo_url',replacement_logo,'street','Rua do teste','address_number','123','postal_code','76960000','phone','5569999990001','whatsapp','5569999990002');
+  perform public.guide_admin_save('company',payload);
+  saved:=public.guide_admin_company(company_id);
+  assert saved->>'id'=company_id::text and saved->>'name'='Empresa com nova marca' and saved->>'logo_url'=replacement_logo and saved->'weekly_hours'=week, 'Edição de marca alterou identidade ou horários';
+  assert saved->>'street'='Rua do teste' and saved->>'address_number'='123' and saved->>'postal_code'='76960000' and saved->>'phone'='5569999990001' and saved->>'whatsapp'='5569999990002', 'Endereço ou contatos não foram atualizados';
+  perform public.guide_admin_save('company',payload||'{"status":"blocked"}');
+  assert public.guide_admin_company(company_id)->>'status'='blocked', 'Desativação não persistiu';
+  reset role;
+  perform set_config('request.jwt.claim.sub','',true);
+  perform set_config('request.jwt.claims','{"role":"anon"}',true);
+  set local role anon;
+  result:=public.guide_search(jsonb_build_object('companyId',company_id));
+  assert jsonb_array_length(result->'companies')=0, 'Empresa desativada continuou pública';
+  reset role;
+  perform set_config('request.jwt.claim.sub',admin_id::text,true);
+  perform set_config('request.jwt.claims',claims::text,true);
+  set local role authenticated;
+  perform public.guide_admin_save('company',payload);
+  reset role;
+  perform set_config('request.jwt.claim.sub','',true);
+  perform set_config('request.jwt.claims','{"role":"anon"}',true);
+  set local role anon;
+  result:=public.guide_search(jsonb_build_object('companyId',company_id));
+  assert jsonb_array_length(result->'companies')=1 and result->'companies'->0->>'name'='Empresa com nova marca', 'Reativação não restaurou a empresa editada';
+  reset role;
+  assert (select count(*) from public.admin_audit_logs where entity_id=company_id and action='company')>=7, 'Edições sem auditoria';
+  raise notice 'OK: nome, logotipo, endereço e contatos editáveis; desativação oculta e reativação restaura o cadastro';
   claims:=jsonb_build_object('sub',consumer_id,'session_id',consumer_id,'role','authenticated','aal','aal1');
   perform set_config('request.jwt.claim.sub',consumer_id::text,true);
   perform set_config('request.jwt.claims',claims::text,true);

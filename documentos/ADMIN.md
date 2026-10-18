@@ -1,4 +1,20 @@
-# ADMIN — SERVICE
+# ADMIN — SERVICE GUIDE
+
+## Editar ou retirar uma empresa do site
+
+Em **Empresas**, localize o cadastro e clique em **Editar**. A mesma ficha
+permite alterar nome, logotipo, descrição, categoria, endereço, telefone,
+WhatsApp, site, dias/horários e plano. Clique em **Salvar empresa** para persistir.
+Para mudar somente a marca, mantenha o **Endereço na URL** existente e preserve
+os links já compartilhados.
+
+Em **Publicação → Situação no guia**, selecione **Bloqueada — não aparece no
+site** e salve para desativar. Para reativar, escolha **Publicada — aparece nas
+buscas** e salve. **Rascunho** também fica privado enquanto é preparado.
+Essas alterações preservam a empresa e sua auditoria; o painel não oferece
+apagamento físico definitivo da empresa. Produtos/serviços e imagens possuem
+controles próprios de disponibilidade/ativação. Aparência do site continua
+permitindo editar textos, títulos, cores e vitrines.
 
 ## Operação atual do Service Guide (17/10/2026)
 
