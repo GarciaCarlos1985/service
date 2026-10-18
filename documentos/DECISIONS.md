@@ -1039,6 +1039,36 @@ estado anterior; a decisão foi executada sem incorporar o PR #3. Ver
 
 ---
 
+## ADR-052 — CAPTCHA e e-mail com ferramentas gratuitas (18/10/2026)
+
+**Contexto medido:** o Auth estava sem CAPTCHA e sem SMTP próprio. O responsável
+solicitou ativar as duas proteções, escolheu `helon280@gmail.com` como remetente,
+autorizou um teste nesse endereço e exigiu custo zero. Durante a preparação,
+ativou a confirmação de e-mail no painel, ainda sem SMTP salvo.
+
+**Decisão:** usar Cloudflare Turnstile gerenciado no domínio oficial, com
+validação no Supabase Auth e prova renovada a cada tentativa. Publicar primeiro
+os formulários e somente depois exigir o CAPTCHA. Usar SMTP Gmail com TLS e senha
+de aplicativo fornecida pelo titular; verificar a conexão e a entrega antes de
+declarar o envio operacional. Manter RLS, sessão, MFA e senhas atuais.
+
+**Alternativas consideradas:** o envio padrão do Supabase tem restrições de
+destinatários e dois e-mails por hora. Provedores pagos foram descartados pelo
+requisito do responsável; hCaptcha acrescentaria outro serviço sem vantagem
+demonstrada neste escopo.
+
+**Motivo:** reutilizar as contas existentes e a integração oficial do Auth, sem
+novo plano, banco paralelo ou validação privada no navegador.
+
+**Consequências:** Turnstile e Gmail ficam sujeitos às cotas dos respectivos
+serviços. Gmail pessoal pode ter limites de entrega para uso transacional.
+Uma falha de rede no widget deve mostrar erro e repetição, sem permitir pular a
+prova. Novos builds exigem a site key pública; segredo e senha SMTP permanecem
+fora do CI, Worker e bundle. O PR #3 e sua migração continuam separados.
+Estado e evidências: `AUTENTICACAO-EMAIL-CAPTCHA-2026-10-18.md`.
+
+---
+
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue
 > a mesma disciplina — Contexto medido ou declarado como hipótese, Decisão com
 > alternativas consideradas, Motivo, Consequências (incluindo custo aceito e

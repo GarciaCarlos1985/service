@@ -3,7 +3,8 @@
 ## Variáveis públicas e segredos
 
 `VITE_*` entra no JavaScript público. Somente URL e chave anônima/publicável
-do Supabase pertencem a esse grupo. RLS e RPCs fazem a autorização no banco.
+do Supabase e site key pública do Turnstile pertencem a esse grupo.
+RLS e RPCs fazem a autorização no banco.
 Nunca use esse prefixo para service role, senha, token Cloudflare ou de CLI.
 `.env.local` e `.dev.vars*` são ignorados pelo Git.
 
@@ -11,6 +12,9 @@ Nunca use esse prefixo para service role, senha, token Cloudflare ou de CLI.
 | --- | --- | --- |
 | `VITE_SUPABASE_URL` | URL pública do projeto Supabase | build local/CI |
 | `VITE_SUPABASE_ANON_KEY` | chave pública do Supabase, protegida por RLS | build local/CI |
+| `VITE_TURNSTILE_SITE_KEY` | identificação pública do widget de autenticação | build local/CI |
+| `TURNSTILE_SECRET_KEY` | validação privada do CAPTCHA | configuração Auth do Supabase; nunca Worker/browser |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` | envio de confirmação e recuperação | configuração Auth do Supabase; nunca Worker/browser |
 | `CLOUDFLARE_API_TOKEN` | autenticação da ferramenta de publicação | processo Wrangler, nunca Worker/browser |
 | `CLOUDFLARE_ACCOUNT_ID` | conta Cloudflare de destino | processo Wrangler |
 | `DATABASE_URL` | runner SQL local, contém senha | somente `.env.local` / processo de teste autorizado |
@@ -35,10 +39,31 @@ do Supabase, respeitando RLS. `secrets.required: []` evita inferir segredos loca
 nos tipos e a configuração Vite desativa a carga automática de `.env` como
 bindings locais do Worker. `worker-configuration.d.ts` é gerado, não versionado.
 
-Em CI, injete apenas as duas variáveis públicas no build. Se no futuro houver
+Em CI, injete apenas as três variáveis públicas no build. Se no futuro houver
 publicação automática autorizada, o token e o account ID ficam em GitHub Secrets
 ou no ambiente protegido do provedor. Não versionar `.env.local` nem publicar
 esse arquivo como asset. Trocar a URL/chave pública exige recompilar e publicar.
+
+## E-mail e CAPTCHA (18/10/2026)
+
+O build de produção recusa backend diferente do projeto oficial, configuração
+pública ausente e site key de teste. As três variáveis públicas ficam em GitHub
+Actions Variables. Nenhum token administrativo ou senha SMTP vai para o CI.
+O modo `e2e` continua separado e aceita as chaves oficiais de teste do Turnstile.
+
+`node scripts/activate-guide-auth.mjs` apenas consulta. `--captcha --apply`
+confere o widget, o domínio e os formulários publicados antes de exigir a prova
+no Auth. `--email --apply` exige CAPTCHA ativo e verifica TLS/autenticação SMTP
+antes de configurar o remetente, os modelos e a confirmação obrigatória.
+O comando de e-mail requer Python 3 com a biblioteca padrão `smtplib`; se
+necessário, adicione o diretório do Python ao PATH somente desse processo.
+`--self-test` testa as guardas sem rede nem leitura de credenciais reais.
+
+Para o remetente autorizado `helon280@gmail.com`, use `smtp.gmail.com`, porta
+587 e uma senha de aplicativo do Google, criada pelo titular após ativar a
+verificação em duas etapas. A senha normal da Conta Google não é usada.
+Gmail e Turnstile são usados sem contratar plano pago, sujeitos às suas cotas.
+Veja `AUTENTICACAO-EMAIL-CAPTCHA-2026-10-18.md` para o estado medido.
 
 ## Serviços futuros
 

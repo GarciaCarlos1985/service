@@ -10,6 +10,15 @@ Status atual (2026-10-17): **painel profissional publicado no Cloudflare;
 14 migrações aplicadas e testadas no Supabase real, com legado preservado.** Catálogo vazio,
 aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 
+### Autenticação por e-mail e CAPTCHA — candidato de 18/10/2026
+
+Turnstile gratuito integrado aos formulários, reenvio de confirmação e proteção
+da reconfirmação administrativa, com 96 unitários e cinco suítes SQL atuais
+aprovados. Widget real provisionado, ainda sem obrigatoriedade no Auth nesta
+etapa. O titular ativou a confirmação por e-mail; SMTP Gmail precisa da senha
+de aplicativo e da validação de envio. A liberação e os resultados medidos são
+registrados em `AUTENTICACAO-EMAIL-CAPTCHA-2026-10-18.md`.
+
 Evolução administrativa aprovada e publicada pelo PR #1, mesclado na `main`, com
 cadastro completo de empresas/produtos/serviços, imagens e ordenação, edição de
 textos/títulos, seis cores e até doze vitrines com prévia, proteção contra perda

@@ -14,6 +14,15 @@ describe('proteção HTTP', () => {
       "connect-src 'self' https://example.supabase.co wss://example.supabase.co",
     )
     expect(result.get('content-security-policy')).not.toContain("script-src 'self' 'unsafe-inline'")
+    expect(result.get('content-security-policy')).toContain(
+      "frame-src 'self' https://challenges.cloudflare.com",
+    )
+    expect(result.get('content-security-policy')).toContain(
+      "script-src 'self' 'nonce-nonce123' https://challenges.cloudflare.com",
+    )
+    expect(result.get('content-security-policy')).toContain(
+      'wss://example.supabase.co https://challenges.cloudflare.com',
+    )
     expect(result.get('cache-control')).toContain('no-store')
     expect(result.get('x-frame-options')).toBe('DENY')
     expect(result.get('x-test')).toBe('preserved')
