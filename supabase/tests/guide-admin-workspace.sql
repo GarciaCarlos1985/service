@@ -130,6 +130,6 @@ begin
  assert exists(select 1 from public.admin_audit_logs where actor_id=admin_id and action='settings'),'Configuração sem auditoria';
  assert exists(select 1 from public.admin_audit_logs where actor_id=admin_id and action='admin_role'),'Papel sem auditoria';
  raise notice 'OK: negação de acesso anônimo/consumidor, rascunhos privados e auditoria das novas operações';
- raise notice 'TODOS OS TESTES DO PAINEL PASSARAM!';
+ raise notice 'TODOS OS TESTES PASSARAM!';
 end;
 $$;

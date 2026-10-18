@@ -22,7 +22,8 @@ begin
   perform public.guide_admin_save('media',jsonb_build_object('company_id',company,'url','https://example.invalid/'||company||'.jpg','alt','Teste de vitrine'));
  end loop;
  result:=public.guide_admin_list('settings');revision_value:=(result->'rows'->0->>'revision')::integer;
- configuration:=(result->'rows'->0->'value')||jsonb_build_object('showSpotlight',true,'searchButtonLabel','Encontrar','resultsTitle','Negócios da cidade','theme','{"primary":"#285e5e","navy":"#102a43","accent":"#e4c66b","background":"#f8fafb","surface":"#eaf0f4","badge":"#d8b565"}'::jsonb,'spotlightMode','manual','spotlights',jsonb_build_array(
+ -- Fixture completa: a suíte também funciona isolada, sem depender do teste do painel.
+ configuration:='{"heroTitle":"Vitrines de teste","heroDescription":"Apresentação exclusivamente transacional de teste.","searchPlaceholder":"Pesquise produtos e serviços","quickSearches":["Tinta","Eletricista"],"showSuggestions":true}'::jsonb||jsonb_build_object('showSpotlight',true,'searchButtonLabel','Encontrar','resultsTitle','Negócios da cidade','theme','{"primary":"#285e5e","navy":"#102a43","accent":"#e4c66b","background":"#f8fafb","surface":"#eaf0f4","badge":"#d8b565"}'::jsonb,'spotlightMode','manual','spotlights',jsonb_build_array(
   jsonb_build_object('id',first_slide,'companyId',second_company,'title','Primeira chamada','description','Descrição editável','imageUrl','','imageAlt','Foto escolhida','enabled',true),
   jsonb_build_object('id',second_slide,'companyId',first_company,'title','Segunda chamada','description','','imageUrl','https://example.invalid/custom.jpg','imageAlt','','enabled',true),
   jsonb_build_object('id',hidden_slide,'companyId',free_company,'title','TEXTO PRIVADO DESATIVADO','description','','imageUrl','','imageAlt','','enabled',false)));
@@ -57,5 +58,6 @@ begin
  assert jsonb_array_length(public.guide_presentation()->'spotlights')=0,'Vitrine desativada exposta';
  set local role postgres;
  raise notice 'OK: CSS/URLs inválidos, promoção indevida, concorrência e acesso não autorizado recusados; vitrine pode ser desativada';
+ raise notice 'TODOS OS TESTES PASSARAM!';
 end;
 $$;
