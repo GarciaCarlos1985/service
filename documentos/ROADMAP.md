@@ -6,17 +6,19 @@
 > `DECISIONS.md` ADR-041+. Mapa do que fazer com o código existente:
 > `REUSE-MAP.md`.
 
-Status atual (2026-10-17): **painel profissional publicado no Cloudflare;
-14 migrações aplicadas e testadas no Supabase real, com legado preservado.** Catálogo vazio,
+Status atual (2026-10-18): **cadastro com logotipo e dias/horários publicado no Cloudflare;
+15 migrações aplicadas e testadas no Supabase real, com legado preservado.** Catálogo vazio,
 aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 
-### Autenticação por e-mail e CAPTCHA — candidato de 18/10/2026
+### Autenticação por e-mail e CAPTCHA — publicada em 18/10/2026
 
 Turnstile gratuito integrado aos formulários, reenvio de confirmação e proteção
 da reconfirmação administrativa, com 96 unitários e cinco suítes SQL atuais
-aprovados. Widget real provisionado, ainda sem obrigatoriedade no Auth nesta
-etapa. O titular ativou a confirmação por e-mail; SMTP Gmail precisa da senha
-de aplicativo e da validação de envio. A liberação e os resultados medidos são
+aprovados. Turnstile e confirmação de e-mail obrigatórios no Auth. SMTP Gmail
+configurado com remetente autorizado `carlinhoct@gmail.com`; titular confirmou
+recebimento do teste na caixa de entrada. Oito negativos sem prova/com prova
+fictícia recusados. Login novo com CAPTCHA e MFA pelos titulares ainda pendentes.
+A liberação e os resultados medidos são
 registrados em `AUTENTICACAO-EMAIL-CAPTCHA-2026-10-18.md`.
 
 Evolução administrativa aprovada e publicada pelo PR #1, mesclado na `main`, com
@@ -30,17 +32,18 @@ e versões em `PUBLICACAO-PAINEL-2026-10-17.md`; ensaio anterior em
 excessivas em seis helpers internos do legado, posteriormente fechadas pelo
 PR #2. As pendências operacionais de segurança continuam explícitas abaixo.
 
-### Extensão em revisão — cadastro de empresas (17/10/2026)
+### Cadastro de empresas — publicado em 18/10/2026
 
 Logotipo, semana de funcionamento por dia, intervalos, 24 horas, validação de
-conflitos e apresentação pública foram adicionados ao candidato local. O editor
+conflitos e apresentação pública foram publicados após aprovação do responsável. O editor
 mantém as ações de salvar/voltar fora da rolagem e elimina a criação duplicada
-na visão geral. Na integração com a segurança passaram 106 testes unitários e
-dez suítes SQL transacionais no banco real; builds de laboratório/produção e
-verificação de segredos também. Não altera o estado publicado acima: o PR #3
-e sua migração de identidade/horários seguem separados, com o teste do seletor
-de arquivos pendente. O PR #2 já foi publicado. Evidências e limites em
-`CADASTRO-EMPRESAS-2026-10-17.md`.
+na visão geral. A integração final passou em 113 unitários, seis suítes SQL
+atuais após aplicação, build/CI e varredura de segredos. Seleção de arquivo,
+salvamento/reabertura e desativação/reativação passaram no laboratório.
+O painel online abriu o novo formulário com sessão administrativa existente.
+Worker `417acf48-d450-4548-848e-992a27c7592b`, fonte `45519de`, 100% do tráfego.
+Evidências e limites em `PUBLICACAO-CADASTRO-2026-10-18.md`;
+o histórico da extensão está em `CADASTRO-EMPRESAS-2026-10-17.md`.
 
 ### Correções de segurança publicadas — 17/10/2026
 

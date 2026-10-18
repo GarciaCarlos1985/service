@@ -112,7 +112,30 @@ da transação protegida pelo runner.
 - `service_role`, tokens CLI — NUNCA em `VITE_*`, nunca no chat/repo.
 - **Sem chaves de pagamento**: não há gateway no MVP (ADR-044).
 
-## Estado atual (2026-10-17)
+## Estado atual (2026-10-18)
+
+Produção: `https://service-guide.helon280.workers.dev`, Worker
+`417acf48-d450-4548-848e-992a27c7592b`, fonte `45519de`, 100% do tráfego.
+O PR #3 foi aprovado, mesclado na `main` e publicado. Logo e rotina semanal
+estão no cadastro/edição e no perfil público; há apenas uma ação **Nova empresa**.
+O administrador edita nome, contatos, endereço, marca, horários e plano e pode
+desativar/reativar a empresa por sua situação, preservando o histórico.
+
+Supabase: 15 migrações aplicadas, 43 tabelas públicas com RLS, duas contas
+administrativas ativas/confirmadas e nenhuma conta técnica. As seis suítes SQL
+atuais passaram após a migração, com TLS e rollback; 113 unitários e o CI da
+fonte/`main` passaram. O catálogo continua vazio, aguardando a primeira empresa
+real pelo Helon. E-mail de confirmação e Turnstile são obrigatórios; SMTP Gmail
+usa o remetente autorizado `carlinhoct@gmail.com`, com entrega de teste confirmada
+na caixa de entrada. O login novo com CAPTCHA e o primeiro cadastro real ainda
+serão exercitados pelo titular. MFA dos titulares continua pendente.
+
+O laboratório `http://127.0.0.1:3005` usa dados/contas fictícios e não publica
+esses registros no Supabase real. O widget real aceita somente o domínio
+oficial; não usar credenciais de titulares no laboratório. Evidências atuais:
+`PUBLICACAO-CADASTRO-2026-10-18.md` e `AUTENTICACAO-EMAIL-CAPTCHA-2026-10-18.md`.
+
+### Registro histórico da publicação de 17/10/2026
 
 **App publicado no Cloudflare Workers** (ADR-049), em
 `https://service-guide.helon280.workers.dev`. Código no repositório oficial.

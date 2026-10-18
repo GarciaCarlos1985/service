@@ -1,0 +1,143 @@
+{
+  "measuredAt": "2026-10-18T05:15:09.738Z",
+  "repository": "https://github.com/GarciaCarlos1985/service",
+  "pullRequest": "https://github.com/GarciaCarlos1985/service/pull/3",
+  "sourceCommit": "45519de892d906957022f1c0929829342798c05b",
+  "mergeCommit": "82a713b5ad8ab96412d91f6f15f24b7b92bc4bd4",
+  "site": "https://service-guide.helon280.workers.dev",
+  "deployment": {
+    "id": "058be96c-9de5-458f-b95f-b2c4cf1aaf53",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "annotations": {
+      "workers/message": "Service Guide: cadastro de empresas - main 45519de",
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "417acf48-d450-4548-848e-992a27c7592b",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-18T05:14:19.406Z"
+  },
+  "bindings": [],
+  "database": {
+    "project": "taabjnmsaaltsiehywbw",
+    "migrations": [
+      "20260812120000",
+      "20260812120010",
+      "20260812130000",
+      "20260812140000",
+      "20260812150000",
+      "20260812160000",
+      "20260813100000",
+      "20260813110000",
+      "20260813120000",
+      "20261015032437",
+      "20261016194717",
+      "20261017005400",
+      "20261017130133",
+      "20261017132355",
+      "20261017142019"
+    ],
+    "tables": {
+      "total": 43,
+      "protected": 43
+    },
+    "columns": [
+      "logo_url",
+      "weekly_hours"
+    ],
+    "companies": 0,
+    "admins": 2,
+    "technical_accounts": 0,
+    "expected_active_admins": 2
+  },
+  "auth": {
+    "confirmationRequired": true,
+    "captchaRequired": true,
+    "captchaProvider": "turnstile",
+    "passwordMinimum": 12,
+    "smtpConfigured": true
+  },
+  "validation": {
+    "unitTests": 113,
+    "testFiles": 17,
+    "sqlSuitesAfterApply": [
+      "guide-internal-permissions.sql",
+      "guide-api-access-boundary.sql",
+      "guide-commercial.sql",
+      "guide-admin-workspace.sql",
+      "guide-site-customization.sql",
+      "guide-company-identity-hours.sql"
+    ],
+    "sqlRollback": true,
+    "logoFileChooserSaveReopen": true,
+    "disableReactivateInBrowser": true,
+    "http": {
+      "baseUrl": "https://service-guide.helon280.workers.dev",
+      "productionBuild": true,
+      "filesScanned": 233,
+      "privateValuesAbsent": true,
+      "labAbsent": true,
+      "correctBackend": true,
+      "http": [
+        {
+          "route": "/",
+          "status": 200,
+          "csp": true,
+          "privateNoStore": false
+        },
+        {
+          "route": "/admin",
+          "status": 200,
+          "csp": true,
+          "privateNoStore": true
+        },
+        {
+          "route": "/recuperar-senha",
+          "status": 200,
+          "csp": true,
+          "privateNoStore": true
+        },
+        {
+          "route": "/previa",
+          "status": 404,
+          "csp": true,
+          "privateNoStore": false
+        }
+      ]
+    },
+    "ci": [
+      {
+        "run": 39099537010,
+        "stage": "pull request",
+        "passed": true
+      },
+      {
+        "run": 39099634986,
+        "stage": "merge main",
+        "passed": true
+      },
+      {
+        "run": 39099763222,
+        "stage": "published source",
+        "passed": true
+      }
+    ],
+    "productionBrowser": {
+      "existingAdministrativeSessionLoaded": true,
+      "newCompanyFormOpened": true,
+      "logoControlVisible": true,
+      "sevenWeekDaysVisible": true,
+      "duplicateCreateActionAbsent": true,
+      "noCompanySaved": true
+    }
+  },
+  "pending": [
+    "Fresh password sign-in with enforced CAPTCHA and first real company registration by Helon",
+    "MFA setup by administrators"
+  ],
+  "companyRemoval": "Reversible status change; no physical deletion in the panel"
+}

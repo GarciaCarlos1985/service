@@ -50,6 +50,9 @@ O build de produção recusa backend diferente do projeto oficial, configuraçã
 pública ausente e site key de teste. As três variáveis públicas ficam em GitHub
 Actions Variables. Nenhum token administrativo ou senha SMTP vai para o CI.
 O modo `e2e` continua separado e aceita as chaves oficiais de teste do Turnstile.
+O widget real permite somente `service-guide.helon280.workers.dev`, sem localhost.
+O laboratório de cadastro na porta 3005 usa uma API descartável na porta 3004,
+contas fictícias e todas as migrações locais; seus cadastros não vão para produção.
 
 `node scripts/activate-guide-auth.mjs` apenas consulta. `--captcha --apply`
 confere o widget, o domínio e os formulários publicados antes de exigir a prova

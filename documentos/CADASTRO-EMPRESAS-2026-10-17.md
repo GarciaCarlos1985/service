@@ -1,4 +1,9 @@
-# Cadastro de empresas — candidato de 17/10/2026
+# Cadastro de empresas — identidade e funcionamento
+
+**Publicado em 18/10/2026:** PR #3 mesclado, fonte `45519de`, Worker
+`417acf48-d450-4548-848e-992a27c7592b`, 15 migrações. O formulário foi aberto
+e conferido no painel online. Ver `PUBLICACAO-CADASTRO-2026-10-18.md` para a
+prova final; os registros de candidato abaixo são históricos.
 
 ## Revalidação e liberação autorizada em 18/10/2026
 

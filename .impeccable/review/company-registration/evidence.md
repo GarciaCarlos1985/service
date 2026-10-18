@@ -51,3 +51,15 @@ Nenhuma migration/deploy desta extensão foi aplicada em produção. PR #2 de pe
 ## Revisão independente — parecer e verdict
 
 Primeira revisão: `fix` com cinco itens. O lote corrigiu navegação externa, primeiro viewport móvel e alvos de ação. O pedido de seed/roll foi retirado como não aplicável à extensão local, após leitura da referência literal acima. O verdict do mesmo revisor sobre as recapturas confirmou **três correções resolvidas e uma não aplicável**. O quinto item permanece **não resolvido por bloqueio externo**: selecionar arquivo pelo Chrome, salvar e reabrir com essa seleção. Disposição final do revisor: **fix**, sem regressão material identificada nas correções pontuadas. Não é pass global nem autorização de publicação. Parecer limitado a esses cinco achados; nenhum segundo detector foi executado.
+
+## Continuação funcional — 18/10/2026
+
+O seletor de arquivos foi exercitado pelo navegador interno com uma empresa
+fictícia identificada: PNG selecionado, prévia exibida, salvamento concluído e
+editor reaberto com a mesma marca. Evidência em
+`logo-selecionado-salvo-reaberto-2026-10-18.png`. Desativação e reativação também
+foram concluídas pelo editor no laboratório. Não houve novo parecer independente.
+O responsável aprovou a prévia e autorizou a liberação. O painel online abriu
+o novo cadastro e os sete controles de dias; a inspeção foi descartada sem
+salvar uma empresa real. Captura em `publicado-online-horarios-2026-10-18.png`.
+Resultados de CI, SQL e publicação em `documentos/PUBLICACAO-CADASTRO-2026-10-18.md`.

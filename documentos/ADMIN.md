@@ -16,7 +16,7 @@ apagamento físico definitivo da empresa. Produtos/serviços e imagens possuem
 controles próprios de disponibilidade/ativação. Aparência do site continua
 permitindo editar textos, títulos, cores e vitrines.
 
-## Operação atual do Service Guide (17/10/2026)
+## Operação atual do Service Guide (18/10/2026)
 
 O painel comercial está em `/admin`. A entrada pode ser feita em
 `/entrar?redirect=%2Fadmin`, com a senha já cadastrada no Supabase Auth.
@@ -27,8 +27,10 @@ Em caso de esquecimento, use `/recuperar-senha`: o link recebido retorna ao site
 publicado e permite definir a nova senha. As senhas reais foram preservadas.
 Use a senha cadastrada no Service Guide para esse e-mail. Estar conectado ao
 Gmail ou ao Chrome não autentica no guia; o provedor Google OAuth está desativado.
-A prévia normal `http://127.0.0.1:3002` usa o mesmo Supabase real. O laboratório
-anterior tinha contas fictícias e não aceitava as credenciais dos titulares.
+O laboratório `http://127.0.0.1:3005` usa dados fictícios e não aceita as
+credenciais dos titulares. O widget Turnstile real é restrito ao domínio online.
+Confirmação por e-mail e CAPTCHA estão ativos; o novo cadastro de empresa foi
+publicado com a migração de marca/horários. Ver `PUBLICACAO-CADASTRO-2026-10-18.md`.
 As ações comerciais verificam `profiles.is_admin` no banco por `_is_admin()` e
 `guide_private.require_user(true)`; metadados editáveis do usuário não concedem
 acesso. Ver `ATIVACAO-SUPABASE-2026-10-16.md` para a validação.

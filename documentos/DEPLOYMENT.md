@@ -1,5 +1,13 @@
 # DEPLOYMENT — SERVICE GUIDE
 
+## Publicação atual — 18/10/2026
+
+Fonte `45519de` na `main`, PR #3 mesclado, Worker
+`417acf48-d450-4548-848e-992a27c7592b` com 100% do tráfego. Logo e horários
+publicados, confirmação de e-mail/CAPTCHA preservados. Supabase com 15 migrações
+e seis suítes SQL atuais aprovadas após aplicação. Nenhum plano pago contratado.
+Evidências: `PUBLICACAO-CADASTRO-2026-10-18.md`.
+
 ## Hospedagem atual (ADR-049 — 16/10/2026)
 
 O destino de publicação é **Cloudflare Workers**, autorizado pelo usuário.

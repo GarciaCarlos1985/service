@@ -1,5 +1,18 @@
 # SECURITY — SERVICE
 
+## Estado confirmado em 18/10/2026
+
+O cadastro de marca/horários foi publicado com 15 migrações; 43/43 tabelas
+públicas mantêm RLS. Seis suítes SQL atuais passaram no banco real após aplicação,
+incluindo IDOR, negação anônima/consumidor, papéis e sessão/MFA. Edição,
+desativação e reativação de empresas permanecem sob RPC e auditoria.
+Confirmação por e-mail e Turnstile são obrigatórios; oito negativos de Auth
+sem prova/com token fictício foram recusados. Entrega SMTP confirmada pelo
+titular. MFA pelos administradores e login novo com CAPTCHA ainda precisam
+ser concluídos pelos titulares. Essas verificações não prometem segurança
+absoluta. Ver `PUBLICACAO-CADASTRO-2026-10-18.md` e
+`AUTENTICACAO-EMAIL-CAPTCHA-2026-10-18.md`.
+
 Postura: segurança por construção, não por convenção. O frontend carrega a chave
 anônima do Supabase por design — toda fronteira real está no banco (RLS) e no
 backend.
