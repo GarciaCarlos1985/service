@@ -1,6 +1,8 @@
 import { z } from 'zod'
 import { normalize } from '../types'
 import { priceCents, text } from '../admin'
+import { cleanWeek, weeklyHoursSchema, weekHoursText } from '../hours'
+import type { WeeklyHours } from '../hours'
 import type { AdminAction, AdminRow } from '../admin'
 
 export const slugFor = (value: string) =>
@@ -22,7 +24,7 @@ const website = z.union([
 ])
 const companyForm = z
   .object({
-    name,
+    name: name.max(100, 'Use até 100 caracteres no nome da empresa.'),
     slug,
     description: z
       .string()
@@ -34,13 +36,28 @@ const companyForm = z
     neighborhood_id: z.union([id, z.literal('')]),
     plan_id: id,
     status: z.enum(['inactive', 'active', 'blocked']),
-    street: z.string().max(200),
-    address_number: z.string().max(30),
+    street: z.string().max(160),
+    address_number: z.string().max(20),
     postal_code: z.string().regex(/^\d{8}$|^$/, 'Informe um CEP com 8 números.'),
     phone: contact,
     whatsapp: contact,
     website,
     hours: z.string().max(2000),
+    logo_url: z
+      .union([
+        z.literal(''),
+        z
+          .url()
+          .refine(
+            (url) =>
+              url.startsWith('https://') ||
+              (import.meta.env.MODE === 'e2e' &&
+                url.startsWith('http://127.0.0.1:3004/storage/v1/object/public/guide-media/')),
+            'Use uma imagem enviada para a empresa.',
+          ),
+      ])
+      .default(''),
+    weekly_hours: weeklyHoursSchema.nullable().optional(),
   })
   .superRefine((value, context) => {
     if (value.status !== 'active') return
@@ -69,12 +86,17 @@ const itemForm = z.object({
 export function editorPayload(action: AdminAction, form: AdminRow): AdminRow {
   const payload = { ...form }
   if (action === 'company') {
+    if (payload.weekly_hours) {
+      payload.weekly_hours = cleanWeek(payload.weekly_hours as WeeklyHours)
+    }
     payload.phone = text(form, 'phone').replace(/[^+\d]/g, '')
     let whatsapp = text(form, 'whatsapp').replace(/\D/g, '')
     if ([10, 11].includes(whatsapp.length)) whatsapp = '55' + whatsapp
     payload.whatsapp = whatsapp
     payload.postal_code = text(form, 'postal_code').replace(/\D/g, '')
-    return { ...companyForm.parse(payload), ...(text(form, 'id') ? { id: text(form, 'id') } : {}) }
+    const parsed = companyForm.parse(payload)
+    if (parsed.weekly_hours) parsed.hours = weekHoursText(parsed.weekly_hours)
+    return { ...parsed, ...(text(form, 'id') ? { id: text(form, 'id') } : {}) }
   }
   if (action === 'item') {
     payload.price_cents = priceCents(text(form, 'price'))

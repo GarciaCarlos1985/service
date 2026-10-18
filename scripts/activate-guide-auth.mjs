@@ -37,7 +37,7 @@ function emailPatch(env, current) {
     external_email_enabled: true,
     mailer_autoconfirm: false,
     smtp_host: env.SMTP_HOST,
-    smtp_port: Number(env.SMTP_PORT),
+    smtp_port: String(env.SMTP_PORT),
     smtp_user: env.SMTP_USER,
     smtp_pass: env.SMTP_PASSWORD,
     smtp_admin_email: env.SMTP_FROM,
@@ -76,6 +76,7 @@ if (args.length === 1 && args[0] === '--self-test') {
   )
   const patch = emailPatch(fake, { security_captcha_enabled: true, rate_limit_email_sent: 60 })
   assert.equal(patch.mailer_autoconfirm, false)
+  assert.equal(patch.smtp_port, '587')
   assert.equal(patch.rate_limit_email_sent, 60)
   assert.ok(patch.mailer_templates_confirmation_content.includes('{{ .ConfirmationURL }}'))
   assert.equal(patch.password_min_length, undefined)

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-17T01:33:45.442539+00:00",
+  "generatedAt": "2026-10-17T14:07:03.645131+00:00",
   "title": "Design System: Service Guide",
   "extensions": {
     "colorMeta": {
@@ -498,7 +498,9 @@
       "src/modules/guide/admin/SecurityPanel.tsx",
       "src/modules/guide/admin/SpotlightEditor.tsx",
       "src/modules/guide/presentation.ts",
-      "src/modules/guide/site-presentation.tsx"
+      "src/modules/guide/site-presentation.tsx",
+      "src/modules/guide/admin/CompanyLogo.tsx",
+      "src/modules/guide/admin/WeeklyHoursEditor.tsx"
     ],
     "assets": {
       "logo": {
@@ -576,7 +578,7 @@
         ]
       },
       "savebar": {
-        "dialog": "position: sticky; bottom: -32px; até 600px bottom: -22px",
+        "dialog": "Histórico de ordenação: position: sticky; bottom: -32px; até 600px bottom: -22px. Cadastro atual: position: static; flex-shrink: 0, fora dos campos roláveis; ver companyRegistration.",
         "settingsDesktop": "position: sticky; bottom: 0",
         "settingsMobile": "até 800px position: fixed; left/right: clamp(16px, 4vw, 32px); bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 35",
         "settingsFormReserve": "até 800px padding-bottom: calc(208px + env(safe-area-inset-bottom))"
@@ -633,6 +635,62 @@
           "migration11And12Applied": false,
           "deployApplied": false
         }
+      },
+      "companyRegistration": {
+        "mode": "Operate / code-led; extensão local, sem nova identidade ou tokens globais.",
+        "status": "Candidato local; parecer fix; seletor Chrome pendente por permissão externa.",
+        "surface": ".impeccable/surfaces/admin-workspace.md",
+        "seed": "Não aplicável: extensão do editor existente; justificativa literal no pacote de evidências.",
+        "dialog": "Máximo 920px; width min(920px, calc(100vw - 32px)); max-height calc(100dvh - 36px); padding efetivo 30px; overflow clip. Até 600px width calc(100vw - 16px), max-height calc(100dvh - 20px), padding efetivo 22px. A regra app-dialog com !important prevalece sobre os paddings declarados no editor; medidas verificadas no navegador.",
+        "scroll": "Somente campos rolam, com gap 26px; título, fechamento, navegação e barra estática de ações ficam fora. revealField usa preventScroll e desloca somente campos; respeita movimento reduzido.",
+        "navigation": "Quatro assuntos em quatro colunas, duas até 600px; gap 8px; ações mínimas de 48px.",
+        "logo": "Prévia contain de 96px, 64px até 600px; borda tracejada e raio 10px; ações nomeadas de troca/remoção, arraste com destaque azul suave; envio ao salvar. Distinto da capa da galeria.",
+        "weeklyHours": "Semana opcional; aberto/fechado/24h explícitos, até três intervalos, cópia para demais dias abertos, virada de dia e conferência textual. Grade diária 160px mais coluna flexível, uma coluna até 600px. Campos tabulares, ação de 48px. Ausência mantém legado/consulta, sem horários inventados.",
+        "public": "Logo contain com raio 8px: cartão 48px, perfil 80px/56px até 600px. Lista semanal com coluna do dia 130px, uma coluna até 600px. Ausência usa legado ou Consulte a empresa.",
+        "entry": "Somente Nova empresa global; criação redundante retirada da visão geral.",
+        "review": {
+          "source": "Pacote e agente principal; não reexecutado pelo documenter.",
+          "path": ".impeccable/review/company-registration/evidence.md",
+          "initialDisposition": "fix",
+          "postFixDisposition": "fix",
+          "findings": 5,
+          "resolvedVisualFindings": 3,
+          "notApplicableFindings": 1,
+          "unresolvedFindings": 1,
+          "unresolved": "Selecionar arquivo pelo Chrome, salvar e reabrir com essa seleção: bloqueado pela permissão externa da extensão. Upload SDK/API local não substitui essa verificação.",
+          "scope": "Somente cinco achados do candidato local; sem pass global, finalização, autorização de publicação ou certificação de produção.",
+          "captureDirectory": ".impeccable/review/company-registration/",
+          "captures": [
+            "profile-desktop.jpg",
+            "hours-desktop.jpg",
+            "profile-mobile.jpg",
+            "hours-mobile.jpg",
+            "profile-user-1254.jpg",
+            "public-desktop.jpg",
+            "public-mobile.jpg"
+          ],
+          "captureLimitations": "Sete viewports finais: 1440x1000, 390x844 e 1254x884 lógicos. Arquivos initial são históricos; documenter conferiu código/documentos, sem nova inspeção de imagens.",
+          "reportedValidation": {
+            "source": "Agente principal/pacote; não reexecutada pelo documenter.",
+            "typecheck": "PASS",
+            "lint": "0 erros / 37 avisos herdados",
+            "format": "PASS",
+            "unitTests": 104,
+            "testFiles": 16,
+            "buildLab": "PASS",
+            "buildProduction": "PASS",
+            "sql": "Nove suítes no PostgreSQL real; candidatas 13/14 dentro da transação; rollback final.",
+            "detector": "Uma execução sem ocorrências antes do ajuste final da barra; nenhuma nova varredura.",
+            "migration13And14AppliedInProduction": false,
+            "deployApplied": false
+          }
+        },
+        "notCanonized": [
+          "Rolagem ancestral que afastava título/navegação, introdução móvel longa e alvos complementares menores que 48px: corrigidos.",
+          "Criação redundante retirada; não herdar duplicação.",
+          "Medidas locais não promovidas a tokens globais.",
+          "Bloqueio externo do seletor Chrome é pendência, não padrão aprovado."
+        ]
       }
     }
   },

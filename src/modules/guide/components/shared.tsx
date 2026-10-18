@@ -287,11 +287,25 @@ export function CompanyCard({
         <Heart size={20} />
       </button>
       <div className="card-body">
-        <h3>
-          <a href={'/empresa/' + c.id}>{c.name}</a>
-        </h3>
-        <div className="card-tags">
-          <span>{cat?.name}</span>
+        <div className="company-card-heading">
+          {c.logo_url && (
+            <img
+              className="company-logo"
+              src={c.logo_url}
+              alt={'Logotipo de ' + c.name}
+              width="48"
+              height="48"
+              loading="lazy"
+            />
+          )}
+          <div>
+            <h3>
+              <a href={'/empresa/' + c.id}>{c.name}</a>
+            </h3>
+            <div className="card-tags">
+              <span>{cat?.name}</span>
+            </div>
+          </div>
         </div>
         <p className="location">
           <MapPin size={14} />

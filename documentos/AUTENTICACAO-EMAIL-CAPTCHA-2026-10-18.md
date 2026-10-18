@@ -1,5 +1,32 @@
 # Autenticação — e-mail e CAPTCHA — 18/10/2026
 
+## Estado efetivo confirmado em 18/10/2026
+
+O PR #4 foi mesclado na `main` (`eca6487`) e publicado no Worker
+`8839d161-fbbd-4978-945b-3d043c6f840d`, com 100% do tráfego. Os dois CIs
+passaram: `39096769037` e `39096890329`. A consulta ao Supabase confirmou
+CAPTCHA Turnstile obrigatório, confirmação de e-mail obrigatória e senha mínima
+de 12 caracteres; as senhas existentes foram preservadas.
+
+O responsável alterou o remetente para `carlinhoct@gmail.com` e forneceu a
+senha de aplicativo fora do chat. SMTP Gmail com TLS na porta 587 foi testado
+e configurado, com limite no Auth de 30 e-mails por hora. Foi enviado somente
+o teste autorizado de recuperação para esse endereço. O titular confirmou o
+recebimento na caixa de entrada e apresentou a mensagem recebida. Nenhuma senha
+do titular foi definida pela automação. A API de configuração exige a porta SMTP
+como string; a ferramenta e seu autoteste foram corrigidos para esse contrato.
+
+Após a propagação da configuração, oito negativos HTTP recusaram quatro fluxos
+sem prova e os mesmos quatro com token fictício (`captcha_failed`). O titular
+confirmou o widget real como concluído no navegador. O login com senha após a
+exigência do servidor ainda deve ser conferido pelo titular; ele priorizou a
+revisão do cadastro local e agora o primeiro cadastro real pelo Helon.
+
+Os 43 objetos de tabela pública permanecem com RLS e há duas contas
+administrativas, sem contas técnicas permanentes. MFA ainda não foi configurado
+pelos titulares. Nenhum plano pago foi contratado. O histórico de preparação
+abaixo descreve o estado anterior, não pendências atuais de SMTP/CAPTCHA.
+
 ## Escopo e autorização
 
 O responsável solicitou ativar e-mail e CAPTCHA e confirmou que as ferramentas

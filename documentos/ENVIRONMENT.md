@@ -59,7 +59,7 @@ O comando de e-mail requer Python 3 com a biblioteca padrão `smtplib`; se
 necessário, adicione o diretório do Python ao PATH somente desse processo.
 `--self-test` testa as guardas sem rede nem leitura de credenciais reais.
 
-Para o remetente autorizado `helon280@gmail.com`, use `smtp.gmail.com`, porta
+Para o remetente autorizado atual `carlinhoct@gmail.com`, use `smtp.gmail.com`, porta
 587 e uma senha de aplicativo do Google, criada pelo titular após ativar a
 verificação em duas etapas. A senha normal da Conta Google não é usada.
 Gmail e Turnstile são usados sem contratar plano pago, sujeitos às suas cotas.

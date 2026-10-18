@@ -30,6 +30,18 @@ e versões em `PUBLICACAO-PAINEL-2026-10-17.md`; ensaio anterior em
 excessivas em seis helpers internos do legado, posteriormente fechadas pelo
 PR #2. As pendências operacionais de segurança continuam explícitas abaixo.
 
+### Extensão em revisão — cadastro de empresas (17/10/2026)
+
+Logotipo, semana de funcionamento por dia, intervalos, 24 horas, validação de
+conflitos e apresentação pública foram adicionados ao candidato local. O editor
+mantém as ações de salvar/voltar fora da rolagem e elimina a criação duplicada
+na visão geral. Na integração com a segurança passaram 106 testes unitários e
+dez suítes SQL transacionais no banco real; builds de laboratório/produção e
+verificação de segredos também. Não altera o estado publicado acima: o PR #3
+e sua migração de identidade/horários seguem separados, com o teste do seletor
+de arquivos pendente. O PR #2 já foi publicado. Evidências e limites em
+`CADASTRO-EMPRESAS-2026-10-17.md`.
+
 ### Correções de segurança publicadas — 17/10/2026
 
 O PR #2 foi mesclado e publicado: fechamento da API antiga, grants diretos e padrões de
