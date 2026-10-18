@@ -45,100 +45,173 @@ try {
       signal: AbortSignal.timeout(15000),
     })
   ).json()
-  assert.equal(settings.mailer_autoconfirm, true, 'Não criar fixture se houver envio de e-mail')
-  const applied = (
-    await db.query(
-      "select to_regprocedure('public.guide_admin_reorder(text,uuid[],uuid[],uuid)') is not null as ready",
-    )
-  ).rows[0].ready
-  report.workspaceMigrationActive = applied
-  const created = await client.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: 'Teste técnico de segurança',
-        phone: '5569999990000',
-        security_test: nonce,
-        is_admin: true,
-      },
-    },
-  })
-  assert.equal(created.error, null, 'Cadastro descartável falhou')
-  id = created.data.user.id
-  assert.equal(
-    (await client.rpc('guide_me')).data.admin,
-    false,
-    'Metadados não podem conceder papel',
+  assert.ok(
+    env.SUPABASE_ACCESS_TOKEN,
+    'Token de gerenciamento necessário para conferir a política antes do teste.',
   )
-  report.metadataEscalationDenied = true
-  const updated = await db.query(
-    "update public.profiles set is_admin=true where id=$1 and exists(select 1 from auth.users where id=$1 and raw_user_meta_data->>'security_test'=$2)",
-    [id, nonce],
-  )
-  assert.equal(updated.rowCount, 1, 'Fixture deve ser a única conta promovida')
-  for (let cycle = 0; cycle < 3; cycle++) {
-    const allowed = await client.rpc('guide_admin_list', { p_section: 'overview' })
-    assert.equal(allowed.error, null, 'Admin temporário sem acesso')
-    const session = (await client.auth.getSession()).data.session
-    privateValues.push(session.access_token, session.refresh_token)
-    assert.equal((await client.auth.signOut()).error, null, 'Logout falhou')
-    const afterLogout = await fetch(env.VITE_SUPABASE_URL + '/rest/v1/rpc/guide_admin_list', {
-      method: 'POST',
-      headers: {
-        apikey: env.VITE_SUPABASE_ANON_KEY,
-        Authorization: 'Bearer ' + session.access_token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ p_section: 'overview' }),
+  const policyResponse = await fetch(
+    `https://api.supabase.com/v1/projects/taabjnmsaaltsiehywbw/config/auth`,
+    {
+      headers: { Authorization: 'Bearer ' + env.SUPABASE_ACCESS_TOKEN },
       signal: AbortSignal.timeout(15000),
+    },
+  )
+  assert.equal(policyResponse.status, 200, 'Não criar fixture sem conferir a política Auth.')
+  const policy = await policyResponse.json()
+  if (policy.security_captcha_enabled) {
+    report.captchaProtectionEnabled = true
+    report.probes = []
+    for (const [label, captchaToken] of [
+      ['missing', undefined],
+      ['dummy', 'XXXX.DUMMY.TOKEN.XXXX'],
+    ]) {
+      const options = captchaToken ? { captchaToken } : {}
+      const login = await client.auth.signInWithPassword({ email, password, options })
+      assert.equal(
+        login.error?.code,
+        'captcha_failed',
+        'Login sem prova válida não foi recusado pelo CAPTCHA.',
+      )
+      const signup = await client.auth.signUp({
+        email,
+        password,
+        options: {
+          ...options,
+          data: {
+            security_test: nonce,
+            full_name: 'Teste técnico de segurança',
+            phone: '5569999990000',
+          },
+        },
+      })
+      if (!signup.error) id = signup.data.user?.id
+      assert.equal(
+        signup.error?.code,
+        'captcha_failed',
+        'Cadastro sem prova válida não foi recusado pelo CAPTCHA.',
+      )
+      const recovery = await client.auth.resetPasswordForEmail(email, {
+        ...options,
+        redirectTo: policy.site_url + '/recuperar-senha',
+      })
+      assert.equal(
+        recovery.error?.code,
+        'captcha_failed',
+        'Recuperação sem prova válida não foi recusada pelo CAPTCHA.',
+      )
+      const resend = await client.auth.resend({ type: 'signup', email, options })
+      assert.equal(
+        resend.error?.code,
+        'captcha_failed',
+        'Reenvio sem prova válida não foi recusado pelo CAPTCHA.',
+      )
+      report.probes.push({
+        proof: label,
+        loginDenied: true,
+        signupDenied: true,
+        recoveryDenied: true,
+        resendDenied: true,
+      })
+    }
+    report.noEmailsSent = true
+    report.noAccountsCreated = !id
+    report.browserValidationRequiredForValidProof = true
+  } else {
+    assert.equal(settings.mailer_autoconfirm, true, 'Não criar fixture se houver envio de e-mail')
+    const applied = (
+      await db.query(
+        "select to_regprocedure('public.guide_admin_reorder(text,uuid[],uuid[],uuid)') is not null as ready",
+      )
+    ).rows[0].ready
+    report.workspaceMigrationActive = applied
+    const created = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: 'Teste técnico de segurança',
+          phone: '5569999990000',
+          security_test: nonce,
+          is_admin: true,
+        },
+      },
     })
-    if (applied) assert.equal(afterLogout.status, 403, 'JWT de sessão encerrada ainda administra')
-    else report.beforeMigrationOldTokenStillAccepted = afterLogout.status === 200
+    assert.equal(created.error, null, 'Cadastro descartável falhou')
+    id = created.data.user.id
+    assert.equal(
+      (await client.rpc('guide_me')).data.admin,
+      false,
+      'Metadados não podem conceder papel',
+    )
+    report.metadataEscalationDenied = true
+    const updated = await db.query(
+      "update public.profiles set is_admin=true where id=$1 and exists(select 1 from auth.users where id=$1 and raw_user_meta_data->>'security_test'=$2)",
+      [id, nonce],
+    )
+    assert.equal(updated.rowCount, 1, 'Fixture deve ser a única conta promovida')
+    for (let cycle = 0; cycle < 3; cycle++) {
+      const allowed = await client.rpc('guide_admin_list', { p_section: 'overview' })
+      assert.equal(allowed.error, null, 'Admin temporário sem acesso')
+      const session = (await client.auth.getSession()).data.session
+      privateValues.push(session.access_token, session.refresh_token)
+      assert.equal((await client.auth.signOut()).error, null, 'Logout falhou')
+      const afterLogout = await fetch(env.VITE_SUPABASE_URL + '/rest/v1/rpc/guide_admin_list', {
+        method: 'POST',
+        headers: {
+          apikey: env.VITE_SUPABASE_ANON_KEY,
+          Authorization: 'Bearer ' + session.access_token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ p_section: 'overview' }),
+        signal: AbortSignal.timeout(15000),
+      })
+      if (applied) assert.equal(afterLogout.status, 403, 'JWT de sessão encerrada ainda administra')
+      else report.beforeMigrationOldTokenStillAccepted = afterLogout.status === 200
+      assert.equal(
+        (await client.auth.signInWithPassword({ email, password })).error,
+        null,
+        'Novo login falhou',
+      )
+    }
+    report.loginLogoutReturnCycles = 3
+    report.revokedAdminTokenDenied = applied
+    const enrolled = await client.auth.mfa.enroll({
+      factorType: 'totp',
+      friendlyName: 'Fixture descartável ' + nonce,
+    })
+    assert.equal(enrolled.error, null, 'Enroll TOTP falhou')
+    privateValues.push(enrolled.data.totp.secret, enrolled.data.totp.qr_code)
+    const verify = await client.auth.mfa.challengeAndVerify({
+      factorId: enrolled.data.id,
+      code: totp(enrolled.data.totp.secret),
+    })
+    assert.equal(verify.error, null, 'Verificação TOTP falhou')
+    const assurance = await client.auth.mfa.getAuthenticatorAssuranceLevel()
+    assert.equal(assurance.data.currentLevel, 'aal2', 'Segundo fator não elevou a sessão')
+    assert.equal(
+      (await client.rpc('guide_admin_list', { p_section: 'overview' })).error,
+      null,
+      'Sessão AAL2 deve administrar',
+    )
+    report.realTotpEnrollmentAndVerification = true
+    await client.auth.signOut()
     assert.equal(
       (await client.auth.signInWithPassword({ email, password })).error,
       null,
-      'Novo login falhou',
+      'Novo login com MFA falhou',
     )
+    const next = await client.auth.mfa.getAuthenticatorAssuranceLevel()
+    assert.equal(next.data.currentLevel, 'aal1')
+    assert.equal(next.data.nextLevel, 'aal2')
+    if (applied)
+      assert.equal(
+        (await client.rpc('guide_admin_list', { p_section: 'overview' })).error?.code,
+        '42501',
+        'Login só com senha não pode ignorar MFA ativo',
+      )
+    report.passwordLoginRequestsSecondFactor = true
+    report.noEmailsSent = true
   }
-  report.loginLogoutReturnCycles = 3
-  report.revokedAdminTokenDenied = applied
-  const enrolled = await client.auth.mfa.enroll({
-    factorType: 'totp',
-    friendlyName: 'Fixture descartável ' + nonce,
-  })
-  assert.equal(enrolled.error, null, 'Enroll TOTP falhou')
-  privateValues.push(enrolled.data.totp.secret, enrolled.data.totp.qr_code)
-  const verify = await client.auth.mfa.challengeAndVerify({
-    factorId: enrolled.data.id,
-    code: totp(enrolled.data.totp.secret),
-  })
-  assert.equal(verify.error, null, 'Verificação TOTP falhou')
-  const assurance = await client.auth.mfa.getAuthenticatorAssuranceLevel()
-  assert.equal(assurance.data.currentLevel, 'aal2', 'Segundo fator não elevou a sessão')
-  assert.equal(
-    (await client.rpc('guide_admin_list', { p_section: 'overview' })).error,
-    null,
-    'Sessão AAL2 deve administrar',
-  )
-  report.realTotpEnrollmentAndVerification = true
-  await client.auth.signOut()
-  assert.equal(
-    (await client.auth.signInWithPassword({ email, password })).error,
-    null,
-    'Novo login com MFA falhou',
-  )
-  const next = await client.auth.mfa.getAuthenticatorAssuranceLevel()
-  assert.equal(next.data.currentLevel, 'aal1')
-  assert.equal(next.data.nextLevel, 'aal2')
-  if (applied)
-    assert.equal(
-      (await client.rpc('guide_admin_list', { p_section: 'overview' })).error?.code,
-      '42501',
-      'Login só com senha não pode ignorar MFA ativo',
-    )
-  report.passwordLoginRequestsSecondFactor = true
-  report.noEmailsSent = true
 } catch (error) {
   let message = redact(error)
   for (const value of privateValues) if (value) message = message.replaceAll(value, '[redacted]')
@@ -179,7 +252,12 @@ try {
     }
   }
   fs.mkdirSync('.wrangler', { recursive: true })
-  fs.writeFileSync('.wrangler/auth-security-verification.json', JSON.stringify(report, null, 2))
+  fs.writeFileSync(
+    report.captchaProtectionEnabled
+      ? '.wrangler/auth-captcha-security-verification.json'
+      : '.wrangler/auth-security-verification.json',
+    JSON.stringify(report, null, 2),
+  )
   console.log(JSON.stringify(report))
   await db.end()
 }

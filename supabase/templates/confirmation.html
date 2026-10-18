@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confirme seu e-mail — Service Guide</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 32px 16px;
+      background: #f4f7fb;
+      color: #102c46;
+      font-family: Arial, sans-serif;
+    "
+  >
+    <div
+      style="
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 32px;
+        background: #ffffff;
+        border-radius: 16px;
+      "
+    >
+      <p style="margin: 0 0 24px; font-size: 16px; font-weight: bold">Service Guide</p>
+      <h1 style="margin: 0 0 16px; font-size: 26px; line-height: 1.25">Confirme seu e-mail</h1>
+      <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6">
+        Para ativar sua conta, confirme este endereço pelo botão abaixo.
+      </p>
+      <p style="margin: 0 0 24px">
+        <a
+          href="{{ .ConfirmationURL }}"
+          style="
+            display: inline-block;
+            padding: 16px 24px;
+            border-radius: 10px;
+            background: #0862d4;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+          "
+          >Confirmar e-mail</a
+        >
+      </p>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6">
+        Se você não solicitou este cadastro, ignore a mensagem. Mantenha este link privado.
+      </p>
+    </div>
+  </body>
+</html>

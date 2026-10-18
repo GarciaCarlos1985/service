@@ -8,6 +8,9 @@ import {
 } from '~/modules/ui/primitives/dialog'
 import { getSupabase } from '~/lib/supabase'
 import { useAuth } from '~/modules/auth/auth-context'
+import { AuthCaptcha } from '~/modules/auth/AuthCaptcha'
+import { useAuthCaptcha } from '~/modules/auth/use-auth-captcha'
+import { authErrorMessage } from '~/modules/auth/captcha-options'
 import { guideRpc } from '../api'
 import { text } from '../admin'
 import type { AdminRow } from '../admin'
@@ -21,7 +24,8 @@ export function RoleDialog({
   onClose: () => void
   onSaved: () => Promise<unknown>
 }) {
-  const { user } = useAuth()
+  const { user, signIn } = useAuth()
+  const captcha = useAuthCaptcha()
   const [password, setPassword] = useState('')
   const [code, setCode] = useState('')
   const [useMfa, setUseMfa] = useState(false)
@@ -56,12 +60,8 @@ export function RoleDialog({
           setBusy(false)
           return
         }
-        const result = await getSupabase().auth.signInWithPassword({
-          email: user?.email ?? '',
-          password,
-        })
+        await signIn({ email: user?.email ?? '', password }, captcha.token)
         setPassword('')
-        if (result.error) throw result.error
       }
       await guideRpc('guide_admin_set_role', { p_user_id: text(row, 'id'), p_admin: !row.is_admin })
       await onSaved()
@@ -72,10 +72,14 @@ export function RoleDialog({
       setError(
         failure instanceof Error && failure.name === 'GuideError'
           ? failure.message
-          : 'Não foi possível confirmar o acesso. Revise a senha ou o código atual do autenticador.',
+          : authErrorMessage(
+              failure,
+              'Não foi possível confirmar o acesso. Revise a senha ou o código atual do autenticador.',
+            ),
       )
     } finally {
       setBusy(false)
+      captcha.reset()
     }
   }
   return (
@@ -157,6 +161,9 @@ export function RoleDialog({
               />
             </label>
           )}
+          {loaded && !useMfa && (
+            <AuthCaptcha key={captcha.attempt} action="admin_confirm" onToken={captcha.setToken} />
+          )}
           {error && (
             <p role="alert" className="field-error">
               {error}
@@ -167,7 +174,7 @@ export function RoleDialog({
               Voltar
             </button>
             {loaded && (
-              <button className="btn primary" disabled={busy}>
+              <button className="btn primary" disabled={busy || (!useMfa && captcha.waiting)}>
                 {busy ? 'Confirmando…' : 'Confirmar alteração de acesso'}
               </button>
             )}

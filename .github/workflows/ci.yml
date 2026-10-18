@@ -14,6 +14,10 @@ jobs:
     name: typecheck · lint · test · build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+      VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,6 +40,9 @@ jobs:
 
       - name: Test
         run: npm run test
+
+      - name: Auth configuration safety
+        run: node scripts/activate-guide-auth.mjs --self-test
 
       - name: Build
         run: npm run build

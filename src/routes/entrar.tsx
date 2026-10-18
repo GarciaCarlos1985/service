@@ -11,6 +11,9 @@ import { signInSchema } from '~/modules/auth/schemas'
 import type { SignInInput } from '~/modules/auth/schemas'
 import { safeReturnPath } from '~/modules/auth/return-path'
 import { GuideAuthLayout } from '~/modules/guide/GuideShell'
+import { AuthCaptcha } from '~/modules/auth/AuthCaptcha'
+import { useAuthCaptcha } from '~/modules/auth/use-auth-captcha'
+import { authErrorMessage } from '~/modules/auth/captcha-options'
 
 export const Route = createFileRoute('/entrar')({
   validateSearch: (input: SearchSchemaInput & { redirect?: unknown }) => ({
@@ -24,6 +27,7 @@ function SignInPage() {
   const { redirect } = Route.useSearch()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const captcha = useAuthCaptcha()
 
   const {
     register,
@@ -37,12 +41,13 @@ function SignInPage() {
     setError(null)
     setLoading(true)
     try {
-      await signIn(values)
+      await signIn(values, captcha.token)
       window.location.assign(redirect)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Não foi possível entrar. Tente novamente.')
+      setError(authErrorMessage(err, 'Não foi possível entrar. Tente novamente.'))
     } finally {
       setLoading(false)
+      captcha.reset()
     }
   }
 
@@ -80,7 +85,8 @@ function SignInPage() {
               error={errors.password?.message}
               {...register('password')}
             />
-            <Button type="submit" fullWidth loading={loading}>
+            <AuthCaptcha key={captcha.attempt} action="sign_in" onToken={captcha.setToken} />
+            <Button type="submit" fullWidth loading={loading} disabled={captcha.waiting}>
               Entrar
             </Button>
           </form>
@@ -95,6 +101,16 @@ function SignInPage() {
             <Link to="/recuperar-senha" className="text-slate-500 hover:text-brand-blue-600">
               Esqueci minha senha
             </Link>
+            <p className="text-slate-500">
+              Precisa confirmar seu e-mail?{' '}
+              <Link
+                to="/cadastro"
+                search={{ confirmar: true }}
+                className="font-semibold text-brand-blue-600 hover:underline"
+              >
+                Reenviar confirmação
+              </Link>
+            </p>
           </div>
         </CardBody>
       </Card>

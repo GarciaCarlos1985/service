@@ -6,11 +6,15 @@ import { Alert, Button, Input } from '~/modules/ui'
 import { useAuth } from '~/modules/auth/auth-context'
 import { resetPasswordSchema, updatePasswordSchema } from '~/modules/auth/schemas'
 import type { ResetPasswordInput, UpdatePasswordInput } from '~/modules/auth/schemas'
+import { AuthCaptcha } from './AuthCaptcha'
+import { useAuthCaptcha } from './use-auth-captcha'
+import { authErrorMessage } from './captcha-options'
 
 export function RequestResetForm() {
   const { resetPassword } = useAuth()
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
   const [error, setError] = useState<string | null>(null)
+  const captcha = useAuthCaptcha()
 
   const {
     register,
@@ -24,13 +28,13 @@ export function RequestResetForm() {
     setError(null)
     setStatus('sending')
     try {
-      await resetPassword(values.email)
+      await resetPassword(values.email, captcha.token)
       setStatus('sent')
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Não foi possível enviar o e-mail. Tente novamente.',
-      )
+      setError(authErrorMessage(err, 'Não foi possível enviar o e-mail. Tente novamente.'))
       setStatus('idle')
+    } finally {
+      captcha.reset()
     }
   }
 
@@ -66,7 +70,13 @@ export function RequestResetForm() {
               error={errors.email?.message}
               {...register('email')}
             />
-            <Button type="submit" fullWidth loading={status === 'sending'}>
+            <AuthCaptcha key={captcha.attempt} action="recovery" onToken={captcha.setToken} />
+            <Button
+              type="submit"
+              fullWidth
+              loading={status === 'sending'}
+              disabled={captcha.waiting}
+            >
               Enviar link
             </Button>
           </form>
