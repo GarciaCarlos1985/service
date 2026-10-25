@@ -13,11 +13,16 @@ import appCss from '~/styles/app.css?url'
 import guideCss from '~/styles/guide.css?url'
 import premiumCss from '~/styles/guide-premium.css?url'
 import { seo } from '~/utils/seo'
+import { PwaRuntime } from '~/modules/pwa/PwaRuntime'
 
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
+      { name: 'theme-color', content: '#102d52' },
+      { name: 'mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-title', content: 'Service Guide' },
       {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1, viewport-fit=cover',
@@ -34,6 +39,8 @@ export const Route = createRootRoute({
       { rel: 'stylesheet', href: guideCss },
       { rel: 'stylesheet', href: premiumCss },
       { rel: 'icon', href: '/guide/favicon.svg' },
+      { rel: 'manifest', href: '/manifest.webmanifest' },
+      { rel: 'apple-touch-icon', href: '/app-icons/apple-touch-icon.png' },
     ],
   }),
   errorComponent: DefaultCatchBoundary,
@@ -50,6 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <PwaRuntime />
         <QueryClientProvider client={queryClient}>
           <ToastProvider>
             <AuthProvider>{children}</AuthProvider>

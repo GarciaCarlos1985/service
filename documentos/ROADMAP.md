@@ -6,7 +6,14 @@
 > `DECISIONS.md` ADR-041+. Mapa do que fazer com o código existente:
 > `REUSE-MAP.md`.
 
-Status atual (2026-10-18): **cadastro com logotipo e dias/horários publicado no Cloudflare;
+Status de desenvolvimento (2026-10-25): **PWA, APK e AAB Android preparados em
+candidato de revisão**, ainda sem nova publicação ou testes em aparelhos reais.
+O iPhone recebe a opção PWA; aplicativo da App Store ainda não foi desenvolvido.
+O Supabase existente foi retomado de `INACTIVE` para `ACTIVE_HEALTHY`, e as seis
+suítes SQL atuais passaram após a retomada, com rollback. Ver
+`INSTALAVEIS-2026-10-25.md` e ADR-053. Nenhum serviço/plano pago contratado.
+
+Produção registrada em 2026-10-18: **cadastro com logotipo e dias/horários publicado no Cloudflare;
 15 migrações aplicadas e testadas no Supabase real, com legado preservado.** Catálogo vazio,
 aguardando conteúdo real. Duas contas administrativas já estão configuradas.
 

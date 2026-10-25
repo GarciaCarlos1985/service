@@ -6,7 +6,7 @@
   "description": "Service Guide — descoberta comercial local em Cacoal",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "vite build && node scripts/finalize-pwa.mjs",
     "typecheck": "npm run cf:typegen && tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -17,7 +17,7 @@
     "test:admin:sql": "node scripts/admin-lab.mjs",
     "test:admin:browser": "node scripts/admin-browser-lab.mjs",
     "test:auth:security": "node scripts/verify-auth-security.mjs",
-    "build:lab": "vite build --mode e2e",
+    "build:lab": "vite build --mode e2e && node scripts/finalize-pwa.mjs",
     "preview": "vite preview",
     "cf:typegen": "wrangler types",
     "deploy": "npm run build && node --env-file-if-exists=.env.local ./node_modules/wrangler/bin/wrangler.js deploy"

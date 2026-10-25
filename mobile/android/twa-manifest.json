@@ -1,0 +1,52 @@
+{
+  "packageId": "dev.serviceguide.cacoal",
+  "host": "service-guide.helon280.workers.dev",
+  "name": "Service Guide",
+  "launcherName": "Service Guide",
+  "display": "standalone",
+  "themeColor": "#102D52",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#FFFFFF",
+  "enableNotifications": false,
+  "startUrl": "/",
+  "iconUrl": "https://service-guide.helon280.workers.dev/app-icons/icon-512.png",
+  "maskableIconUrl": "https://service-guide.helon280.workers.dev/app-icons/icon-512-maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "../../.wrangler/mobile-signing/service-guide.jks",
+    "alias": "service-guide"
+  },
+  "appVersionName": "0.1.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://service-guide.helon280.workers.dev/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://service-guide.helon280.workers.dev/",
+  "minSdkVersion": 24,
+  "orientation": "default",
+  "fingerprints": [
+    {
+      "name": "Assinatura local de homologação",
+      "value": "84:24:2A:A9:31:36:52:81:70:95:56:28:DE:D7:91:D5:8E:91:5D:6E:9F:80:50:00:E5:D8:47:DE:30:14:3D:17"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "0.1.0"
+}

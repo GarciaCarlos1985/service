@@ -1,5 +1,12 @@
 @custom-variant dark (&:is(.dark *));
 @layer components {
+  @media (display-mode: standalone) {
+    .site-header {
+      padding-top: env(safe-area-inset-top);
+    }
+  }
+}
+@layer components {
   .company-logo {
     flex-shrink: 0;
     width: 56px;

@@ -16,6 +16,8 @@ export function secureHeaders(
       "style-src 'self' 'unsafe-inline'",
       `img-src 'self' data: blob: https: ${backend.origin}`,
       "font-src 'self' data:",
+      "worker-src 'self'",
+      "manifest-src 'self'",
       `connect-src 'self' ${backend.origin} ${socket} https://challenges.cloudflare.com`,
       "frame-src 'self' https://challenges.cloudflare.com",
       "object-src 'none'",
@@ -29,6 +31,9 @@ export function secureHeaders(
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()')
   if (https) headers.set('Strict-Transport-Security', 'max-age=31536000')
+  if (['/service-worker.js', '/manifest.webmanifest', '/offline', '/offline.html'].includes(path)) {
+    headers.set('Cache-Control', 'no-cache, max-age=0, must-revalidate')
+  }
   if (/^\/(admin|conta|favoritos|entrar|cadastro|recuperar-senha)(\/|$)/.test(path)) {
     headers.set('Cache-Control', 'private, no-store, max-age=0')
     headers.set('Pragma', 'no-cache')
