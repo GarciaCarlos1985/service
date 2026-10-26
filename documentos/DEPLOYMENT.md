@@ -1,6 +1,18 @@
 # DEPLOYMENT — SERVICE GUIDE
 
-## Publicação atual — 18/10/2026
+## Publicação atual — 26/10/2026
+
+Fonte `0d73e69` na `main`, PR #5 mesclado, Worker
+`ee01187a-ef9b-4a46-989a-0d1779f9b0ce` com 100% do tráfego.
+PWA e orientações em `https://service-guide.helon280.workers.dev/instalar`.
+Build, dry-run e onze verificações HTTP no domínio oficial aprovados; CI da
+`main` aprovado. Nenhuma migration ou mudança de plano nesta publicação.
+APK/AAB são artefatos compilados, ainda sem teste completo em aparelho ou
+publicação na Play; aplicativo da App Store não implementado.
+Versões, capturas, limites e retorno à versão anterior:
+`PUBLICACAO-PWA-2026-10-26.md`.
+
+### Publicação anterior — 18/10/2026
 
 Fonte `45519de` na `main`, PR #3 mesclado, Worker
 `417acf48-d450-4548-848e-992a27c7592b` com 100% do tráfego. Logo e horários

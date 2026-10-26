@@ -1,0 +1,231 @@
+{
+  "date": "2026-10-26",
+  "timeZone": "America/Sao_Paulo",
+  "repository": "https://github.com/GarciaCarlos1985/service",
+  "sourceCommit": "0d73e69366cdfe236a2064c228e3f5408964f9cb",
+  "pullRequest": {
+    "number": 5,
+    "url": "https://github.com/GarciaCarlos1985/service/pull/5",
+    "state": "MERGED",
+    "mergedAtUtc": "2026-10-26T03:13:44Z",
+    "humanAuthorized": true
+  },
+  "productionPublished": true,
+  "installationUrl": "https://service-guide.helon280.workers.dev/instalar",
+  "cloudflare": {
+    "worker": "service-guide",
+    "accountName": "Helon280@gmail.com's Account",
+    "deployment": {
+      "id": "4002a904-552a-44b4-8380-e2b61122ab6e",
+      "source": "wrangler",
+      "strategy": "percentage",
+      "annotations": {
+        "workers/message": "Service Guide PWA - PR 5 - main 0d73e69",
+        "workers/triggered_by": "deployment"
+      },
+      "versions": [
+        {
+          "version_id": "ee01187a-ef9b-4a46-989a-0d1779f9b0ce",
+          "percentage": 100
+        }
+      ],
+      "created_on": "2026-10-26T03:23:14.165446Z"
+    },
+    "workerRevision": "a131520e1c2ab76a",
+    "rollbackRecorded": {
+      "id": "058be96c-9de5-458f-b95f-b2c4cf1aaf53",
+      "source": "wrangler",
+      "strategy": "percentage",
+      "annotations": {
+        "workers/message": "Service Guide: cadastro de empresas - main 45519de",
+        "workers/triggered_by": "deployment"
+      },
+      "versions": [
+        {
+          "version_id": "417acf48-d450-4548-848e-992a27c7592b",
+          "percentage": 100
+        }
+      ],
+      "created_on": "2026-10-18T05:14:19.406Z"
+    },
+    "rollbackExecuted": false
+  },
+  "quality": {
+    "candidateReceipt": "instalaveis-2026-10-25.json",
+    "candidateUnitTests": 125,
+    "candidateSqlSuites": 6,
+    "mainCi": {
+      "runId": 40263026359,
+      "conclusion": "success",
+      "url": "https://github.com/GarciaCarlos1985/service/actions/runs/40263026359"
+    },
+    "mainBuildPassed": true,
+    "finalDryRunPassed": true,
+    "secretScan": {
+      "passed": true,
+      "files": 263,
+      "streaming": true,
+      "scope": "dist",
+      "at": "2026-10-26T03:22:01.630Z",
+      "sourceMapsWithOriginalLabReferences": 1,
+      "executableLabReferences": 0
+    },
+    "productionHttp": {
+      "testedAt": "2026-10-26T03:25:55.274Z",
+      "base": "https://service-guide.helon280.workers.dev",
+      "results": [
+        {
+          "path": "/instalar",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/manifest.webmanifest",
+          "status": 200,
+          "contentType": "application/manifest+json; charset=utf-8"
+        },
+        {
+          "path": "/app-icons/icon-192.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/icon-512.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/icon-192-maskable.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/icon-512-maskable.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/apple-touch-icon.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/service-worker.js",
+          "status": 200,
+          "contentType": "text/javascript; charset=utf-8"
+        },
+        {
+          "path": "/offline",
+          "status": 200,
+          "contentType": "text/html"
+        },
+        {
+          "path": "/.well-known/assetlinks.json",
+          "status": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "path": "/admin",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        }
+      ],
+      "passed": true,
+      "browserInstallationTested": false,
+      "realDeviceTested": false
+    },
+    "smoke": {
+      "testedAt": "2026-10-26T04:16:28.948Z",
+      "base": "https://service-guide.helon280.workers.dev",
+      "passed": true,
+      "results": [
+        {
+          "path": "/",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/entrar",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/instalar",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/previa",
+          "status": 404,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/.env.local",
+          "status": 404,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/.git/config",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "legacySoft404": true,
+          "repositoryFileExposed": false
+        },
+        {
+          "path": "/service-worker.js",
+          "status": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "sha256": "82776920bf9aa7b73777715ac9f2332eca2392b55c01baea848d1f760de29cd9",
+          "matchesBuild": true
+        }
+      ]
+    }
+  },
+  "backend": {
+    "project": "taabjnmsaaltsiehywbw",
+    "migrationsApplied": 0,
+    "planChanged": false,
+    "captchaEnabled": true,
+    "captchaProvider": "turnstile",
+    "emailConfirmationRequired": true,
+    "customSmtpConfigured": true,
+    "emailsSent": 0,
+    "passwordsChanged": false
+  },
+  "browserReview": {
+    "desktopReviewed": true,
+    "mobileViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "consoleErrorsObserved": 0,
+    "consoleWarningsObserved": 0,
+    "screenshots": [
+      "pwa-2026-10-26/install-online-desktop.png",
+      "pwa-2026-10-26/install-online-mobile.png"
+    ],
+    "offlineTransitionExercisedInBrowser": false
+  },
+  "userDeviceEvidence": {
+    "platform": "Android",
+    "source": "user-provided screenshot in chat",
+    "browserInstallationOffered": true,
+    "installationCompletionConfirmed": false,
+    "fullDeviceFlowsTested": false
+  },
+  "distribution": {
+    "pwaPublished": true,
+    "androidApkBuilt": true,
+    "androidAabBuilt": true,
+    "androidStorePublished": false,
+    "iosNativeImplemented": false,
+    "ipaGenerated": false,
+    "appStorePublished": false
+  },
+  "remaining": [
+    "Complete installation and flows on real Android",
+    "Complete installation and flows on real iPhone",
+    "Validate store-specific requirements before submission",
+    "Legacy two-segment route returns soft 404 for /.git/config; repository file not exposed"
+  ]
+}

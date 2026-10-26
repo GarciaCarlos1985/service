@@ -1,5 +1,12 @@
 # Service Guide instalável — candidato de revisão
 
+> **Atualização de 26/10/2026:** este candidato foi aprovado, mesclado pelo
+> PR #5 e publicado no Cloudflare. A PWA está em
+> `https://service-guide.helon280.workers.dev/instalar`. O relato abaixo preserva
+> o ensaio de 25/10; estado atual, capturas e limites em
+> `PUBLICACAO-PWA-2026-10-26.md`. APK/AAB continuam sem publicação na Play;
+> aplicativo da App Store ainda não foi desenvolvido.
+
 ## Entrega e limites
 
 Implementação na branch `codex/instalaveis-mobile`, a partir da main `8374b1c`.

@@ -112,16 +112,21 @@ da transação protegida pelo runner.
 - `service_role`, tokens CLI — NUNCA em `VITE_*`, nunca no chat/repo.
 - **Sem chaves de pagamento**: não há gateway no MVP (ADR-044).
 
-## Estado atual (2026-10-18)
+## Estado atual (2026-10-26)
 
-**Candidato de 25/10/2026:** branch `codex/instalaveis-mobile`, com PWA e pacotes
-APK/AAB Android. Ainda não publicado; sem IPA e sem testes em aparelhos reais.
-Ver `INSTALAVEIS-2026-10-25.md`. O Supabase foi encontrado inativo e retomado no
-mesmo projeto, sem nova migration; seis suítes SQL atuais passaram após a retomada.
-O registro de produção abaixo continua sendo o da publicação anterior.
+**PWA publicada em 26/10/2026:** PR #5 aprovado e mesclado; fonte `0d73e69`
+na `main`, Worker `ee01187a-ef9b-4a46-989a-0d1779f9b0ce`, 100% do tráfego.
+Instalação orientada em `https://service-guide.helon280.workers.dev/instalar`.
+Onze respostas do verificador HTTP passaram no domínio oficial; página revista
+no navegador em desktop e 390 px. O usuário mostrou a oferta de instalação no
+Android; instalação concluída e fluxos em aparelho ainda não foram comprovados.
+APK/AAB Android compilados e assinados, sem publicação na Play; iOS/IPA ainda
+não desenvolvido. Ver `PUBLICACAO-PWA-2026-10-26.md` e o ensaio histórico
+`INSTALAVEIS-2026-10-25.md`. Nenhuma migration ou mudança de plano nesta entrega.
+O Supabase foi retomado no mesmo projeto em 25/10, e seis suítes SQL passaram.
 
-Produção: `https://service-guide.helon280.workers.dev`, Worker
-`417acf48-d450-4548-848e-992a27c7592b`, fonte `45519de`, 100% do tráfego.
+### Cadastro publicado em 18/10/2026, preservado na versão atual
+
 O PR #3 foi aprovado, mesclado na `main` e publicado. Logo e rotina semanal
 estão no cadastro/edição e no perfil público; há apenas uma ação **Nova empresa**.
 O administrador edita nome, contatos, endereço, marca, horários e plano e pode
