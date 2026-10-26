@@ -1069,6 +1069,45 @@ Estado e evidências: `AUTENTICACAO-EMAIL-CAPTCHA-2026-10-18.md`.
 
 ---
 
+## ADR-053 — Instalação PWA e Android preservando SSR (25/10/2026)
+
+**Status:** candidato implementado para revisão; sem publicação desta versão.
+
+**Contexto medido:** o responsável pediu desenvolver as versões instaláveis.
+O site usa TanStack Start SSR, Supabase e Cloudflare, sem `index.html` estático
+pronto para empacotamento Capacitor. Não existiam APK/AAB/IPA. O responsável
+não dispõe de Mac ou iPhone, e o Helon não opera ferramentas de desenvolvimento.
+
+**Decisão:** acrescentar PWA à mesma aplicação e gerar Android por TWA/Bubblewrap,
+com validação de domínio por Digital Asset Links e fallback Custom Tab.
+Preservar backend, rotas, RPCs, Auth e CAPTCHA. Oferecer instruções públicas em
+`/instalar`, com PWA pela tela inicial do iPhone, sem depender de App Store.
+Não declarar nem simular uma versão iOS nativa que não foi desenvolvida/testada.
+
+**Alternativas:** Capacitor com conteúdo local exigiria primeiro uma saída web
+compatível com o SSR existente. Um invólucro WebView remoto introduziria outro
+contexto de autenticação/CAPTCHA e não comprovaria os critérios da Apple.
+Reescrever o catálogo nativamente acrescentaria outra interface sem necessidade
+demonstrada para a primeira entrega gratuita.
+
+**Motivo:** reutilização efetiva, menor superfície de manutenção e a mesma
+origem HTTPS no Android; acesso instalável no iPhone sem obrigar o Helon a programar.
+
+**Consequências:** cache exclusivo de arquivos estáticos, orientação pública
+offline, sem catálogo ou painel offline. Atualização não força recarga de
+formulários. AAB válido não significa aprovação Play. App Store continua exigindo
+desenvolvimento iOS, macOS/Xcode, assinatura, testes e revisão da Apple.
+Sem plano/serviço pago; taxas e contas das lojas não foram contratadas.
+Assinatura Android privada permanece local e exige backup recuperável antes de
+distribuição comercial. Testes de instalação, sessão e navegação em dispositivos
+reais e conferência visual seguem pendentes, descritos no relatório.
+
+**Evidência:** `INSTALAVEIS-2026-10-25.md` e seu recibo público. Sem alteração de
+schema. As seis suítes SQL atuais passaram após retomar o projeto Supabase que
+estava `INACTIVE`. A disponibilidade gratuita segue sujeita às regras do provedor.
+
+---
+
 > **Regra de manutenção:** a partir de 2026-08-12, todo ADR novo do SERVICE segue
 > a mesma disciplina — Contexto medido ou declarado como hipótese, Decisão com
 > alternativas consideradas, Motivo, Consequências (incluindo custo aceito e

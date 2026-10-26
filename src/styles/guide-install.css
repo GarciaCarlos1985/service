@@ -1,0 +1,152 @@
+@layer components {
+  .install-page {
+    padding-top: 40px;
+    padding-bottom: 80px;
+  }
+  .install-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-bottom: 36px;
+    text-underline-offset: 4px;
+  }
+  .install-intro {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    max-width: 880px;
+  }
+  .install-intro > img {
+    flex-shrink: 0;
+    border-radius: 16px;
+  }
+  .install-eyebrow {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+  .install-intro h1 {
+    margin: 0 0 20px;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .install-intro p:last-child {
+    max-width: 64ch;
+    line-height: 1.7;
+    margin: 0;
+  }
+  .install-action,
+  .install-status,
+  .install-lead {
+    margin-top: 32px;
+  }
+  .install-action .btn {
+    display: inline-flex;
+    gap: 10px;
+    min-height: 52px;
+    padding: 14px 24px;
+  }
+  .install-action p,
+  .install-lead {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .install-status {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #edf5ff;
+  }
+  .install-status p {
+    margin: 0;
+  }
+  .install-message {
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: #edf5ff;
+    line-height: 1.6;
+  }
+  .install-methods {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+    margin-top: 48px;
+  }
+  .install-methods > section {
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .install-methods h2 {
+    font-size: 25px;
+    margin: 16px 0 20px;
+  }
+  .install-methods ol {
+    padding-left: 24px;
+    margin: 0;
+    line-height: 1.8;
+  }
+  .install-methods li {
+    padding: 0 0 12px 7px;
+  }
+  .install-methods li svg {
+    display: inline;
+    vertical-align: text-bottom;
+  }
+  .install-methods section > p {
+    margin-top: 20px;
+    max-width: 58ch;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .install-notes {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .install-notes h2 {
+    margin: 0 0 16px;
+    font-size: 26px;
+  }
+  .install-notes p {
+    max-width: 70ch;
+    line-height: 1.75;
+  }
+  .install-notes a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-underline-offset: 5px;
+  }
+  @media (max-width: 640px) {
+    .install-page {
+      padding-top: 24px;
+    }
+    .install-back {
+      margin-bottom: 24px;
+    }
+    .install-intro {
+      display: block;
+    }
+    .install-intro > img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 24px;
+    }
+    .install-methods {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-top: 32px;
+    }
+    .install-methods h2 {
+      font-size: 23px;
+    }
+    .install-action .btn {
+      width: 100%;
+    }
+  }
+}

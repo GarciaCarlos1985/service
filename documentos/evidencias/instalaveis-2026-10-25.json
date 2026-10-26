@@ -1,0 +1,210 @@
+{
+  "date": "2026-10-25",
+  "baseCommit": "8374b1cd581017eadb3bcb180fac031c362b9120",
+  "branch": "codex/instalaveis-mobile",
+  "productionPublished": false,
+  "web": {
+    "typecheck": true,
+    "lint": {
+      "errors": 0,
+      "warnings": 37
+    },
+    "format": true,
+    "tests": {
+      "passed": 125,
+      "files": 19
+    },
+    "build": true,
+    "workerRevision": "dc44656ffaed9197",
+    "http": {
+      "testedAt": "2026-10-25T17:56:28.905Z",
+      "base": "http://127.0.0.1:3011",
+      "results": [
+        {
+          "path": "/instalar",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/manifest.webmanifest",
+          "status": 200,
+          "contentType": "application/manifest+json; charset=utf-8"
+        },
+        {
+          "path": "/app-icons/icon-192.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/icon-512.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/icon-192-maskable.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/icon-512-maskable.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/app-icons/apple-touch-icon.png",
+          "status": 200,
+          "contentType": "image/png"
+        },
+        {
+          "path": "/service-worker.js",
+          "status": 200,
+          "contentType": "text/javascript; charset=utf-8"
+        },
+        {
+          "path": "/offline",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "path": "/.well-known/assetlinks.json",
+          "status": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "path": "/admin",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8"
+        }
+      ],
+      "passed": true,
+      "browserInstallationTested": false,
+      "realDeviceTested": false
+    },
+    "secretScan": {
+      "passed": true,
+      "stagedFileCount": 75,
+      "fileCount": 91,
+      "testedAt": "2026-10-25T17:50:18.761Z",
+      "streamed": true
+    },
+    "staticDesignFindings": []
+  },
+  "android": {
+    "physical_device_tested": false,
+    "apk_sha256": "D413D96402FB004CCBEFF8B4F6534C204C653BA411630636FD389E22EBCCDB90",
+    "version": "0.1.0",
+    "certificate_sha256": "84:24:2A:A9:31:36:52:81:70:95:56:28:DE:D7:91:D5:8E:91:5D:6E:9F:80:50:00:E5:D8:47:DE:30:14:3D:17",
+    "aab_sha256": "B5E124EA38C74DA6F443A1D6B0793CE57E67FD6BFCDAD9756B53AD0F34B56CA0",
+    "store_published": false,
+    "built_at_utc": "2026-10-25T17:48:02.5584217Z",
+    "package": "dev.serviceguide.cacoal",
+    "apksignerVerified": true,
+    "bundletoolValidated": {
+      "version": "1.18.3",
+      "sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29"
+    },
+    "jarsignerVerified": true,
+    "minSdk": 24,
+    "targetSdk": 36,
+    "lintErrors": 0,
+    "wrapperSha256": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046",
+    "gradleDistributionSha256": "f397b287023acdba1e9f6fc5ea72d22dd63669d59ed4a289a29b1a76eee151c6"
+  },
+  "backend": {
+    "project": "taabjnmsaaltsiehywbw",
+    "initialStatus": "INACTIVE",
+    "restoreHttp": 200,
+    "verifiedStatus": "ACTIVE_HEALTHY",
+    "authHttp": 200,
+    "captchaEnabled": true,
+    "emailConfirmationRequired": true,
+    "customSmtpConfigured": true,
+    "planChanged": false,
+    "migrationsApplied": 0,
+    "emailsSent": 0,
+    "causeOfPauseProven": false
+  },
+  "sql": [
+    {
+      "name": "guide-internal-permissions",
+      "passed": true,
+      "tlsValidated": true,
+      "rolledBack": true
+    },
+    {
+      "name": "guide-api-access-boundary",
+      "passed": true,
+      "tlsValidated": true,
+      "rolledBack": true
+    },
+    {
+      "name": "guide-commercial",
+      "passed": true,
+      "tlsValidated": true,
+      "rolledBack": true
+    },
+    {
+      "name": "guide-admin-workspace",
+      "passed": true,
+      "tlsValidated": true,
+      "rolledBack": true
+    },
+    {
+      "name": "guide-site-customization",
+      "passed": true,
+      "tlsValidated": true,
+      "rolledBack": true
+    },
+    {
+      "name": "guide-company-identity-hours",
+      "passed": true,
+      "tlsValidated": true,
+      "rolledBack": true
+    }
+  ],
+  "iconSource": {
+    "path": "public/service-guide.png",
+    "sha256": "210d5bb91d6572315c60b1e408465d5bd08d586080063117dd98f44eb04b31aa"
+  },
+  "icons": [
+    {
+      "file": "apple-touch-icon.png",
+      "width": 180,
+      "height": 180,
+      "sha256": "766ef1ca2619cd504665a7ad293e9003fe62a82638d623f8f1deeeb6351bab89"
+    },
+    {
+      "file": "icon-192-maskable.png",
+      "width": 192,
+      "height": 192,
+      "sha256": "2ce49546dafa6503bb1ecd30382f5c75dcdd977a9d45e4317ed367698942c04d"
+    },
+    {
+      "file": "icon-192.png",
+      "width": 192,
+      "height": 192,
+      "sha256": "a2fad4c4521265c673da649f3e7394dc21f2c822b8b9177981e6c8972e85b58f"
+    },
+    {
+      "file": "icon-512-maskable.png",
+      "width": 512,
+      "height": 512,
+      "sha256": "4e786be101fe50ac8f875945dee6fc4cc87302f6f1504a0c20746f8a1bb9f0ed"
+    },
+    {
+      "file": "icon-512.png",
+      "width": 512,
+      "height": 512,
+      "sha256": "665ef88178e08282aefc12d45f291698bfd1480df21a1d57fb47981f21dcd5e5"
+    }
+  ],
+  "limits": {
+    "browserInstallationTested": false,
+    "realAndroidTested": false,
+    "realIphoneTested": false,
+    "iosNativeImplemented": false,
+    "ipaGenerated": false,
+    "storesPublished": false,
+    "browserControl": "disabled_in_work_settings"
+  }
+}

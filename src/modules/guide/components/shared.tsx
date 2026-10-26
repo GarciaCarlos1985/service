@@ -157,6 +157,7 @@ export function Footer() {
         <p>{presentation.footerTagline}</p>
       </div>
       <div className="footer-links">
+        <a href="/instalar">Instalar no celular</a>
         <a href="/ajuda">Ajuda e contato</a>
         <a href="/ajuda?tipo=business#contato">Incluir meu negócio</a>
         <a href="/privacidade">Privacidade</a>

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "package_name": "dev.serviceguide.cacoal",
+      "sha256_cert_fingerprints": [
+        "84:24:2A:A9:31:36:52:81:70:95:56:28:DE:D7:91:D5:8E:91:5D:6E:9F:80:50:00:E5:D8:47:DE:30:14:3D:17"
+      ],
+      "namespace": "android_app"
+    }
+  }
+]

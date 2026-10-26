@@ -114,6 +114,12 @@ da transação protegida pelo runner.
 
 ## Estado atual (2026-10-18)
 
+**Candidato de 25/10/2026:** branch `codex/instalaveis-mobile`, com PWA e pacotes
+APK/AAB Android. Ainda não publicado; sem IPA e sem testes em aparelhos reais.
+Ver `INSTALAVEIS-2026-10-25.md`. O Supabase foi encontrado inativo e retomado no
+mesmo projeto, sem nova migration; seis suítes SQL atuais passaram após a retomada.
+O registro de produção abaixo continua sendo o da publicação anterior.
+
 Produção: `https://service-guide.helon280.workers.dev`, Worker
 `417acf48-d450-4548-848e-992a27c7592b`, fonte `45519de`, 100% do tráfego.
 O PR #3 foi aprovado, mesclado na `main` e publicado. Logo e rotina semanal

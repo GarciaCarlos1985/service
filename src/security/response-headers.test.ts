@@ -26,6 +26,30 @@ describe('proteção HTTP', () => {
     expect(result.get('cache-control')).toContain('no-store')
     expect(result.get('x-frame-options')).toBe('DENY')
     expect(result.get('x-test')).toBe('preserved')
+    expect(result.get('content-security-policy')).toContain("worker-src 'self'")
+    expect(result.get('content-security-policy')).toContain("manifest-src 'self'")
+  })
+  it('revalida os arquivos de controle PWA sem liberar cache de HTML privado', () => {
+    for (const path of [
+      '/service-worker.js',
+      '/manifest.webmanifest',
+      '/offline',
+      '/offline.html',
+    ]) {
+      const result = secureHeaders(
+        new Headers(),
+        'nonce789',
+        'https://example.supabase.co',
+        path,
+        true,
+      )
+      expect(result.get('cache-control')).toContain('must-revalidate')
+    }
+    expect(
+      secureHeaders(new Headers(), 'nonce789', 'https://example.supabase.co', '/admin', true).get(
+        'cache-control',
+      ),
+    ).toContain('no-store')
   })
   it('preserva cookies e cache público sem forçar HSTS no laboratório local', () => {
     const original = new Headers({

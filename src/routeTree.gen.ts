@@ -17,6 +17,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as ContaRouteImport } from './routes/conta'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
+import { Route as InstalarRouteImport } from './routes/instalar'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PreviaRouteImport } from './routes/previa'
@@ -76,6 +77,11 @@ const EntrarRoute = EntrarRouteImport.update({
 const FavoritosRoute = FavoritosRouteImport.update({
   id: '/favoritos',
   path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InstalarRoute = InstalarRouteImport.update({
+  id: '/instalar',
+  path: '/instalar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/conta': typeof ContaRoute
   '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
+  '/instalar': typeof InstalarRoute
   '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRouteWithChildren
   '/previa': typeof PreviaRoute
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/conta': typeof ContaRoute
   '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
+  '/instalar': typeof InstalarRoute
   '/onboarding': typeof OnboardingRoute
   '/previa': typeof PreviaRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/conta': typeof ContaRoute
   '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
+  '/instalar': typeof InstalarRoute
   '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRouteWithChildren
   '/previa': typeof PreviaRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
     | '/conta'
     | '/entrar'
     | '/favoritos'
+    | '/instalar'
     | '/onboarding'
     | '/painel'
     | '/previa'
@@ -313,6 +323,7 @@ export interface FileRouteTypes {
     | '/conta'
     | '/entrar'
     | '/favoritos'
+    | '/instalar'
     | '/onboarding'
     | '/previa'
     | '/privacidade'
@@ -342,6 +353,7 @@ export interface FileRouteTypes {
     | '/conta'
     | '/entrar'
     | '/favoritos'
+    | '/instalar'
     | '/onboarding'
     | '/painel'
     | '/previa'
@@ -373,6 +385,7 @@ export interface RootRouteChildren {
   ContaRoute: typeof ContaRoute
   EntrarRoute: typeof EntrarRoute
   FavoritosRoute: typeof FavoritosRoute
+  InstalarRoute: typeof InstalarRoute
   OnboardingRoute: typeof OnboardingRoute
   PainelRoute: typeof PainelRouteWithChildren
   PreviaRoute: typeof PreviaRoute
@@ -441,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/favoritos'
       fullPath: '/favoritos'
       preLoaderRoute: typeof FavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/instalar': {
+      id: '/instalar'
+      path: '/instalar'
+      fullPath: '/instalar'
+      preLoaderRoute: typeof InstalarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -624,6 +644,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContaRoute: ContaRoute,
   EntrarRoute: EntrarRoute,
   FavoritosRoute: FavoritosRoute,
+  InstalarRoute: InstalarRoute,
   OnboardingRoute: OnboardingRoute,
   PainelRoute: PainelRouteWithChildren,
   PreviaRoute: PreviaRoute,

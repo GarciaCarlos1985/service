@@ -36,5 +36,15 @@ Thumbs.db
 # Testes
 coverage/
 
+# Pacotes móveis e credenciais de assinatura locais
+artifacts/mobile/
+mobile/**/.gradle/
+mobile/**/build/
+mobile/**/local.properties
+*.jks
+*.keystore
+mobile/**/xcuserdata/
+mobile/**/DerivedData/
+
 # Supabase CLI cache
 supabase/.temp/
